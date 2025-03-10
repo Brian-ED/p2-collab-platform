@@ -1,5 +1,5 @@
-import { TestComponent } from "@/app/components/test";
+import { FrontNavbar } from "@/app/components/nav/frontnavbar";
 
 export default function Home() {
-  return <TestComponent />;
+  return <FrontNavbar />;
 }
