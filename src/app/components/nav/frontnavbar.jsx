@@ -1,3 +1,10 @@
+//deleted the old code, as it was copy-pasted and bad
+//this version is much cleaner and simpler to understand
+
+//read all the comments, read the "REQUIRED READING" and then tinker with the code on your own
+
+//good luck
+
 /*
 ***** REQUIRED READING *****
 useState
