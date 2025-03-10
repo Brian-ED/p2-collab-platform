@@ -1,3 +1,8 @@
 export const FrontNavbar = () => {
-  return <h1>melih gay</h1>;
+  return (
+    <nav>
+      <img src="#" alt="#"/>
+      <a href="#">User button</a>
+    </nav>
+  );
 };
