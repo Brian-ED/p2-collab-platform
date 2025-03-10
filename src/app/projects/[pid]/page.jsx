@@ -1,3 +1,9 @@
+import { ProjectsNavbar } from "@/app/components/nav/projectsnavbar";
+
 export default function Projects() {
-  return <h1>projects</h1>;
+  return (
+    <main>
+      <ProjectsNavbar />
+    </main>
+  );
 }
