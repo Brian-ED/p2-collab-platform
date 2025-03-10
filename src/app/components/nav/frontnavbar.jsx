@@ -1,74 +1,58 @@
+/*
+***** REQUIRED READING *****
+useState
+https://react.dev/reference/react/useState
+or
+https://www.w3schools.com/react/react_usestate.asp (if you prefer)
+
+Ternary/Conditional Operators
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_operator
+
+React Conditional Rendering
+https://react.dev/learn/conditional-rendering#logical-and-operator- (specifically the "Logical AND operator (&&)" part)
+*/
+
+// use client is required when "use hooks" are used in the code, as they are rendered on client side (the user can interact with it)
+"use client";
+
+import { useState } from "react";
+
+// the dropdown menu is rendered in the exported function component, this function component is rendered on the page via projects/page.jsx
+// see it on localhost:3000/projects/whatever
 export const FrontNavbar = () => {
+  return <DropdownMenu />;
+};
+
+// i have created the drop down menu in a separate function component, to make it easier for you to alter it
+// also, i intentionally made it very ugly, and only made slight CSS changes, so it's up to you guys to make it nicer
+const DropdownMenu = () => {
+  // here the 'expanded' state is created with the 'setExpanded' function to alter it
+  const [expanded, setExpanded] = useState(false);
+
   return (
-    <nav>
-      <img src="#" alt="Logo" />
-
+    <div>
+      {/* this button changes the expanded useState between 'true' and 'false' */}
       <button
-        id="dropdownDefaultButton"
-        data-dropdown-toggle="dropdown"
-        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        type="button"
+        className="border-2 border-red-800 px-2 text-black bg-white hover:bg-white/80"
+        onClick={() => {
+          expanded ? setExpanded(false) : setExpanded(true);
+        }}
       >
-        Dropdown button{" "}
-        <svg
-          className="w-2.5 h-2.5 ms-3"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 10 6"
-        >
-          <path
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="m1 1 4 4 4-4"
-          />
-        </svg>
+        Menu
       </button>
-
+      {/* this div is conditionally rendered based on the state of 'expanded' (this is our actual dropdown part) */}
       <div
-        id="dropdown"
-        className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700"
+        className={
+          (expanded ? "scale-100" : "scale-0") +
+          " bg-white text-black border-red-800 border-2 w-36"
+        }
       >
-        <ul
-          className="py-2 text-sm text-gray-700 dark:text-gray-200"
-          aria-labelledby="dropdownDefaultButton"
-        >
-          <li>
-            <a
-              href="#"
-              className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-            >
-              Dashboard
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-            >
-              Settings
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-            >
-              Earnings
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-            >
-              Sign out
-            </a>
-          </li>
-        </ul>
+        <p className="hover:underline">test</p>
+        <p className="hover:underline">test 2</p>
+        <p className="hover:underline">test 3</p>
+        <p className="hover:underline">test 4</p>
+        <p className="hover:underline">test 5</p>
       </div>
-    </nav>
+    </div>
   );
 };
