@@ -1,3 +1,4 @@
+import { GroupContract } from "@/app/components/projects/groupContract/groupContract";
 import { GanttChart } from "@/app/components/ganttChart";
 
 import { GroupContract } from "@/app/components/projects/groupContract/groupContract";
