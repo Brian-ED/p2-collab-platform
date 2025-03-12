@@ -38,7 +38,7 @@ const Button = ({ name, link, logo, section }) => {
     );
 };
 
-export const ProjectsNavbar = ({ section, setSection }) => {
+export const ProjectsNavbar = ({ setSection }) => {
     return (
         <nav>
             <div className="bg-[#00ADB5] w-screen h-12 flex flex-row">
