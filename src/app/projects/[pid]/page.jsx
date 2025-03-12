@@ -1,3 +1,5 @@
+import { GroupContract } from "@/app/components/projects/groupContract/groupContract";
+
 export default function Projects() {
-  return <h1>projects</h1>;
+  return <GroupContract />;
 }
