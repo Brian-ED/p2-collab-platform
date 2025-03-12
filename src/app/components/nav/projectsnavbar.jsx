@@ -1,7 +1,3 @@
-"use client";
-
-import { useState } from "react";
-
 const NavButtons = [
     {
         name: "Overview",
