@@ -1,5 +1,4 @@
 export const BoxedProject = ({title="MISSING", memberNames="MISSING", startDate="MISSING", onClick}) => {
-  const maxLineLength = 17;
   return (
     <button onClick={onClick} className="py-5 rounded-md bg-blue-500 hover:bg-blue-600 size-32">
       <div className="leading-10 whitespace-nowrap overflow-hidden overflow-ellipsis">{title}</div>
