@@ -3,6 +3,8 @@
 import { ProjectsNavbar } from "@/app/components/nav/projectsnavbar";
 import { useState } from "react";
 
+import { GanttChart } from "@/app/components/ganttChart";
+
 export default function Projects() {
     const [section, setSection] = useState("overview");
     return (
