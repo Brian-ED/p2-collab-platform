@@ -5,12 +5,16 @@
 :root {
   --background: #393e46;
   --foreground: #eeeeee;
+  --trackcolor: #0f172a;
+  --trackcolorodd: #334155;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #393e46;
     --foreground: #eeeeee;
+    --trackcolor: #0f172a;
+    --trackcolorodd: #334155;
   }
 }
 
