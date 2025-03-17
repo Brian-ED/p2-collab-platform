@@ -1,9 +1,13 @@
 const foldersNames = ["boxed-project"]
 
+function FolderToLink(x) {
+  return <a href={`/tests/${x}`}>{x}</a>
+}
+
 export default function Home() {
   return (
     <div>
-      {foldersNames.map(x=>(<a href={`/tests/${x}`}>{x}</a>))}
+      {foldersNames.map(FolderToLink)}
     </div>
   );
 }
