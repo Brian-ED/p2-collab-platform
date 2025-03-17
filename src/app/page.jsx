@@ -1,5 +1,5 @@
-import { TestComponent } from "@/app/components/test";
+import { LoginButton } from "@/app/components/loginButton";
 
 export default function Home() {
-  return <TestComponent />;
+  return <LoginButton />;
 }
