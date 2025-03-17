@@ -10,6 +10,8 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        trackcolor: "var(--trackcolor)",
+        trackcolorodd: "var(--trackcolorodd)",
       },
     },
   },
