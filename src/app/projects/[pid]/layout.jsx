@@ -3,8 +3,8 @@
 import { useState } from "react";
 
 export default function ProjectsLayout({ children }) {
-    const [sidebar, setSidebar] = useState(false);
-    const [section, setSection] = useState("overview");
+  const [sidebar, setSidebar] = useState(false);
+  const [section, setSection] = useState("overview");
 
     return (
         <div className="min-h-screen bg-backdrop">
@@ -22,9 +22,9 @@ export default function ProjectsLayout({ children }) {
                         </h1>
                     </div>
 
-                    <nav>{/* NAVBAR BUTTONS */}</nav>
-                </div>
-            </header>
+          <nav>{/* NAVBAR BUTTONS */}</nav>
+        </div>
+      </header>
 
             <div
                 className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-sidebar transition-all duration-300 ${
@@ -65,13 +65,13 @@ export default function ProjectsLayout({ children }) {
                 </nav>
             </div>
 
-            <main
-                className={`pt-16 transition-all duration-300 ${
-                    sidebar ? "ml-64" : "ml-0"
-                }`}
-            >
-                <div className="p-2">{children}</div>
-            </main>
-        </div>
-    );
+      <main
+        className={`pt-16 transition-all duration-300 ${
+          sidebar ? "ml-64" : "ml-0"
+        }`}
+      >
+        <div className="p-2">{children}</div>
+      </main>
+    </div>
+  );
 }
