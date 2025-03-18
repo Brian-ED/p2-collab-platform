@@ -1,9 +1,3 @@
-import { GanttChart } from "@/app/components/ganttChart";
-
 export default function Projects() {
-  return (
-    <>
-      <GanttChart />
-    </>
-  );
+  return <h1>lmao</h1>;
 }
