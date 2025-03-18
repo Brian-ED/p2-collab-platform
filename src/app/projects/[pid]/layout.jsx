@@ -7,8 +7,8 @@ export default function ProjectsLayout({ children }) {
     const [section, setSection] = useState("overview");
 
     return (
-        <div className="min-h-screen bg-gray-600">
-            <header className="bg-slate-800 fixed top-0 left-0 right-0 z-50">
+        <div className="min-h-screen bg-backdrop">
+            <header className="bg-navbar fixed top-0 left-0 right-0 z-50">
                 <div className="flex items-center justify-between px-4 h-16">
                     <div className="flex items-center">
                         <button
@@ -27,7 +27,7 @@ export default function ProjectsLayout({ children }) {
             </header>
 
             <div
-                className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-gray-700 transition-all duration-300 ${
+                className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-sidebar transition-all duration-300 ${
                     sidebar ? "w-64" : "w-0"
                 }`}
             >

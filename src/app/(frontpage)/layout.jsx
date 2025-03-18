@@ -1,7 +1,7 @@
 export default function FrontpageLayout({ children }) {
     return (
-        <div className="min-h-screen bg-gray-600">
-            <header className="bg-slate-800 fixed top-0 left-0 right-0 z-50">
+        <div className="min-h-screen bg-backdrop">
+            <header className="bg-navbar fixed top-0 left-0 right-0 z-50">
                 <div className="flex items-center justify-between px-4 h-16">
                     <div className="flex items-center">
                         <h1 className="ml-4 text-xl font-semibold text-white">
