@@ -1,8 +1,9 @@
 "use client";
 
+import dayjs from "dayjs";
 import { useState } from "react";
 
-const data = [
+/* const data = [
   {
     id: 1,
     title: "Test1",
@@ -44,7 +45,7 @@ const data = [
     endDate: new Date("2025-03-30"),
     percentComplete: 0,
   },
-];
+]; */
 
 const GanttTask = ({
   id,
@@ -84,7 +85,19 @@ const GanttTask = ({
   );
 };
 
-export const GanttChart = () => {
+export const GanttChart = (tasks) => {
+  const data = tasks.tasks;
+
+  const tasksDuration = dayjs(data[data.length - 1].endDate).diff(
+    dayjs(data[0].startDate),
+    "day"
+  );
+
+  let dates = [dayjs(data[0].startDate)];
+  for (let i = 1; i < tasksDuration + 1; i++) {
+    dates[i] = dayjs([dates[i - 1].add(1, "day")]);
+  }
+
   return (
     <div>
       <div className="[&>*:nth-child(odd)]:bg-trackcolorodd [&>*:nth-child(even)]:bg-trackcolor">
@@ -93,10 +106,14 @@ export const GanttChart = () => {
         ))}
       </div>
       <div className="bg-amber-300 h-8 flex pl-2">
-        {}
-        <p className="text-black m-auto ml-0 mr-5">
-          {data[0].startDate.getDate()}
-        </p>
+        {dates.map((date) => (
+          <p
+            className="text-black m-auto ml-0 mr-5"
+            key={date.format("DD/MM/YYYY")}
+          >
+            {date.format("DD/MM")}
+          </p>
+        ))}
       </div>
     </div>
   );
