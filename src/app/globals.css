@@ -21,5 +21,8 @@ body {
 @theme {
   --color-trackcolor: #0f172a;
   --color-trackcolorodd: #334155;
+  --color-navbar: #1e293b;
+  --color-sidebar: #374151;
+  --color-backdrop: #4b5563;
   --color-taskcolor: oklch(0.685 0.169 237.323);
 }
