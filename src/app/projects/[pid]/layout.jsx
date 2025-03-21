@@ -27,42 +27,44 @@ export default function ProjectsLayout({ children }) {
       </header>
 
       <div
-        className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-sidebar transition-all duration-300 ${
+        className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-sidebar transition-all duration-250 ${
           sidebar ? "w-64" : "w-0"
         }`}
       >
-        <nav className="p-4 overflow-hidden">
-          <button
-            className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
-            onClick={() => setSection("overview")}
-          >
-            Overview
-          </button>
-          <button
-            className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
-            onClick={() => setSection("calendar")}
-          >
-            Calender
-          </button>
-          <button
-            className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
-            onClick={() => setSection("gantt")}
-          >
-            Gantt
-          </button>
-          <button
-            className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
-            onClick={() => setSection("trello")}
-          >
-            Trello
-          </button>
-          <button
-            className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
-            onClick={() => setSection("github")}
-          >
-            GitHub
-          </button>
-        </nav>
+        {sidebar && (
+          <nav className="p-4 overflow-hidden">
+            <button
+              className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
+              onClick={() => setSection("overview")}
+            >
+              Overview
+            </button>
+            <button
+              className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
+              onClick={() => setSection("calendar")}
+            >
+              Calender
+            </button>
+            <button
+              className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
+              onClick={() => setSection("gantt")}
+            >
+              Gantt
+            </button>
+            <button
+              className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
+              onClick={() => setSection("trello")}
+            >
+              Trello
+            </button>
+            <button
+              className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
+              onClick={() => setSection("github")}
+            >
+              GitHub
+            </button>
+          </nav>
+        )}
       </div>
 
       <main
