@@ -1,4 +1,4 @@
-import { GanttChart } from "@/app/components/ganttChart";
+import { GanttChart } from "@/components/ganttChart";
 
 export default function Projects() {
   return (
