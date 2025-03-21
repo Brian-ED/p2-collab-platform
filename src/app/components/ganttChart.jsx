@@ -56,12 +56,13 @@ const GanttTask = ({
   percentComplete,
 }) => {
   const [hover, setHover] = useState(false);
-  const taskDuration = (endDate - startDate) / (1000 * 60 * 60 * 24);
+  const taskDuration = dayjs(endDate).diff(dayjs(startDate), "day");
 
   return (
-    <div className="h-12 w-screen flex">
+    <div className="h-12 w-fit flex">
       <div
-        className={`rounded-lg bg-taskcolor h-8 m-auto ml-0 flex group/task w-150`}
+        className={`rounded-lg bg-taskcolor h-8 m-auto ml-10 flex group/task`}
+        style={{ width: "calc(var(--spacing) * " + taskDuration * 20 + ")" }}
         onMouseEnter={() => {
           setHover(true);
         }}
@@ -93,26 +94,41 @@ export const GanttChart = (tasks) => {
     "day"
   );
 
+  let bgLength = tasksDuration * 20;
+
   let dates = [dayjs(data[0].startDate)];
   for (let i = 1; i < tasksDuration + 1; i++) {
     dates[i] = dayjs([dates[i - 1].add(1, "day")]);
   }
 
   return (
-    <div>
+    <div className="overflow-x-scroll">
       <div className="[&>*:nth-child(odd)]:bg-trackcolorodd [&>*:nth-child(even)]:bg-trackcolor">
         {data.map((task) => (
-          <GanttTask key={task.id} {...task} />
+          <div
+            style={{ width: "calc(var(--spacing) * " + (bgLength + 20) + ")" }}
+            className="flex flex-row"
+            key={task.id}
+          >
+            <div
+              style={{
+                width:
+                  "calc(var(--spacing) * " +
+                  dayjs(task.startDate).diff(dates[0], "day") * 20 +
+                  ")",
+              }}
+            ></div>
+            <GanttTask {...task} />
+          </div>
         ))}
       </div>
-      <div className="bg-amber-300 h-8 flex pl-2">
+      <div className="bg-amber-300 h-6 w-fit flex">
         {dates.map((date) => (
-          <p
-            className="text-black m-auto ml-0 mr-5"
-            key={date.format("DD/MM/YYYY")}
-          >
-            {date.format("DD/MM")}
-          </p>
+          <div key={date.format("DD/MM/YYYY")} className="w-20">
+            <p className="text-black m-auto text-center">
+              {date.format("DD/MM")}
+            </p>
+          </div>
         ))}
       </div>
     </div>

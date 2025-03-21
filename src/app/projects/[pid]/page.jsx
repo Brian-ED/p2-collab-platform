@@ -18,7 +18,7 @@ export default function Projects() {
             title: "Test2",
             description: "This is test2",
             startDate: new Date("2025-03-19"),
-            endDate: new Date("2025-03-20"),
+            endDate: new Date("2025-03-25"),
             percentComplete: 25,
           },
           {
@@ -26,7 +26,7 @@ export default function Projects() {
             title: "Test3 yabba dabba doo shit on my shoe",
             description: "This is test3",
             startDate: new Date("2025-03-20"),
-            endDate: new Date("2025-03-21"),
+            endDate: new Date("2025-04-10"),
             percentComplete: 0,
           },
           {
@@ -34,7 +34,7 @@ export default function Projects() {
             title: "Test4",
             description: "This is test4",
             startDate: new Date("2025-03-22"),
-            endDate: new Date("2025-03-23"),
+            endDate: new Date("2025-03-30"),
             percentComplete: 0,
           },
           {
@@ -42,8 +42,8 @@ export default function Projects() {
             title: "Test5",
             description:
               "Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor Lorem ipsum din mor",
-            startDate: new Date("2025-03-24"),
-            endDate: new Date("2025-03-30"),
+            startDate: new Date("2025-03-30"),
+            endDate: new Date("2025-04-30"),
             percentComplete: 0,
           },
         ]}
