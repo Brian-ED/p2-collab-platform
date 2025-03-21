@@ -78,7 +78,9 @@ const GanttTask = ({
             hover ? "scale-100" : "scale-0"
           }`}
         >
-          <p className="text-black p-2 m-auto pb-1">{`${startDate.getDate()}/${startDate.getMonth()} - ${endDate.getDate()}/${endDate.getMonth()}`}</p>
+          <p className="text-black p-2 m-auto pb-1">{`${dayjs(startDate).format(
+            "DD/MM"
+          )} - ${dayjs(endDate).format("DD/MM")}`}</p>
           <p className="text-black p-2 m-auto pt-0">{description}</p>
         </div>
       </div>
@@ -87,7 +89,14 @@ const GanttTask = ({
 };
 
 export const GanttChart = (tasks) => {
-  const data = tasks.tasks;
+  let data = tasks.tasks;
+
+  data = data.toSorted((a, b) => {
+    if (dayjs(a.startDate).diff(dayjs(b.startDate, "day")) === 0) {
+      return a.endDate - a.startDate - (b.endDate - a.startDate);
+    }
+    return dayjs(a.startDate).diff(dayjs(b.startDate, "day"));
+  });
 
   const tasksDuration = dayjs(data[data.length - 1].endDate).diff(
     dayjs(data[0].startDate),
@@ -102,7 +111,7 @@ export const GanttChart = (tasks) => {
   }
 
   return (
-    <div className="overflow-x-scroll">
+    <div className="overflow-x-auto">
       <div className="[&>*:nth-child(odd)]:bg-trackcolorodd [&>*:nth-child(even)]:bg-trackcolor">
         {data.map((task) => (
           <div
