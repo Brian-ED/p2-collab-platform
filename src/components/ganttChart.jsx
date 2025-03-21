@@ -9,7 +9,7 @@ const GanttTask = ({
   description,
   startDate,
   endDate,
-  percentComplete,
+  percentComplete, //TODO: Should just be "complete" as we won't have percentages.
 }) => {
   const [hover, setHover] = useState(false);
   const taskDuration = dayjs(endDate).diff(dayjs(startDate), "day");
@@ -54,23 +54,38 @@ export const GanttChart = (tasks) => {
     return dayjs(a.startDate).diff(dayjs(b.startDate, "day"));
   });
 
-  const tasksDuration = dayjs(data[data.length - 1].endDate).diff(
+  const lastEndDate = data.toSorted((a, b) =>
+    dayjs(b.endDate).diff(dayjs(a.endDate, "day"))
+  )[0].endDate;
+
+  const tasksDuration = dayjs(lastEndDate).diff(
     dayjs(data[0].startDate),
     "day"
   );
 
   let bgLength = tasksDuration * 20;
 
+  if (bgLength < 22 * 20) bgLength = 22 * 20;
+
   let dates = [dayjs(data[0].startDate)];
-  for (let i = 1; i < tasksDuration + 1; i++) {
-    dates[i] = dayjs([dates[i - 1].add(1, "day")]);
+
+  if (tasksDuration + 1 > 22) {
+    for (let i = 1; i < tasksDuration + 1; i++) {
+      dates[i] = dayjs([dates[i - 1].add(1, "day")]);
+    }
+  } else {
+    for (let i = 1; i < 23; i++) {
+      dates[i] = dayjs([dates[i - 1].add(1, "day")]);
+    }
   }
 
   let currentDate = dayjs();
-  currentDate = currentDate.add(1, "day");
+  {
+    /*currentDate = currentDate.add(1, "day");*/
+  }
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto relative">
       <div
         className="w-0.5 bg-currentdatecolor absolute"
         style={{
