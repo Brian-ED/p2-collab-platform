@@ -110,8 +110,21 @@ export const GanttChart = (tasks) => {
     dates[i] = dayjs([dates[i - 1].add(1, "day")]);
   }
 
+  let currentDate = dayjs();
+  currentDate = currentDate.add(1, "day");
+
   return (
     <div className="overflow-x-auto">
+      <div
+        className="w-0.5 bg-currentdatecolor absolute"
+        style={{
+          height: "calc(var(--spacing) * " + data.length * 12 + ")",
+          marginLeft:
+            "calc(var(--spacing) * " +
+            (dayjs(currentDate).diff(dayjs(dates[0]), "day") * 20 + 10) +
+            ")",
+        }}
+      ></div>
       <div className="[&>*:nth-child(odd)]:bg-trackcolorodd [&>*:nth-child(even)]:bg-trackcolor">
         {data.map((task) => (
           <div
@@ -131,10 +144,16 @@ export const GanttChart = (tasks) => {
           </div>
         ))}
       </div>
-      <div className="bg-amber-300 h-6 w-fit flex">
+      <div className="bg-ganttbottom h-6 w-fit flex">
         {dates.map((date) => (
           <div key={date.format("DD/MM/YYYY")} className="w-20">
-            <p className="text-black m-auto text-center">
+            <p
+              className={`${
+                dayjs(currentDate).isSame(date, "day")
+                  ? "text-currentdatecolor"
+                  : "text-black"
+              } m-auto text-center`}
+            >
               {date.format("DD/MM")}
             </p>
           </div>
