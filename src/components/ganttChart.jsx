@@ -44,24 +44,17 @@ const GanttTask = ({
   );
 };
 
-const handleScroll = () => {
-  console.log("scroll event", window.scrollY);
-
-  const ref = document.querySelector("#gantbottom");
-
-  ref.style.opacity = 0;
+const isCurrentDateInChart = (day, dates) => {
+  for (let x of dates) {
+    if (day.isSame(x, "day")) {
+      console.log("true");
+      return true;
+    }
+  }
+  return false;
 };
 
 export const GanttChart = (tasks) => {
-  {
-    /*
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  });
-  */
-  }
-
   let data = tasks.tasks;
 
   data = data.toSorted((a, b) => {
@@ -97,23 +90,25 @@ export const GanttChart = (tasks) => {
   }
 
   let currentDate = dayjs();
-  {
-    /*currentDate = currentDate.add(1, "day");*/
-  }
+  //currentDate = currentDate.add(1, "month");
+
+  let inChart = isCurrentDateInChart(currentDate, dates);
 
   return (
     // the height of this div needs to be more dynamic i think, just setting it to '157' is bad
     <div className="overflow-auto relative h-156">
-      <div
-        className="w-0.5 bg-currentdatecolor absolute"
-        style={{
-          height: "calc(var(--spacing) * " + data.length * 12 + ")",
-          marginLeft:
-            "calc(var(--spacing) * " +
-            (dayjs(currentDate).diff(dayjs(dates[0]), "day") * 20 + 10) +
-            ")",
-        }}
-      ></div>
+      {inChart && (
+        <div
+          className="w-0.5 bg-currentdatecolor absolute"
+          style={{
+            height: "calc(var(--spacing) * " + data.length * 12 + ")",
+            marginLeft:
+              "calc(var(--spacing) * " +
+              (dayjs(currentDate).diff(dayjs(dates[0]), "day") * 20 + 10) +
+              ")",
+          }}
+        ></div>
+      )}
       <div className="[&>*:nth-child(odd)]:bg-trackcolorodd [&>*:nth-child(even)]:bg-trackcolor">
         {data.map((task) => (
           <div
