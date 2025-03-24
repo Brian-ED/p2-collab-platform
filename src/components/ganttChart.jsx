@@ -1,7 +1,7 @@
 "use client";
 
 import dayjs from "dayjs";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 
 const GanttTask = ({
   id,
