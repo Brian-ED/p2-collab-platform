@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useAppContext } from "@/context/AppContext";
 
 export default function ProjectsLayout({ children }) {
   const [sidebar, setSidebar] = useState(false);
-  const [section, setSection] = useState("overview");
+  const { setSection } = useAppContext();
 
   return (
     <div className="min-h-screen bg-backdrop">

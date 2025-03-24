@@ -1,7 +1,7 @@
 "use client";
 
 import dayjs from "dayjs";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 
 const GanttTask = ({
   id,
@@ -94,7 +94,6 @@ export const GanttChart = (tasks) => {
   let inChart = isCurrentDateInChart(currentDate, dates);
 
   return (
-    // the height of this div needs to be more dynamic i think, just setting it to '157' is bad
     <div
       className="overflow-auto relative"
       style={{ height: "calc(100vh - 5rem)" }}
@@ -130,7 +129,6 @@ export const GanttChart = (tasks) => {
           </div>
         ))}
       </div>
-      {/* this keeps it at the bottom, but only if the parent div has a fixed height */}
       <div className="bg-ganttbottom h-6 w-fit flex sticky bottom-0">
         {dates.map((date) => (
           <div key={date.format("DD/MM/YYYY")} className="w-20">
