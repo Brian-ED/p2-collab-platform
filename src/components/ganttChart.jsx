@@ -102,8 +102,8 @@ export const GanttChart = (tasks) => {
   }
 
   return (
-    // the height of this div needs to be more dynamic i think, just setting it to '155' is bad
-    <div className="overflow-x-auto relative h-155">
+    // the height of this div needs to be more dynamic i think, just setting it to '157' is bad
+    <div className="overflow-x-auto relative h-157">
       <div
         className="w-0.5 bg-currentdatecolor absolute"
         style={{
