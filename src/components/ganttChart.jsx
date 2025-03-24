@@ -1,7 +1,7 @@
 "use client";
 
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const GanttTask = ({
   id,
@@ -44,6 +44,15 @@ const GanttTask = ({
   );
 };
 
+const isCurrentDateInChart = (day, dates) => {
+  for (let x of dates) {
+    if (day.isSame(x, "day")) {
+      return true;
+    }
+  }
+  return false;
+};
+
 export const GanttChart = (tasks) => {
   let data = tasks.tasks;
 
@@ -80,22 +89,28 @@ export const GanttChart = (tasks) => {
   }
 
   let currentDate = dayjs();
-  {
-    /*currentDate = currentDate.add(1, "day");*/
-  }
+  //currentDate = currentDate.add(1, "month");
+
+  let inChart = isCurrentDateInChart(currentDate, dates);
 
   return (
-    <div className="overflow-x-auto relative">
-      <div
-        className="w-0.5 bg-currentdatecolor absolute"
-        style={{
-          height: "calc(var(--spacing) * " + data.length * 12 + ")",
-          marginLeft:
-            "calc(var(--spacing) * " +
-            (dayjs(currentDate).diff(dayjs(dates[0]), "day") * 20 + 10) +
-            ")",
-        }}
-      ></div>
+    // the height of this div needs to be more dynamic i think, just setting it to '157' is bad
+    <div
+      className="overflow-auto relative"
+      style={{ height: "calc(100vh - 5rem)" }}
+    >
+      {inChart && (
+        <div
+          className="w-0.5 bg-currentdatecolor absolute"
+          style={{
+            height: "calc(var(--spacing) * " + data.length * 12 + ")",
+            marginLeft:
+              "calc(var(--spacing) * " +
+              (dayjs(currentDate).diff(dayjs(dates[0]), "day") * 20 + 10) +
+              ")",
+          }}
+        ></div>
+      )}
       <div className="[&>*:nth-child(odd)]:bg-trackcolorodd [&>*:nth-child(even)]:bg-trackcolor">
         {data.map((task) => (
           <div
@@ -115,7 +130,8 @@ export const GanttChart = (tasks) => {
           </div>
         ))}
       </div>
-      <div className="bg-ganttbottom h-6 w-fit flex">
+      {/* this keeps it at the bottom, but only if the parent div has a fixed height */}
+      <div className="bg-ganttbottom h-6 w-fit flex sticky bottom-0">
         {dates.map((date) => (
           <div key={date.format("DD/MM/YYYY")} className="w-20">
             <p
