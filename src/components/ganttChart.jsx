@@ -1,7 +1,7 @@
 "use client";
 
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const GanttTask = ({
   id,
@@ -44,7 +44,24 @@ const GanttTask = ({
   );
 };
 
+const handleScroll = () => {
+  console.log("scroll event", window.scrollY);
+
+  const ref = document.querySelector("#gantbottom");
+
+  ref.style.opacity = 0;
+};
+
 export const GanttChart = (tasks) => {
+  {
+    /*
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  });
+  */
+  }
+
   let data = tasks.tasks;
 
   data = data.toSorted((a, b) => {
@@ -85,7 +102,7 @@ export const GanttChart = (tasks) => {
   }
 
   return (
-    <div className="overflow-x-auto relative">
+    <div className="overflow-x-auto relative h-155">
       <div
         className="w-0.5 bg-currentdatecolor absolute"
         style={{
@@ -115,7 +132,7 @@ export const GanttChart = (tasks) => {
           </div>
         ))}
       </div>
-      <div className="bg-ganttbottom h-6 w-fit flex">
+      <div className="bg-ganttbottom h-6 w-fit flex sticky bottom-0">
         {dates.map((date) => (
           <div key={date.format("DD/MM/YYYY")} className="w-20">
             <p
