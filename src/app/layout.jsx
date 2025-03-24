@@ -1,4 +1,5 @@
 import "./globals.css";
+import { AppProvider } from "@/context/AppContext";
 
 export const metadata = {
   title: "P2 Collab Platform",
@@ -8,7 +9,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <AppProvider>{children}</AppProvider>
+      </body>
     </html>
   );
 }
