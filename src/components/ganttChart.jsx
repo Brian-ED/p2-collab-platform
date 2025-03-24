@@ -95,7 +95,10 @@ export const GanttChart = (tasks) => {
 
   return (
     // the height of this div needs to be more dynamic i think, just setting it to '157' is bad
-    <div className="overflow-auto relative h-156">
+    <div
+      className="overflow-auto relative"
+      style={{ height: "calc(100vh - 5rem)" }}
+    >
       {inChart && (
         <div
           className="w-0.5 bg-currentdatecolor absolute"
