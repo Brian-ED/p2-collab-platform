@@ -102,6 +102,7 @@ export const GanttChart = (tasks) => {
   }
 
   return (
+    // the height of this div needs to be more dynamic i think, just setting it to '155' is bad
     <div className="overflow-x-auto relative h-155">
       <div
         className="w-0.5 bg-currentdatecolor absolute"
@@ -132,6 +133,7 @@ export const GanttChart = (tasks) => {
           </div>
         ))}
       </div>
+      {/* this keeps it at the bottom, but only if the parent div has a fixed height */}
       <div className="bg-ganttbottom h-6 w-fit flex sticky bottom-0">
         {dates.map((date) => (
           <div key={date.format("DD/MM/YYYY")} className="w-20">
