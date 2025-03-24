@@ -47,7 +47,6 @@ const GanttTask = ({
 const isCurrentDateInChart = (day, dates) => {
   for (let x of dates) {
     if (day.isSame(x, "day")) {
-      console.log("true");
       return true;
     }
   }
