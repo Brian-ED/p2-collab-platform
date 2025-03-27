@@ -21,7 +21,7 @@ export async function addUser(name, userId) {
 
 export async function getGanttTasks(projectId) {
   const result = await pool.query(
-    `SELECT id, title, description, start_date, end_date, completed FROM gantt_charts WHERE (project_id = ${projectId});`
+    `SELECT id, title, description, start_date as startdate, end_date as enddate, completed FROM gantt_charts WHERE (project_id = ${projectId});`
   );
   return result.rows;
 }
