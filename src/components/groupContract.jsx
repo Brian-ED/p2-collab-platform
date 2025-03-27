@@ -7,18 +7,25 @@ const GroupContract = () => {
     {
       id: 1,
       title: "Meetings",
-      rules: ["Attend on time", "Notify if you are late"],
+      rules: [
+        { id: Date.now(), description: "Attend on time" },
+        { id: Date.now(), description: "Notify if you are late" },
+      ],
     },
   ]);
 
   // Add a new rule category
   const addCategory = () => {
-    setRules(...rules, { id: Date.now(), title: "", rules: [] });
+    setContractRules(...contractRules, {
+      id: Date.now(),
+      title: "",
+      rules: [],
+    });
   };
 
   // Update the category title
   const updateCategoryTitle = (id, newTitle) => {
-    setRules(
+    setContractRules(
       rules.map((category) => {
         category.id === id ? { ...category, title: newTitle } : category;
       })
@@ -26,10 +33,10 @@ const GroupContract = () => {
   };
 
   // Add a rule to a category
-  const addRule = (id) => {
+  const addRule = (categoryId) => {
     setContractRules((category) => {
-      category.id === category
-        ? { ...category, contractRules: [...category.rules, ""] }
+      category.id === categoryId
+        ? { ...category, rules: { id: Date.now(), description: "" } }
         : category;
     });
   };
@@ -37,6 +44,18 @@ const GroupContract = () => {
   return (
     <div className="p-4">
       <h2 className="text-2xl font-bold mb-4">Group Contract</h2>
+      {contractRules.map((category) => (
+        <div key={category.id}>
+          <h3>{category.title}</h3>
+          <div>
+            {category.rules.map((rule) => (
+                <ul>
+                    <li key = {rule.id}>{rule.description}</li>
+                </ul>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   );
 };
