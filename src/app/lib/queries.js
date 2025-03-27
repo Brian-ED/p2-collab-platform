@@ -1,3 +1,5 @@
+"use server";
+
 import pg from "pg";
 
 const { Pool } = pg;
@@ -15,4 +17,11 @@ export async function addUser(name, userId) {
   await pool.query(
     `INSERT INTO users (name, user_id) VALUES ('${name}', '${userId}') ON CONFLICT (user_id) DO NOTHING;`
   );
+}
+
+export async function getGanttTasks(projectId) {
+  const result = await pool.query(
+    `SELECT id, title, description, start_date, end_date, completed FROM gantt_charts WHERE (project_id = ${projectId});`
+  );
+  return result.rows;
 }
