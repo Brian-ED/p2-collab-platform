@@ -1,6 +1,6 @@
 import pkg from "./app/lib/queries.mjs";
-const { checkIfTablesExist } = pkg;
+const checkIfTablesExist = pkg;
 
-export default async function startup() {
-  await checkIfTablesExist();
-}
+await checkIfTablesExist();
+
+console.log("postbuild finished...");
