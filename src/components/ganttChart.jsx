@@ -3,6 +3,8 @@
 import dayjs from "dayjs";
 import { useState } from "react";
 
+import { getGanttTasks } from "@/app/lib/queries";
+
 const GanttTask = ({
   id,
   title,
@@ -19,8 +21,9 @@ const GanttTask = ({
       <div
         className={`rounded-lg bg-taskcolor h-8 m-auto ml-10 flex group/task`}
         style={{ width: "calc(var(--spacing) * " + taskDuration * 20 + ")" }}
-        onMouseEnter={() => {
+        onMouseEnter={async () => {
           setHover(true);
+          console.log(await getGanttTasks(1));
         }}
         onMouseLeave={() => {
           setHover(false);
