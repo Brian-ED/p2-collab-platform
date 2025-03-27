@@ -1,45 +1,44 @@
-import { signIn, signOut, auth } from "@/auth/authSetup";
-import { addUser } from "@/app/lib/queries.js";
+"use client";
 
-export const LoginButton = async () => {
-  const session = await auth();
+import { useEffect, useState } from "react";
+import {
+  getSessionAndUpdateUser,
+  handleSignIn,
+  handleSignOut,
+} from "@/app/lib/authActions";
 
-  if (!!session) {
-    ("use server");
-    // Exports userId from github profile image.
-    const userId = session.user.image.split("/")[4].split("?")[0];
-    const userName = session.user.name;
-    await addUser(userName, userId);
-  }
+export const LoginButton = () => {
+  const [session, setSession] = useState(null);
 
-  let signInOrOutButton;
+  useEffect(() => {
+    const fetchSession = async () => {
+      const sessionData = await getSessionAndUpdateUser();
+      setSession(sessionData);
+    };
 
-  // Select page depending on if user is logged in
-  if (session?.user) {
-    // Logged in
-    signInOrOutButton = (
-      <form
-        action={async () => {
-          "use server";
-          await signOut();
-        }}
-      >
-        <button type="submit">Logout</button>
-      </form>
-    );
-  } else {
-    // Logged Out
-    signInOrOutButton = (
-      <form
-        action={async () => {
-          "use server";
-          await signIn("github");
-        }}
-      >
-        <button type="submit">Login with GitHub</button>
-      </form>
-    );
-  }
+    console.log("test");
 
-  return signInOrOutButton;
+    fetchSession();
+  }, []);
+
+  return session?.user ? (
+    <form
+      action={async () => {
+        await handleSignOut();
+        setSession(null);
+      }}
+    >
+      <button type="submit">Logout</button>
+    </form>
+  ) : (
+    <form
+      action={async () => {
+        await handleSignIn();
+        const newSession = await getSessionAndUpdateUser(); // Fetch session after login
+        setSession(newSession);
+      }}
+    >
+      <button type="submit">Login with GitHub</button>
+    </form>
+  );
 };
