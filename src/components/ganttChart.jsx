@@ -2,6 +2,7 @@
 
 import dayjs from "dayjs";
 import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 
 const GanttTask = ({
   id,
@@ -56,9 +57,10 @@ const isCurrentDateInChart = (day, dates) => {
 export const GanttChart = () => {
   const [tasks, setTasks] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { pid } = useParams();
 
   useEffect(() => {
-    fetch("/api/db/getGantt")
+    fetch(`/api/db/getGantt?projectId=${pid}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.length > 0) setTasks(data);
