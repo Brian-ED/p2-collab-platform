@@ -9,6 +9,7 @@ const pool = new Pool({
 });
 
 export async function addUser(name, userId) {
+  // TODO: Clean data before querying. SQL-injections are possible.
   await pool.query(
     `INSERT INTO users (name, user_id) VALUES ('${name}', '${userId}') ON CONFLICT (user_id) DO NOTHING;`
   );
