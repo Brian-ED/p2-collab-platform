@@ -10,6 +10,6 @@ const pool = new Pool({
 
 export async function addUser(name, userId) {
   await pool.query(
-    `INSERT INTO users (name, user_id) VALUES ('${name}', '${userId}'g) ON CONFLICT (user_id) DO NOTHING;`
+    `INSERT INTO users (name, user_id) VALUES ('${name}', '${userId}') ON CONFLICT (user_id) DO NOTHING;`
   );
 }
