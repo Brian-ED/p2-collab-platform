@@ -4,6 +4,10 @@ import { GanttChart } from "@/components/ganttChart";
 import { testTasks } from "@/components/ganttTempData";
 import { useAppContext } from "@/context/AppContext";
 
+export function generateStaticParams() {
+  return [];
+}
+
 export default function Projects() {
   const { section } = useAppContext();
   return (
