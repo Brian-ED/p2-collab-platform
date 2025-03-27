@@ -4,11 +4,11 @@ const testRules = [
   {
     id: 1,
     title: "Meetings",
-    rules: {
-      rule1: "bla bla",
-      rule2: "bla bla 2",
-      rule3: "bla bla 3",
-    },
+    rules: [
+      "bla bla",
+      "bla bla 2",
+      "bla bla 3",
+    ],
   },
   {
     id: 2,
