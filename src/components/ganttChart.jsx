@@ -63,13 +63,17 @@ export const GanttChart = () => {
     fetch(`/api/db/getGantt?projectId=${pid}`)
       .then((res) => res.json())
       .then((data) => {
-        if (data.length > 0) setTasks(data);
+        if (data < 0 || data.error) setTasks(data);
         setIsLoading(false);
       });
   }, []);
 
+  console.log(tasks);
+
   if (isLoading) return <p>Loading...</p>;
-  if (tasks === null) return <p>No tasks</p>;
+  if (tasks === null || tasks.length < 0) return <p>No tasks</p>;
+  if (tasks.error && tasks.error === "Not authorized")
+    return <p>Not authorized</p>;
 
   let data = tasks;
 
