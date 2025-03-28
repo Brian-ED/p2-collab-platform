@@ -13,10 +13,15 @@ const pool = new Pool({
 export async function addUser(name, userId) {
   // TODO: Clean data before querying. SQL-injections are possible.
 
-  // TODO: Query if the user exists already, to prevet IDs from going up.
-  await pool.query(
-    `INSERT INTO users (name, user_id) VALUES ('${name}', '${userId}') ON CONFLICT (user_id) DO NOTHING;`
+  const result = await pool.query(
+    `SELECT * FROM users WHERE (name = '${name}') AND (user_id = '${userId}');`
   );
+
+  if (result.rowCount == 0) {
+    await pool.query(
+      `INSERT INTO users (name, user_id) VALUES ('${name}', '${userId}') ON CONFLICT (user_id) DO NOTHING;`
+    );
+  }
 }
 
 export async function checkIfUserOwnsProject(session, projectId) {
