@@ -1,6 +1,6 @@
 import { auth } from "@/auth/authSetup";
 
-import { getGanttTasks, checkIfUserOwnsProject } from "@/app/lib/queries";
+import { getGanttTasks, checkIfUserOwnsProject } from "@/lib/queries";
 
 export async function GET(req) {
   const projectId = new URL(req.url).searchParams.get("projectId");

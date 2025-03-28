@@ -5,7 +5,7 @@ import {
   getSessionAndUpdateUser,
   handleSignIn,
   handleSignOut,
-} from "@/app/lib/authActions";
+} from "@/lib/authActions";
 
 export const LoginButton = () => {
   const [session, setSession] = useState(null);
