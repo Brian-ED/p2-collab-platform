@@ -2,10 +2,30 @@
 
 import { Overview } from "@/components/projects/overview";
 import { GanttChart } from "@/components/projects/ganttChart";
+import { Loading } from "@/components/loading";
 import { useAppContext } from "@/context/AppContext";
+
+import { useState, useEffect } from "react";
+import { useParams, redirect } from "next/navigation";
 
 export default function Projects() {
   const { section } = useAppContext();
+  const { pid } = useParams();
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(`/api/db/ownsProject?projectId=${pid}`)
+      .then((res) => res.json())
+      .then((data) => {
+        const userOwnsProject = data.userOwnsProject;
+        if (!userOwnsProject) redirect("/");
+
+        setIsLoading(false);
+      });
+  }, []);
+
+  if (isLoading) return <Loading />;
 
   return (
     <>

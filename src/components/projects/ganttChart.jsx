@@ -76,16 +76,12 @@ export const GanttChart = () => {
 
   let data = tasks.data;
 
-  console.log(data);
-
   data = data.toSorted((a, b) => {
     if (dayjs(a.startdate).diff(dayjs(b.startdate, "day")) === 0) {
       return dayjs(a.enddate).diff(dayjs(b.enddate, "day"));
     }
     return dayjs(a.startdate).diff(dayjs(b.startdate, "day"));
   });
-
-  console.log(data);
 
   const lastEndDate = data.toSorted((a, b) =>
     dayjs(b.enddate).diff(dayjs(a.enddate, "day"))

@@ -16,8 +16,6 @@ export const LoginButton = () => {
       setSession(sessionData);
     };
 
-    console.log("test");
-
     fetchSession();
   }, []);
 
