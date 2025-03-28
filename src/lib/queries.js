@@ -24,7 +24,7 @@ export async function checkIfUserOwnsProject(session, projectId) {
   const result = await pool.query(
     `select projects.id, users.user_id as uid from projects inner join users on projects.user_id = users.id where users.user_id = '${userId}' and projects.id = ${projectId};`
   );
-  return result.rowCount;
+  return !!result.rowCount;
 }
 
 export async function getGanttTasks(projectId) {
