@@ -9,7 +9,7 @@ const pool = new Pool({
   allowExitOnIdle: false,
 });
 
-const file = (await fs.readFile("./src/app/lib/checktables.sql")).toString();
+const file = (await fs.readFile("./src/lib/checktables.sql")).toString();
 await pool.query(file);
 await pool.end();
 
