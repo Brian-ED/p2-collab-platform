@@ -8,8 +8,8 @@ export async function GET(req) {
   const userOwnsProject = await checkIfUserOwnsProject(session, projectId);
   if (!!session && userOwnsProject) {
     const data = await getGanttTasks(projectId);
-    return Response.json(data);
+    return Response.json({ data: data, error: null });
   } else {
-    return Response.json({ error: "Not authorized" });
+    return Response.json({ data: null, error: "Not authorized" });
   }
 }
