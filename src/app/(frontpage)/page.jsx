@@ -1,5 +1,4 @@
 import { LoginButton } from "@/components/loginButton";
-import { Test } from "@/components/test";
 
 import Link from "next/link";
 

@@ -2,10 +2,7 @@
 
 import { Overview } from "@/components/projects/overview";
 import { GanttChart } from "@/components/projects/ganttChart";
-import { testTasks } from "@/components/projects/ganttTempData";
 import { useAppContext } from "@/context/AppContext";
-
-import { getGanttTasks } from "@/app/lib/queries";
 
 export default function Projects() {
   const { section } = useAppContext();
