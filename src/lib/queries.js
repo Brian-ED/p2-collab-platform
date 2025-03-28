@@ -33,3 +33,19 @@ export async function getGanttTasks(projectId) {
   );
   return result.rows;
 }
+
+export async function getUserProjects(session) {
+  const userId = session.user.image.split("/")[4].split("?")[0];
+  const result = await pool.query(`
+    SELECT p.id AS project_id, null AS permissions
+    FROM projects p
+    JOIN users u ON p.user_id = u.id
+    WHERE (u.user_id = '${userId}')
+    UNION ALL
+    SELECT a.project_id, a.permission
+    FROM access a
+    LEFT JOIN users u ON a.user_id = u.id
+    WHERE (u.user_id = '${userId}');
+    `);
+  return result.rows;
+}
