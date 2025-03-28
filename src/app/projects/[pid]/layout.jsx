@@ -76,7 +76,9 @@ export default function ProjectsLayout({ children }) {
           sidebar ? "ml-64" : "ml-0"
         }`}
       >
-        <div className="p-2">{children}</div>
+        <div className="p-2" style={{ height: "calc(-4rem + 100vh)" }}>
+          {children}
+        </div>
       </main>
     </div>
   );

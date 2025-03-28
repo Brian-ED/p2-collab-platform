@@ -4,6 +4,8 @@ import dayjs from "dayjs";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 
+import { Loading } from "@/components/loading";
+
 const GanttTask = ({
   id,
   title,
@@ -68,7 +70,7 @@ export const GanttChart = () => {
       });
   }, []);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Loading />;
   if (tasks.error != null) return <p>{tasks.error}</p>;
   if (tasks.data.length === 0) return <p>No tasks</p>;
 
