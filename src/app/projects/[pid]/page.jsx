@@ -14,13 +14,12 @@ export default function Projects() {
 
   const [isLoading, setIsLoading] = useState(true);
 
+  // TODO: Make a not authorized page.
   useEffect(() => {
     fetch(`/api/db/ownsProject?projectId=${pid}`)
       .then((res) => res.json())
       .then((data) => {
-        const userOwnsProject = data.userOwnsProject;
-        if (!userOwnsProject) redirect("/");
-
+        if (!data.userOwnsProject) redirect("/");
         setIsLoading(false);
       });
   }, []);
