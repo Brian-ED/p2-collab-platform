@@ -4,6 +4,8 @@ import dayjs from "dayjs";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 
+import { Loading } from "@/components/loading";
+
 const GanttTask = ({
   id,
   title,
@@ -63,21 +65,16 @@ export const GanttChart = () => {
     fetch(`/api/db/getGantt?projectId=${pid}`)
       .then((res) => res.json())
       .then((data) => {
-        if (data < 0 || data.error) setTasks(data);
+        setTasks(data);
         setIsLoading(false);
       });
   }, []);
 
-  console.log(tasks);
+  if (isLoading) return <Loading />;
+  if (tasks.error != null) return <p>{tasks.error}</p>;
+  if (tasks.data.length === 0) return <p>No tasks</p>;
 
-  if (isLoading) return <p>Loading...</p>;
-  if (tasks === null || tasks.length < 0) return <p>No tasks</p>;
-  if (tasks.error && tasks.error === "Not authorized")
-    return <p>Not authorized</p>;
-
-  let data = tasks;
-
-  console.log(data);
+  let data = tasks.data;
 
   data = data.toSorted((a, b) => {
     if (dayjs(a.startdate).diff(dayjs(b.startdate, "day")) === 0) {
@@ -85,8 +82,6 @@ export const GanttChart = () => {
     }
     return dayjs(a.startdate).diff(dayjs(b.startdate, "day"));
   });
-
-  console.log(data);
 
   const lastEndDate = data.toSorted((a, b) =>
     dayjs(b.enddate).diff(dayjs(a.enddate, "day"))
