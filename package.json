@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "postbuild": "node --env-file-if-exists=.env.local ./src/startup.mjs",
+    "postbuild": "node --env-file-if-exists=.env.local --env-file-if-exists=.env ./src/startup.mjs",
     "start": "next start",
     "lint": "next lint",
     "test": "jest"
