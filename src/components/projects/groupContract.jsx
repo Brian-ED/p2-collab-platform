@@ -82,10 +82,8 @@ export const GroupContract = () => {
 
   // Allow user to submit rule when hitting "enter"
   const submitOnEnter = (e, categoryId) => {
-    if (e.key === "enter") {
-      e.preventDeafult(); // Prevent the deafult feature, e.g. a new line
+      e.preventDefault(); // Prevent the deafult feature, e.g. a new line
       addRule(categoryId);
-    }
   };
 
   return (
@@ -105,10 +103,14 @@ export const GroupContract = () => {
             <div className="mt-2 flex">
               <input
                 type="text"
-                placeholder="Enter new rule"
+                placeholder={`Enter new rule for ${category.title.toLowerCase()}`}
                 value={newRuleInputs[category.id] || ""}
                 onChange={(e) => handleInputChange(category.id, e.target.value)}
-                onKeyDown={(e) => submitOnEnter(e, category.id)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    submitOnEnter(e, category.id);
+                  }
+                }}
                 className="border p-2 rounded w-full"
               />
               <button onClick={() => addRule(category.id)}>Add Rule</button>
