@@ -1,33 +1,42 @@
-import { signIn, signOut, auth } from "@/auth/authSetup";
+"use client";
 
-export const LoginButton = async () => {
-  const session = await auth();
-  let signInOrOutButton;
+import { useEffect, useState } from "react";
+import {
+  getSessionAndUpdateUser,
+  handleSignIn,
+  handleSignOut,
+} from "@/lib/authActions";
 
-  // Select page depending on if user is logged in
-  if (session?.user) { // Logged in
-    signInOrOutButton = (
-      <form
-        action={async () => {
-          "use server";
-          await signOut();
-        }}
-      >
-        <button type="submit">Logout</button>
-      </form>
-    )
-  } else { // Logged Out
-    signInOrOutButton = (
-      <form
-        action={async () => {
-          "use server";
-          await signIn("github");
-        }}
-      >
-        <button type="submit">Login with GitHub</button>
-      </form>
-    )
-  }
+export const LoginButton = () => {
+  const [session, setSession] = useState(null);
 
-  return signInOrOutButton
+  useEffect(() => {
+    const fetchSession = async () => {
+      const sessionData = await getSessionAndUpdateUser();
+      setSession(sessionData);
+    };
+
+    fetchSession();
+  }, []);
+
+  return session?.user ? (
+    <form
+      action={async () => {
+        await handleSignOut();
+        setSession(null);
+      }}
+    >
+      <button type="submit">Logout</button>
+    </form>
+  ) : (
+    <form
+      action={async () => {
+        await handleSignIn();
+        const newSession = await getSessionAndUpdateUser(); // Fetch session after login
+        setSession(newSession);
+      }}
+    >
+      <button type="submit">Login with GitHub</button>
+    </form>
+  );
 };

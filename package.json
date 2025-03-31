@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
+    "postbuild": "node --env-file-if-exists=.env.local --env-file-if-exists=.env ./src/startup.mjs",
     "start": "next start",
     "lint": "next lint",
     "test": "jest"
@@ -13,8 +14,10 @@
     "dayjs": "^1.11.13",
     "next": "^15.2.3",
     "next-auth": "^5.0.0-beta.25",
+    "pg": "^8.14.1",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-icons": "^5.5.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

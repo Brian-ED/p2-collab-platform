@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useAppContext } from "@/context/AppContext";
 
+import { FaBars, FaX } from "react-icons/fa6";
+
 export default function ProjectsLayout({ children }) {
   const [sidebar, setSidebar] = useState(false);
   const { setSection } = useAppContext();
@@ -14,9 +16,10 @@ export default function ProjectsLayout({ children }) {
           <div className="flex items-center">
             <button
               onClick={() => setSidebar(!sidebar)}
-              className="p-2 rounded-md hover:bg-gray-100"
+              className="p-2 rounded-md hover:bg-gray-100 hover:text-black"
             >
-              X
+              {!sidebar && <FaBars size={25} />}
+              {sidebar && <FaX size={25} />}
             </button>
             <h1 className="ml-4 text-xl font-semibold text-white">
               P2 Collab Platform
@@ -73,7 +76,9 @@ export default function ProjectsLayout({ children }) {
           sidebar ? "ml-64" : "ml-0"
         }`}
       >
-        <div className="p-2">{children}</div>
+        <div className="p-2" style={{ height: "calc(-4rem + 100vh)" }}>
+          {children}
+        </div>
       </main>
     </div>
   );
