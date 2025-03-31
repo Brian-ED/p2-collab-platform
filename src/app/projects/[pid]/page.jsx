@@ -20,7 +20,7 @@ export default function Projects() {
     fetch(`/api/db/ownsProject?projectId=${pid}`)
       .then((res) => res.json())
       .then((data) => {
-        if (!data.userOwnsProject) redirect("/");
+        if (!data.userOwnsProject && !data.userHasAccess) redirect("/");
         setIsLoading(false);
       });
   }, []);

@@ -33,6 +33,15 @@ export async function checkIfUserOwnsProject(session, projectId) {
   return !!result.rowCount;
 }
 
+export async function checkIfUserHasAccessToProject(session, projectId) {
+  const userId = session.user.image.split("/")[4].split("?")[0];
+  const result = await pool.query(
+    "select access.id, access.project_id, users.user_id as uid from access inner join projects on access.project_id = projects.id inner join users on access.user_id = users.id where users.user_id = $1 and access.project_id = $2;",
+    [userId, projectId]
+  );
+  return !!result.rowCount;
+}
+
 export async function getGanttTasks(projectId) {
   const result = await pool.query(
     "SELECT id, title, description, start_date as startdate, end_date as enddate, completed FROM gantt_charts WHERE (project_id = $1);",
