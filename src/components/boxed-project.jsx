@@ -2,7 +2,7 @@
 
 export const BoxedProject = ({
   title = "MISSING",
-  memberNames = { 0: ["MISSING"] },
+  memberNames = { 0: [{ id: 0, name: "" }] },
   onClick,
 }) => {
   const ellipses = "whitespace-nowrap overflow-hidden overflow-ellipsis";

@@ -26,6 +26,7 @@ export default function Page() {
   return (
     <div className="flex flex-row">
       <div className="m-auto mt-20 grid grid-cols-5 gap-15">
+        <BoxedProject title="Add new project" />
         {projects.data.map((project) => (
           <BoxedProject
             key={project.project_id}
