@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <main>
       <div className="m-2">
-        <Link href={{ pathname: "/projects/test", query: { melih: "gay" } }}>
+        <Link href={{ pathname: "/projects", query: { melih: "gay" } }}>
           <button className="text-2xl border-3 p-1 rounded-2xl">
             projects
           </button>

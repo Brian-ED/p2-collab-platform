@@ -54,17 +54,34 @@ export async function getUserProjects(session) {
   const userId = session.user.image.split("/")[4].split("?")[0];
   const result = await pool.query(
     `
-    SELECT p.id AS project_id, null AS permissions
+    SELECT p.id AS project_id, p.project_name AS project_name, null AS permissions
     FROM projects p
     JOIN users u ON p.user_id = u.id
     WHERE (u.user_id = $1)
     UNION ALL
-    SELECT a.project_id, a.permission
+    SELECT a.project_id, p.project_name, a.permission
     FROM access a
     LEFT JOIN users u ON a.user_id = u.id
+    LEFT JOIN projects p ON a.project_id = p.id
     WHERE (u.user_id = $2);
     `,
     [userId, userId]
+  );
+  return result.rows;
+}
+
+export async function getProjectMembers(projectId) {
+  const result = await pool.query(
+    `
+    SELECT users.name AS name, users.id AS id FROM users
+    JOIN access ON users.id = access.user_id
+    WHERE access.project_id = $1
+    UNION ALL
+    SELECT users.name as name, users.id AS id FROM users
+    JOIN projects ON users.id = projects.user_id
+    WHERE projects.id = $2;
+    `,
+    [projectId, projectId]
   );
   return result.rows;
 }
