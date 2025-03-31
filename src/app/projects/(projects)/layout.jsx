@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Layout({ children }) {
   return (
     <div className="min-h-screen bg-backdrop">
@@ -5,7 +7,7 @@ export default function Layout({ children }) {
         <div className="flex items-center justify-between px-4 h-16">
           <div className="flex items-center">
             <h1 className="ml-4 text-xl font-semibold text-white">
-              P2 Collab Platform
+              <Link href="/projects">P2 Collab Platform</Link>
             </h1>
           </div>
 

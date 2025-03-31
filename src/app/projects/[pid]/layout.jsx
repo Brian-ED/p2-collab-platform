@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { useState } from "react";
 import { useAppContext } from "@/context/AppContext";
 
@@ -22,7 +24,7 @@ export default function ProjectsLayout({ children }) {
               {sidebar && <FaX size={25} />}
             </button>
             <h1 className="ml-4 text-xl font-semibold text-white">
-              P2 Collab Platform
+              <Link href="/projects">P2 Collab Platform</Link>
             </h1>
           </div>
 
