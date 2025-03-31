@@ -36,7 +36,7 @@ export const GroupContract = () => {
       ...prevRules,
       {
         id: Date.now(),
-        title: "",
+        title: "New category",
         rules: [],
       },
     ]);
@@ -82,13 +82,14 @@ export const GroupContract = () => {
 
   // Allow user to submit rule when hitting "enter"
   const submitOnEnter = (e, categoryId) => {
-      e.preventDefault(); // Prevent the deafult feature, e.g. a new line
-      addRule(categoryId);
+    e.preventDefault(); // Prevent the deafult feature, e.g. a new line
+    addRule(categoryId);
   };
 
   return (
     <div className="p-4">
       <h2 className="text-4xl font-bold mb-4">Group Contract</h2>
+      <button onClick={() => addCategory()}>Add category</button>
       {contractRules.map((category) => (
         <div key={category.id} className="">
           <div className="py-4">
