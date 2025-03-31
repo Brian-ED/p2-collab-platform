@@ -101,7 +101,7 @@ export const GroupContract = () => {
               ))}
             </ul>
             <div className="mt-2 flex">
-              <input
+              <textarea
                 type="text"
                 placeholder={`Enter new rule for ${category.title.toLowerCase()}`}
                 value={newRuleInputs[category.id] || ""}
@@ -111,7 +111,7 @@ export const GroupContract = () => {
                     submitOnEnter(e, category.id);
                   }
                 }}
-                className="border p-2 rounded w-full"
+                className="border p-2 rounded w-[30%] mr-2 transition-all h-10 duration-300 focus:h-25 resize-none"
               />
               <button onClick={() => addRule(category.id)}>Add Rule</button>
             </div>
