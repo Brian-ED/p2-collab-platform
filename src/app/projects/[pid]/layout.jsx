@@ -28,10 +28,8 @@ export default function ProjectsLayout({ children }) {
             </h1>
           </div>
 
-          <nav>
-            {/* NAVBAR BUTTONS */}
-            <LoginButton />
-          </nav>
+          <nav>{/* NAVBAR BUTTONS */}</nav>
+          <LoginButton />
         </div>
       </header>
 
