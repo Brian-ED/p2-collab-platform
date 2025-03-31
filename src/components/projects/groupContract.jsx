@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-const GroupContract = () => {
+export const GroupContract = () => {
   const [contractRules, setContractRules] = useState([
     {
       id: 1,
@@ -110,5 +110,3 @@ const GroupContract = () => {
     </div>
   );
 };
-
-export default GroupContract;
