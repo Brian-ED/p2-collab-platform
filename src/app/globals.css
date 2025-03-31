@@ -31,3 +31,8 @@ body {
   --color-sidebar: #374151;
   --color-backdrop: #4b5563;
 }
+
+@theme {
+  --color-button: #334155;
+  --color-button-hover: #0f172a;
+}

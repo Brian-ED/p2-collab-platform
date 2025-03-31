@@ -1,3 +1,5 @@
+import { LoginButton } from "@/components/loginButton";
+
 export default function FrontpageLayout({ children }) {
   return (
     <div className="min-h-screen bg-backdrop">
@@ -8,8 +10,9 @@ export default function FrontpageLayout({ children }) {
               P2 Collab Platform
             </h1>
           </div>
-
-          <nav>{/* NAVBAR BUTTONS */}</nav>
+          <nav>
+            <LoginButton />
+          </nav>
         </div>
       </header>
       <main className="pt-16 ml-0">

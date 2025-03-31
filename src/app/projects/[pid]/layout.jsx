@@ -1,5 +1,7 @@
 "use client";
 
+import { LoginButton } from "@/components/loginButton";
+
 import { useState } from "react";
 import { useAppContext } from "@/context/AppContext";
 
@@ -26,7 +28,10 @@ export default function ProjectsLayout({ children }) {
             </h1>
           </div>
 
-          <nav>{/* NAVBAR BUTTONS */}</nav>
+          <nav>
+            {/* NAVBAR BUTTONS */}
+            <LoginButton />
+          </nav>
         </div>
       </header>
 
