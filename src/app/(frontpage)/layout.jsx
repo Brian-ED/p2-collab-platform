@@ -1,3 +1,4 @@
+import { LoginButton } from "@/components/loginButton";
 import Link from "next/link";
 
 export default function FrontpageLayout({ children }) {
@@ -10,8 +11,8 @@ export default function FrontpageLayout({ children }) {
               <Link href="/projects">P2 Collab Platform</Link>
             </h1>
           </div>
-
           <nav>{/* NAVBAR BUTTONS */}</nav>
+          <LoginButton />
         </div>
       </header>
       <main className="pt-16 ml-0">

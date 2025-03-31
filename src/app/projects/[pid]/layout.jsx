@@ -1,5 +1,6 @@
 "use client";
 
+import { LoginButton } from "@/components/loginButton";
 import Link from "next/link";
 
 import { useState } from "react";
@@ -29,6 +30,7 @@ export default function ProjectsLayout({ children }) {
           </div>
 
           <nav>{/* NAVBAR BUTTONS */}</nav>
+          <LoginButton />
         </div>
       </header>
 
