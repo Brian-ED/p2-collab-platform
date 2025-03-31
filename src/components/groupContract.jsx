@@ -28,6 +28,8 @@ const GroupContract = () => {
     },
   ]);
 
+  const [newRuleInputs, setNewRuleInputs] = useState({});
+
   // Add a new rule category
   const addCategory = () => {
     setContractRules((prevRules) => [
@@ -49,18 +51,33 @@ const GroupContract = () => {
     );
   };
 
+  // Handle input changes for a new rule
+  const handleInputChange = (categoryId, value) => {
+    setNewRuleInputs((prevInputs) => ({ ...prevInputs, [categoryId]: value }));
+  };
+
   // Add a rule to a category
   const addRule = (categoryId) => {
+    // Prevent users from adding an empty rule
+    if (!newRuleInputs[categoryId] || newRuleInputs[categoryId.trim === ""]) {
+      return;
+    }
+
     setContractRules((prevRules) =>
       prevRules.map((category) =>
         category.id === categoryId
           ? {
               ...category,
-              rules: [...category.rules, { id: Date.now(), description: "New rule added here" }],
+              rules: [
+                ...category.rules,
+                { id: Date.now(), description: newRuleInputs[categoryId] },
+              ],
             }
           : category
       )
     );
+    // Clear the input field after adding a rule
+    setNewRuleInputs((prevInputs) => ({ ...prevInputs, [categoryId]: "" }));
   };
 
   return (
@@ -77,8 +94,17 @@ const GroupContract = () => {
                 </li>
               ))}
             </ul>
+            <div className="mt-2 flex">
+              <input
+                type="text"
+                placeholder="Enter new rule"
+                value={newRuleInputs[category.id] || ""}
+                onChange={(e) => handleInputChange(category.id, e.target.value)}
+                className="border p-2 rounded w-full"
+              />
+              <button onClick={() => addRule(category.id)}>Add Rule</button>
+            </div>
           </div>
-          <button onClick={() => addRule(category.id)}>Add Rule</button>
         </div>
       ))}
     </div>
