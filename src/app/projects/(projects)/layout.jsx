@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LoginButton } from "@/components/loginButton";
 
 export default function Layout({ children }) {
   return (
@@ -12,6 +13,7 @@ export default function Layout({ children }) {
           </div>
 
           <nav>{/* NAVBAR BUTTONS */}</nav>
+          <LoginButton />
         </div>
       </header>
       <main className="pt-16 ml-0">
