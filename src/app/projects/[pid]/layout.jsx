@@ -1,6 +1,7 @@
 "use client";
 
 import { LoginButton } from "@/components/loginButton";
+import Link from "next/link";
 
 import { useState } from "react";
 import { useAppContext } from "@/context/AppContext";
@@ -24,7 +25,7 @@ export default function ProjectsLayout({ children }) {
               {sidebar && <FaX size={25} />}
             </button>
             <h1 className="ml-4 text-xl font-semibold text-white">
-              P2 Collab Platform
+              <Link href="/projects">P2 Collab Platform</Link>
             </h1>
           </div>
 
@@ -45,6 +46,12 @@ export default function ProjectsLayout({ children }) {
               onClick={() => setSection("overview")}
             >
               Overview
+            </button>
+            <button
+              className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
+              onClick={() => setSection("group contract")}
+            >
+              Group Contract
             </button>
             <button
               className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"

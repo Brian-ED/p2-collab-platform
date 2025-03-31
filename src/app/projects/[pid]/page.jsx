@@ -1,6 +1,7 @@
 "use client";
 
 import { Overview } from "@/components/projects/overview";
+import { GroupContract } from "@/components/projects/groupContract";
 import { GanttChart } from "@/components/projects/ganttChart";
 import { Loading } from "@/components/loading";
 import { useAppContext } from "@/context/AppContext";
@@ -19,7 +20,7 @@ export default function Projects() {
     fetch(`/api/db/ownsProject?projectId=${pid}`)
       .then((res) => res.json())
       .then((data) => {
-        if (!data.userOwnsProject) redirect("/");
+        if (!data.userOwnsProject && !data.userHasAccess) redirect("/");
         setIsLoading(false);
       });
   }, []);
@@ -29,6 +30,7 @@ export default function Projects() {
   return (
     <>
       {section === "overview" && <Overview />}
+      {section === "group contract" && <GroupContract />}
       {section === "calendar" && <h1 className="text-2xl">calendar</h1>}
       {section === "gantt" && <GanttChart />}
       {section === "trello" && <h1 className="text-2xl">trello</h1>}
