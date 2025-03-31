@@ -80,6 +80,14 @@ export const GroupContract = () => {
     setNewRuleInputs((prevInputs) => ({ ...prevInputs, [categoryId]: "" }));
   };
 
+  // Allow user to submit rule when hitting "enter"
+  const submitOnEnter = (e, categoryId) => {
+    if (e.key === "enter") {
+      e.preventDeafult(); // Prevent the deafult feature, e.g. a new line
+      addRule(categoryId);
+    }
+  };
+
   return (
     <div className="p-4">
       <h2 className="text-4xl font-bold mb-4">Group Contract</h2>
@@ -100,6 +108,7 @@ export const GroupContract = () => {
                 placeholder="Enter new rule"
                 value={newRuleInputs[category.id] || ""}
                 onChange={(e) => handleInputChange(category.id, e.target.value)}
+                onKeyDown={(e) => submitOnEnter(e, category.id)}
                 className="border p-2 rounded w-full"
               />
               <button onClick={() => addRule(category.id)}>Add Rule</button>
