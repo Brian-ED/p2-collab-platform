@@ -13,9 +13,8 @@ export async function GET(req) {
   const session = await auth();
   let userHasAccess = false;
   if (Number.isInteger(projectId)) {
-    userHasAccess = await checkIfUserOwnsProject(session, projectId);
-    if (!userHasAccess)
-      userHasAccess = await checkIfUserHasAccessToProject(session, projectId);
+    userHasAccess = await checkIfUserOwnsProject(session, projectId) ||
+                    await checkIfUserHasAccessToProject(session, projectId);
   }
 
   if (!!session && userHasAccess) {
