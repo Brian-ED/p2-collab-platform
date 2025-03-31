@@ -10,7 +10,7 @@ export default function FrontpageLayout({ children }) {
               P2 Collab Platform
             </h1>
           </div>
-          <nav>{/* Nav Buttons */}</nav>
+          <nav>{/* NAVBAR BUTTONS */}</nav>
           <LoginButton />
         </div>
       </header>
