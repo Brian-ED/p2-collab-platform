@@ -1,6 +1,7 @@
 "use client";
 
 import { BoxedProject } from "@/components/boxed-project";
+import { AddProjectButton } from "@/components/addProjectButton";
 import { Loading } from "@/components/loading";
 
 import { useState, useEffect } from "react";
@@ -26,7 +27,7 @@ export default function Page() {
   return (
     <div className="flex flex-row">
       <div className="m-auto mt-20 grid grid-cols-5 gap-15">
-        <BoxedProject title="Add new project" />
+        <AddProjectButton />
         {projects.data.map((project) => (
           <BoxedProject
             key={project.project_id}
