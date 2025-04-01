@@ -1,7 +1,7 @@
-import { LoginButton } from "@/components/loginButton";
 import Link from "next/link";
+import { LoginButton } from "@/components/loginButton";
 
-export default function FrontpageLayout({ children }) {
+export default function Layout({ children }) {
   return (
     <div className="min-h-screen bg-backdrop">
       <header className="bg-navbar fixed top-0 left-0 right-0 z-50">
@@ -11,12 +11,15 @@ export default function FrontpageLayout({ children }) {
               <Link href="/projects">P2 Collab Platform</Link>
             </h1>
           </div>
+
           <nav>{/* NAVBAR BUTTONS */}</nav>
           <LoginButton />
         </div>
       </header>
       <main className="pt-16 ml-0">
-        <div className="p-2">{children}</div>
+        <div className="p-2" style={{ height: "calc(-4rem + 100vh)" }}>
+          {children}
+        </div>
       </main>
     </div>
   );
