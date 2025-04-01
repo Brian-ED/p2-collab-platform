@@ -6,7 +6,7 @@ import {
 } from "@/lib/queries";
 
 export async function GET(req) {
-  let projectId = new URL(req.url).searchParams.get("projectId");
+  let projectId = (new URL(req.url)).searchParams.get("projectId");
   projectId = parseInt(projectId);
 
   const session = await auth();
