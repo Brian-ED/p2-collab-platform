@@ -63,7 +63,8 @@ export async function getUserProjects(session) {
     FROM access a
     LEFT JOIN users u ON a.user_id = u.id
     LEFT JOIN projects p ON a.project_id = p.id
-    WHERE (u.user_id = $2);
+    WHERE (u.user_id = $2)
+    ORDER BY project_id;
     `,
     [userId, userId]
   );
