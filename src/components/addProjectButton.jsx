@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
-function addProject() {}
+import { IoMdClose } from "react-icons/io";
 
 export const AddProjectButton = () => {
   const [click, setClick] = useState(false);
@@ -16,6 +15,10 @@ export const AddProjectButton = () => {
           click ? "scale-100" : "scale-0"
         }`}
       >
+        <IoMdClose
+          className="fill-black size-8 absolute hover:cursor-pointer right-1 top-1"
+          onClick={() => setClick(false)}
+        />
         <form
           action="/api/db/addProject"
           method="post"
