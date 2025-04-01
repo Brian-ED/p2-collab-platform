@@ -30,18 +30,23 @@ export const GroupContract = () => {
   ]);
 
   // State for creating new categories
-  
+  const [newCategoryInputs, setNewCategoryInputs] = useState("");
 
-  // State for creating new rules
+  // State for creating new rules inside categories
   const [newRuleInputs, setNewRuleInputs] = useState({});
 
-  // Add a new rule category
+  // Handle input changes for a new rule
+  const handleCategoryInputChange = (value) => {
+    setNewCategoryInputs((prevInputs) => ({ ...prevInputs, value }));
+  };
+
+  // Add a new category
   const addCategory = () => {
     setContractRules((prevRules) => [
       ...prevRules,
       {
         id: Date.now(),
-        title: newRuleInputs[title],
+        title: "newCategoryInputs",
         rules: [],
       },
     ]);
@@ -57,7 +62,7 @@ export const GroupContract = () => {
   };
 
   // Handle input changes for a new rule
-  const handleInputChange = (categoryId, value) => {
+  const handleRuleInputChange = (categoryId, value) => {
     setNewRuleInputs((prevInputs) => ({ ...prevInputs, [categoryId]: value }));
   };
 
@@ -75,7 +80,7 @@ export const GroupContract = () => {
               ...category,
               rules: [
                 ...category.rules,
-                { id: Date.now(), description: newRuleInputs[categoryId] },
+                { id: Date.now(), description: newRuleInputs },
               ],
             }
           : category
@@ -91,20 +96,20 @@ export const GroupContract = () => {
       <input
         type="text"
         placeholder={`Enter new category`}
-        onChange={console.log("hello")}
+        onChange={(e) => handleCategoryInputChange(e.target.value)}
+        value={newCategoryInputs("")}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
-            console.log("Hello");
+            addCategory();
           }
-          s;
         }}
         className="border p-2 rounded w-[30%] mr-2"
       />
       <button
-        onClick={() => addCategory()}
+        onClick={addCategory()}
         className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
       >
-        Add category
+        Add rule category
       </button>
       {contractRules.map((category) => (
         <div key={category.id} className="">
@@ -122,7 +127,9 @@ export const GroupContract = () => {
                 type="text"
                 placeholder={`Enter new rule for ${category.title.toLowerCase()}`}
                 value={newRuleInputs[category.id] || ""}
-                onChange={(e) => handleInputChange(category.id, e.target.value)}
+                onChange={(e) =>
+                  handleRuleInputChange(category.id, e.target.value)
+                }
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     e.preventDefault(); // Prevent the deafult feature, e.g. a new line
