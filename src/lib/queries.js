@@ -63,7 +63,8 @@ export async function getUserProjects(session) {
     FROM access a
     LEFT JOIN users u ON a.user_id = u.id
     LEFT JOIN projects p ON a.project_id = p.id
-    WHERE (u.user_id = $2);
+    WHERE (u.user_id = $2)
+    ORDER BY project_id;
     `,
     [userId, userId]
   );
@@ -84,4 +85,23 @@ export async function getProjectMembers(projectId) {
     [projectId, projectId]
   );
   return result.rows;
+}
+
+export async function addProject(session, projectName) {
+  const userId = session.user.image.split("/")[4].split("?")[0];
+  const id = (
+    await pool.query("SELECT id FROM users WHERE (user_id = $1);", [userId])
+  ).rows[0].id;
+
+  await pool.query(
+    "INSERT INTO projects (user_id, project_name) VALUES ($1, $2);",
+    [id, projectName]
+  );
+
+  const result = await pool.query(
+    "SELECT id FROM projects WHERE (project_name = $1) and (user_id = $2);",
+    [projectName, id]
+  );
+
+  return result.rows[0].id;
 }

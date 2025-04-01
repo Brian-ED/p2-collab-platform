@@ -9,7 +9,7 @@ export const BoxedProject = ({
   return (
     <button
       onClick={onClick}
-      className="py-5 rounded-md bg-blue-600 hover:bg-blue-500 size-50"
+      className="py-5 rounded-md bg-blue-600 hover:bg-blue-500 hover:cursor-pointer size-50"
     >
       <div className={`${ellipses} leading-10`}>{title}</div>
       {memberNames[0].map((member) => (
