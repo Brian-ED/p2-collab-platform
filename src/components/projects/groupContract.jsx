@@ -77,7 +77,7 @@ export const GroupContract = () => {
           : category
       )
     );
-    // Clear the input field after adding a rule
+    // Clear the input field after submitting
     setNewRuleInputs((prevInputs) => ({ ...prevInputs, [categoryId]: "" }));
   };
 
