@@ -167,8 +167,13 @@ export const GanttChart = () => {
             </div>
           </div>
         </div>
-        <div className="relative">
-          {addTaskClicked && <AddGanttTask submitFunction={addNewGanttTask} />}
+
+        <div
+          className={`relative transition-all duration-150 w-fit h-fit ${
+            addTaskClicked ? "scale-100" : "scale-0"
+          }`}
+        >
+          <AddGanttTask submitFunction={addNewGanttTask} />
         </div>
       </>
     );
