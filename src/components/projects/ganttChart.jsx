@@ -116,6 +116,13 @@ export const GanttChart = () => {
 
   let inChart = isCurrentDateInChart(currentDate, dates);
 
+  const addGanttTask = (title, description, startDate, endDate) => {
+    console.log(title);
+    console.log(description);
+    console.log(startDate);
+    console.log(endDate);
+  };
+
   return (
     <div
       className="overflow-auto relative"
