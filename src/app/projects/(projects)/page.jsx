@@ -32,7 +32,7 @@ export default function Page() {
           <BoxedProject
             key={project.project_id}
             title={project.project_name}
-            memberNames={project.members}
+            memberNames={project.members[0]}
             onClick={() => redirect("/projects/" + project.project_id)}
           />
         ))}
