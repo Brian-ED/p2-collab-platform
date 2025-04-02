@@ -86,7 +86,10 @@ export const GanttChart = () => {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-    }).then(() => setAddTask(!addTask));
+    }).then(() => {
+      setAddTask(!addTask);
+      setAddTaskClicked(false);
+    });
   };
 
   if (isLoading) return <Loading />;
@@ -192,7 +195,7 @@ export const GanttChart = () => {
             </div>
           </div>
           <div
-            className={`absolute z-50 w-fit h-fit bg-white top-2 left-12 border-2 border-black text-black flex flex-col text-center p-2 transition-all duration-200 ${
+            className={`absolute z-50 w-fit h-fit bg-white top-2 left-12 border-2 border-black text-black flex flex-col text-center p-2 transition-all duration-150 ${
               addTaskClicked ? "scale-100" : "scale-0"
             }`}
           >
