@@ -106,6 +106,9 @@ export async function addProject(session, projectName) {
   return result.rows[0].id;
 }
 
-export async function addGanttTask(session, task) {
-  
+export async function addGanttTask(projectId, title, description, startDate, endDate) {
+  await pool.query(
+    "INSERT INTO gantt_charts (project_id, title, description, start_date, end_date, completed) VALUES ($1, $2, $3, $4, $5, $6);",
+    [projectId, title, description, startDate, endDate, false]
+  );
 }

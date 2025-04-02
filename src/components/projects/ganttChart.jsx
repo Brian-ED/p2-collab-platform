@@ -63,6 +63,7 @@ export const GanttChart = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { pid } = useParams();
   const [addTaskHover, setAddTaskHover] = useState(false);
+  const [addTask, setAddTask] = useState(false);
 
   useEffect(() => {
     fetch(`/api/db/getGantt?projectId=${pid}`)
@@ -71,7 +72,21 @@ export const GanttChart = () => {
         setTasks(data);
         setIsLoading(false);
       });
-  }, []);
+  }, [addTask]);
+
+  const addGanttTask = () => {
+    setIsLoading(true);
+    const data = new URLSearchParams(
+      new FormData(document.querySelector("#addTask"))
+    );
+    fetch(`/api/db/addGantt?projectId=${pid}`, {
+      method: "POST",
+      body: data,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    }).then(() => setAddTask(!addTask));
+  };
 
   if (isLoading) return <Loading />;
   if (tasks.error != null) return <p>{tasks.error}</p>;
@@ -193,7 +208,7 @@ export const GanttChart = () => {
         ))}
       </div>
       <div className="w-fit h-fit bg-white border-2 border-black text-black flex flex-col text-center p-2">
-        <form action={`/api/db/addGantt?projectId=${pid}`} method="POST">
+        <form action={() => addGanttTask()} id="addTask">
           <h3 className="text-center font-bold text-lg mb-2">
             Add new Gantt task
           </h3>
