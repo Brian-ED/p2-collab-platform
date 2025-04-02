@@ -1,20 +1,23 @@
 import { auth } from "@/auth/authSetup";
 
-import { getGanttTasks, checkIfUserOwnsProject } from "@/lib/queries";
+import {
+  getGanttTasks,
+  checkIfUserOwnsProject,
+  checkIfUserHasAccessToProject,
+} from "@/lib/queries";
 
 export async function GET(req) {
   let projectId = new URL(req.url).searchParams.get("projectId");
   projectId = parseInt(projectId);
 
   const session = await auth();
-  let userOwnsProject;
+  let userHasAccess = false;
   if (Number.isInteger(projectId)) {
-    userOwnsProject = await checkIfUserOwnsProject(session, projectId);
-  } else {
-    userOwnsProject = false;
+    userHasAccess = await checkIfUserOwnsProject(session, projectId) ||
+                    await checkIfUserHasAccessToProject(session, projectId);
   }
 
-  if (!!session && userOwnsProject) {
+  if (!!session && userHasAccess) {
     const data = await getGanttTasks(projectId);
     return Response.json({ data: data, error: null });
   } else {

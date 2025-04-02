@@ -7,7 +7,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #393e46;
+    --background: #4b5563;
     --foreground: #eeeeee;
   }
 }
@@ -30,4 +30,9 @@ body {
   --color-navbar: #1e293b;
   --color-sidebar: #374151;
   --color-backdrop: #4b5563;
+}
+
+@theme {
+  --color-button: #334155;
+  --color-button-hover: #0f172a;
 }
