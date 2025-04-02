@@ -99,7 +99,7 @@ const AddGanttTask = ({ submitFunction }) => {
         <input className="mb-4" type="date" name="gantt-enddate" />
         <br />
         <input
-          className="border-2 px-2 rounded-full hover:bg-gray-500/20"
+          className="border-2 px-2 rounded-full hover:bg-gray-500/30"
           type="submit"
           value="Add task"
         />
@@ -144,7 +144,35 @@ export const GanttChart = () => {
 
   if (isLoading) return <Loading />;
   if (tasks.error != null) return <p>{tasks.error}</p>;
-  if (tasks.data.length === 0) return <p>No tasks</p>;
+  if (tasks.data.length === 0) {
+    return (
+      <>
+        <h1 className="text-xl">No tasks...</h1>
+        <div className="relative flex flex-row w-fit">
+          <h2 className="text-lg m-auto">Add your first task:</h2>
+          <div
+            className="h-12 w-12 flex"
+            onMouseEnter={() => setAddTaskHover(true)}
+            onMouseLeave={() => setAddTaskHover(false)}
+            onClick={() => setAddTaskClicked(!addTaskClicked)}
+          >
+            <FaPlus className="text-green-500 m-auto z-20" size={30} />
+
+            <div
+              className={`absolute bg-white mt-7 ml-9 z-60 text-black text-sm whitespace-nowrap transition-all duration-150 border-1 px-1 ${
+                addTaskHover ? "scale-100" : "scale-0"
+              }`}
+            >
+              <span>Add task...</span>
+            </div>
+          </div>
+        </div>
+        <div className="relative">
+          {addTaskClicked && <AddGanttTask submitFunction={addNewGanttTask} />}
+        </div>
+      </>
+    );
+  }
 
   let data = tasks.data;
 
