@@ -235,6 +235,7 @@ export const GanttChart = () => {
           }}
         ></div>
       )}
+
       <div className="[&>*:nth-child(odd)]:bg-trackcolorodd [&>*:nth-child(even)]:bg-trackcolor relative">
         {data.map((task) => (
           <div
@@ -277,7 +278,6 @@ export const GanttChart = () => {
               <span>Add task...</span>
             </div>
           </div>
-          {addTaskClicked && <AddGanttTask submitFunction={addNewGanttTask} />}
         </div>
       </div>
       <div className="bg-ganttbottom h-6 w-fit flex sticky bottom-0">
@@ -294,6 +294,13 @@ export const GanttChart = () => {
             </p>
           </div>
         ))}
+      </div>
+      <div
+        className={`fixed top-[35%] transition-all duration-150 w-fit h-fit ${
+          addTaskClicked ? "scale-100" : "scale-0"
+        }`}
+      >
+        <AddGanttTask submitFunction={addNewGanttTask} />
       </div>
     </div>
   );
