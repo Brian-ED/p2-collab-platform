@@ -63,6 +63,7 @@ export const GanttChart = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { pid } = useParams();
   const [addTaskHover, setAddTaskHover] = useState(false);
+  const [addTaskClicked, setAddTaskClicked] = useState(false);
   const [addTask, setAddTask] = useState(false);
 
   useEffect(() => {
@@ -148,7 +149,7 @@ export const GanttChart = () => {
           }}
         ></div>
       )}
-      <div className="[&>*:nth-child(odd)]:bg-trackcolorodd [&>*:nth-child(even)]:bg-trackcolor">
+      <div className="[&>*:nth-child(odd)]:bg-trackcolorodd [&>*:nth-child(even)]:bg-trackcolor relative">
         {data.map((task) => (
           <div
             style={{
@@ -175,20 +176,69 @@ export const GanttChart = () => {
           }}
         >
           <div
-            className="h-12 w-12 flex relative"
+            className="h-12 w-12 flex"
             onMouseEnter={() => setAddTaskHover(true)}
             onMouseLeave={() => setAddTaskHover(false)}
-            onClick={() => console.log("clicked")}
+            onClick={() => setAddTaskClicked(!addTaskClicked)}
           >
             <FaPlus className="text-green-500 m-auto z-20" size={30} />
 
             <div
-              className={`absolute bg-white top-8 left-10 z-30 text-black text-sm whitespace-nowrap transition-all duration-150 ${
+              className={`absolute bg-white mt-7 ml-9 z-60 text-black text-sm whitespace-nowrap transition-all duration-150 border-1 px-1 ${
                 addTaskHover ? "scale-100" : "scale-0"
               }`}
             >
               <span>Add task...</span>
             </div>
+          </div>
+          <div
+            className={`absolute z-50 w-fit h-fit bg-white top-2 left-12 border-2 border-black text-black flex flex-col text-center p-2 transition-all duration-200 ${
+              addTaskClicked ? "scale-100" : "scale-0"
+            }`}
+          >
+            <form action={() => addGanttTask()} id="addTask">
+              <h3 className="text-center font-bold text-lg mb-2">
+                Add new Gantt task
+              </h3>
+              <label className="font-semibold" htmlFor="title">
+                Title:
+              </label>
+              <br />
+              <input
+                className="border-1 mb-2 "
+                type="text"
+                name="gantt-title"
+              />
+              <br />
+              <label className="font-semibold" htmlFor="description">
+                Description:
+              </label>
+              <br />
+              <textarea
+                className="border-1 mb-2 text-sm resize-none"
+                rows="3"
+                cols="21"
+                name="gantt-description"
+              />
+              <br />
+              <label className="font-semibold" htmlFor="startdate">
+                Start date:
+              </label>
+              <br />
+              <input className="mb-2" type="date" name="gantt-startdate" />
+              <br />
+              <label className="font-semibold" htmlFor="enddate">
+                End date:
+              </label>
+              <br />
+              <input className="mb-4" type="date" name="gantt-enddate" />
+              <br />
+              <input
+                className="border-2 px-2 rounded-full hover:bg-gray-500/20"
+                type="submit"
+                value="Add task"
+              />
+            </form>
           </div>
         </div>
       </div>
@@ -206,47 +256,6 @@ export const GanttChart = () => {
             </p>
           </div>
         ))}
-      </div>
-      <div className="w-fit h-fit bg-white border-2 border-black text-black flex flex-col text-center p-2">
-        <form action={() => addGanttTask()} id="addTask">
-          <h3 className="text-center font-bold text-lg mb-2">
-            Add new Gantt task
-          </h3>
-          <label className="font-semibold" htmlFor="title">
-            Title:
-          </label>
-          <br />
-          <input className="border-1 mb-2 " type="text" name="gantt-title" />
-          <br />
-          <label className="font-semibold" htmlFor="description">
-            Description:
-          </label>
-          <br />
-          <textarea
-            className="border-1 mb-2 text-sm resize-none"
-            rows="3"
-            cols="21"
-            name="gantt-description"
-          />
-          <br />
-          <label className="font-semibold" htmlFor="startdate">
-            Start date:
-          </label>
-          <br />
-          <input className="mb-2" type="date" name="gantt-startdate" />
-          <br />
-          <label className="font-semibold" htmlFor="enddate">
-            End date:
-          </label>
-          <br />
-          <input className="mb-4" type="date" name="gantt-enddate" />
-          <br />
-          <input
-            className="border-2 px-2 rounded-full hover:bg-gray-500/20"
-            type="submit"
-            value="Add task"
-          />
-        </form>
       </div>
     </div>
   );
