@@ -192,6 +192,36 @@ export const GanttChart = () => {
           </div>
         ))}
       </div>
+      <div className="w-fit h-fit bg-white border-2 border-black text-black flex flex-col text-center p-2">
+        <form action="javascript:void(0);">
+          <h3 className="text-center font-bold mb-2">Add new Gantt task</h3>
+          <label htmlFor="title">Title:</label>
+          <br />
+          <input className="border-1 mb-2" type="text" />
+          <br />
+          <label htmlFor="description">Description:</label>
+          <br />
+          <textarea
+            className="border-1 mb-2 text-sm resize-none"
+            rows="3"
+            cols="21"
+          />
+          <br />
+          <label htmlFor="startdate">Start date:</label>
+          <br />
+          <input className="mb-2" type="date" />
+          <br />
+          <label htmlFor="enddate">End date:</label>
+          <br />
+          <input className="mb-4" type="date" />
+          <br />
+          <input
+            className="border-2 px-2 rounded-full hover:bg-gray-500/20"
+            type="submit"
+            value="Add task"
+          />
+        </form>
+      </div>
     </div>
   );
 };
