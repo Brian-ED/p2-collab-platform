@@ -8,7 +8,6 @@ import { useAppContext } from "@/context/AppContext";
 
 import { useState, useEffect } from "react";
 import { useParams, redirect } from "next/navigation";
-import { useRouter } from "next/navigation";
 
 export default function Projects() {
   const { section, setSection } = useAppContext();

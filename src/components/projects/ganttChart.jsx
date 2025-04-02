@@ -211,19 +211,20 @@ export const GanttChart = () => {
             className="border-1 mb-2 text-sm resize-none"
             rows="3"
             cols="21"
+            name="gantt-description"
           />
           <br />
           <label className="font-semibold" htmlFor="startdate">
             Start date:
           </label>
           <br />
-          <input className="mb-2" type="date" />
+          <input className="mb-2" type="date" name="gantt-startdate" />
           <br />
           <label className="font-semibold" htmlFor="enddate">
             End date:
           </label>
           <br />
-          <input className="mb-4" type="date" />
+          <input className="mb-4" type="date" name="gantt-enddate" />
           <br />
           <input
             className="border-2 px-2 rounded-full hover:bg-gray-500/20"

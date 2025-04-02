@@ -22,8 +22,14 @@ export async function POST(req) {
     let origin = new URL(req.url);
     const formData = await req.formData();
     const taskTitle = formData.get("gantt-title");
+    const taskDescription = formData.get("gantt-description");
+    const taskStartDate = formData.get("gantt-startdate");
+    const taskEndDate = formData.get("gantt-enddate");
 
     console.log(taskTitle);
+    console.log(taskDescription);
+    console.log(taskStartDate);
+    console.log(taskEndDate);
 
     origin.pathname = `/projects/${projectId}#gantt`;
 
