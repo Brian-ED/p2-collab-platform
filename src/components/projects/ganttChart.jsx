@@ -116,13 +116,6 @@ export const GanttChart = () => {
 
   let inChart = isCurrentDateInChart(currentDate, dates);
 
-  const addGanttTask = (title, description, startDate, endDate) => {
-    console.log(title);
-    console.log(description);
-    console.log(startDate);
-    console.log(endDate);
-  };
-
   return (
     <div
       className="overflow-auto relative"
@@ -200,13 +193,19 @@ export const GanttChart = () => {
         ))}
       </div>
       <div className="w-fit h-fit bg-white border-2 border-black text-black flex flex-col text-center p-2">
-        <form action="javascript:void(0);">
-          <h3 className="text-center font-bold mb-2">Add new Gantt task</h3>
-          <label htmlFor="title">Title:</label>
+        <form action={`/api/db/addGantt?projectId=${pid}`} method="POST">
+          <h3 className="text-center font-bold text-lg mb-2">
+            Add new Gantt task
+          </h3>
+          <label className="font-semibold" htmlFor="title">
+            Title:
+          </label>
           <br />
-          <input className="border-1 mb-2" type="text" />
+          <input className="border-1 mb-2 " type="text" name="gantt-title" />
           <br />
-          <label htmlFor="description">Description:</label>
+          <label className="font-semibold" htmlFor="description">
+            Description:
+          </label>
           <br />
           <textarea
             className="border-1 mb-2 text-sm resize-none"
@@ -214,11 +213,15 @@ export const GanttChart = () => {
             cols="21"
           />
           <br />
-          <label htmlFor="startdate">Start date:</label>
+          <label className="font-semibold" htmlFor="startdate">
+            Start date:
+          </label>
           <br />
           <input className="mb-2" type="date" />
           <br />
-          <label htmlFor="enddate">End date:</label>
+          <label className="font-semibold" htmlFor="enddate">
+            End date:
+          </label>
           <br />
           <input className="mb-4" type="date" />
           <br />

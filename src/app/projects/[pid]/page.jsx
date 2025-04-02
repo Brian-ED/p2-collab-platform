@@ -8,12 +8,28 @@ import { useAppContext } from "@/context/AppContext";
 
 import { useState, useEffect } from "react";
 import { useParams, redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function Projects() {
-  const { section } = useAppContext();
+  const { section, setSection } = useAppContext();
   const { pid } = useParams();
 
   const [isLoading, setIsLoading] = useState(true);
+
+  console.log(pid);
+
+  const setHashSection = (hash) => {
+    if (hash === "#overview") setSection("overview");
+    else if (hash === "#group-contract") setSection("group contract");
+    else if (hash === "#calender") setSection("calender");
+    else if (hash === "#gantt") setSection("gantt");
+    else if (hash === "#trello") setSection("trello");
+    else if (hash === "#github") setSection("github");
+  };
+
+  useEffect(() => {
+    setHashSection(window.location.hash);
+  }, [pid]);
 
   // TODO: Make a not authorized page.
   useEffect(() => {
@@ -26,6 +42,8 @@ export default function Projects() {
   }, []);
 
   if (isLoading) return <Loading />;
+
+  let hash = "";
 
   return (
     <>
