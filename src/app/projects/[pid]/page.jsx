@@ -16,8 +16,6 @@ export default function Projects() {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  console.log(pid);
-
   const setHashSection = (hash) => {
     if (hash === "#overview") setSection("overview");
     else if (hash === "#group-contract") setSection("group contract");
@@ -26,10 +24,6 @@ export default function Projects() {
     else if (hash === "#trello") setSection("trello");
     else if (hash === "#github") setSection("github");
   };
-
-  useEffect(() => {
-    setHashSection(window.location.hash);
-  }, [pid]);
 
   // TODO: Make a not authorized page.
   useEffect(() => {
@@ -41,9 +35,11 @@ export default function Projects() {
       });
   }, []);
 
-  if (isLoading) return <Loading />;
+  useEffect(() => {
+    setHashSection(window.location.hash);
+  }, [pid]);
 
-  let hash = "";
+  if (isLoading) return <Loading />;
 
   return (
     <>
