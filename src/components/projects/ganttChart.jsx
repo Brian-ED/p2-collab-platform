@@ -6,6 +6,8 @@ import { useParams } from "next/navigation";
 
 import { Loading } from "@/components/loading";
 
+import { FaPlus } from "react-icons/fa6";
+
 const GanttTask = ({
   id,
   title,
@@ -60,6 +62,7 @@ export const GanttChart = () => {
   const [tasks, setTasks] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const { pid } = useParams();
+  const [addTaskHover, setAddTaskHover] = useState(false);
 
   useEffect(() => {
     fetch(`/api/db/getGantt?projectId=${pid}`)
@@ -120,9 +123,9 @@ export const GanttChart = () => {
     >
       {inChart && (
         <div
-          className="w-0.5 bg-currentdatecolor absolute"
+          className="w-0.5 bg-currentdatecolor absolute z-10"
           style={{
-            height: "calc(var(--spacing) * " + data.length * 12 + ")",
+            height: "calc(var(--spacing) * " + (data.length + 1) * 12 + ")",
             marginLeft:
               "calc(var(--spacing) * " +
               (dayjs(currentDate).diff(dayjs(dates[0]), "day") * 20 + 10) +
@@ -150,6 +153,29 @@ export const GanttChart = () => {
             <GanttTask {...task} />
           </div>
         ))}
+        <div
+          className="h-12 flex flex-row"
+          style={{
+            width: "calc(var(--spacing) * " + (bgLength + 20) + ")",
+          }}
+        >
+          <div
+            className="h-12 w-12 flex relative"
+            onMouseEnter={() => setAddTaskHover(true)}
+            onMouseLeave={() => setAddTaskHover(false)}
+            onClick={() => console.log("clicked")}
+          >
+            <FaPlus className="text-green-500 m-auto z-20" size={30} />
+
+            <div
+              className={`absolute bg-white top-8 left-10 z-30 text-black text-sm whitespace-nowrap transition-all duration-150 ${
+                addTaskHover ? "scale-100" : "scale-0"
+              }`}
+            >
+              <span>Add task...</span>
+            </div>
+          </div>
+        </div>
       </div>
       <div className="bg-ganttbottom h-6 w-fit flex sticky bottom-0">
         {dates.map((date) => (

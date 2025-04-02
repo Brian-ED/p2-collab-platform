@@ -105,3 +105,7 @@ export async function addProject(session, projectName) {
 
   return result.rows[0].id;
 }
+
+export async function addGanttTask(session, task) {
+  
+}
