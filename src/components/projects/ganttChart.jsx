@@ -24,7 +24,7 @@ const GanttTask = ({
   return (
     <div className="h-12 w-fit flex">
       <div
-        className={`rounded-lg bg-taskcolor h-8 m-auto ml-10 flex flex-row justify-start group/task`}
+        className={`rounded-lg bg-taskcolor h-8 m-auto ml-10 flex flex-row justify-start group/task overflow-hidden`}
         style={{ width: "calc(var(--spacing) * " + taskDuration * 20 + ")" }}
         onMouseEnter={async () => {
           setHover(true);
@@ -69,8 +69,18 @@ const GanttTask = ({
       >
         <p>Are you sure you want to remove this task?</p>
         <div className="flex flex-row justify-center mt-2">
-          <button className="mr-2 border-1 px-2 rounded-full">Yes</button>
-          <button className="ml-2 border-1 px-2 rounded-full">No</button>
+          <button
+            className="mr-2 border-2 px-2 rounded-full hover:bg-gray-500/30"
+            onClick={() => setRemoveTaskClicked(false)}
+          >
+            Yes
+          </button>
+          <button
+            className="ml-2 border-2 px-2 rounded-full hover:bg-gray-500/30"
+            onClick={() => setRemoveTaskClicked(false)}
+          >
+            No
+          </button>
         </div>
       </div>
     </div>
@@ -308,7 +318,7 @@ export const GanttChart = () => {
           </div>
         </div>
       </div>
-      <div className="bg-ganttbottom h-6 w-fit flex sticky bottom-0">
+      <div className="bg-ganttbottom h-6 w-fit flex sticky bottom-0 z-100">
         {dates.map((date) => (
           <div key={date.format("DD/MM/YYYY")} className="w-20">
             <p
