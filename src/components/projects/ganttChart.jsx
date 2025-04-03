@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 
 import { Loading } from "@/components/loading";
 
-import { FaPlus } from "react-icons/fa6";
+import { FaPlus, FaX } from "react-icons/fa6";
 
 const GanttTask = ({
   id,
@@ -17,12 +17,13 @@ const GanttTask = ({
   percentComplete, //TODO: Should just be "complete" as we won't have percentages.
 }) => {
   const [hover, setHover] = useState(false);
+  const [removeTaskClicked, setRemoveTaskClicked] = useState(false);
   const taskDuration = dayjs(enddate).diff(dayjs(startdate), "day");
 
   return (
     <div className="h-12 w-fit flex">
       <div
-        className={`rounded-lg bg-taskcolor h-8 m-auto ml-10 flex group/task`}
+        className={`rounded-lg bg-taskcolor h-8 m-auto ml-10 flex flex-row justify-start group/task`}
         style={{ width: "calc(var(--spacing) * " + taskDuration * 20 + ")" }}
         onMouseEnter={async () => {
           setHover(true);
@@ -31,7 +32,13 @@ const GanttTask = ({
           setHover(false);
         }}
       >
-        <p className="m-auto ml-1 overflow-hidden group-hover/task:overflow-visible whitespace-nowrap">
+        <div
+          className="flex"
+          onClick={() => setRemoveTaskClicked(!removeTaskClicked)}
+        >
+          {hover && <FaX size={20} className="m-auto ml-2 text-red-600" />}
+        </div>
+        <p className="ml-1 m-auto overflow-hidden group-hover/task:overflow-visible whitespace-nowrap">
           {title}
         </p>
         <div
