@@ -17,6 +17,7 @@ const GanttTask = ({
   percentComplete, //TODO: Should just be "complete" as we won't have percentages.
 }) => {
   const [hover, setHover] = useState(false);
+  const [removeTaskHover, setRemoveTaskHover] = useState(false);
   const [removeTaskClicked, setRemoveTaskClicked] = useState(false);
   const taskDuration = dayjs(enddate).diff(dayjs(startdate), "day");
 
@@ -34,9 +35,18 @@ const GanttTask = ({
       >
         <div
           className="flex"
+          onMouseEnter={() => setRemoveTaskHover(true)}
+          onMouseLeave={() => setRemoveTaskHover(false)}
           onClick={() => setRemoveTaskClicked(!removeTaskClicked)}
         >
           {hover && <FaX size={20} className="m-auto ml-2 text-red-600" />}
+        </div>
+        <div
+          className={`absolute bg-white mt-7 ml-9 z-60 text-black text-sm whitespace-nowrap transition-all duration-150 border-1 px-1 ${
+            removeTaskHover ? "scale-100" : "scale-0"
+          }`}
+        >
+          <span>Remove task...</span>
         </div>
         <p className="ml-1 m-auto overflow-hidden group-hover/task:overflow-visible whitespace-nowrap">
           {title}
@@ -50,6 +60,17 @@ const GanttTask = ({
             "DD/MM"
           )} - ${dayjs(enddate).format("DD/MM")}`}</p>
           <p className="text-black p-2 m-auto pt-0">{description}</p>
+        </div>
+      </div>
+      <div
+        className={`bg-white h-fit w-fit text-black border-2 p-2 z-80 ${
+          removeTaskClicked ? "scale-100" : "scale-0"
+        }`}
+      >
+        <p>Are you sure you want to remove this task?</p>
+        <div className="flex flex-row justify-center mt-2">
+          <button className="mr-2 border-1 px-2 rounded-full">Yes</button>
+          <button className="ml-2 border-1 px-2 rounded-full">No</button>
         </div>
       </div>
     </div>
