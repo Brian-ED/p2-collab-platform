@@ -42,7 +42,7 @@ const GanttTask = ({
           {hover && <FaX size={20} className="m-auto ml-2 text-red-600" />}
         </div>
         <div
-          className={`absolute bg-white mt-7 ml-9 z-60 text-black text-sm whitespace-nowrap transition-all duration-150 border-1 px-1 ${
+          className={`absolute bg-white mt-7 ml-9 z-80 text-black text-sm whitespace-nowrap transition-all duration-150 border-1 px-1 ${
             removeTaskHover ? "scale-100" : "scale-0"
           }`}
         >
@@ -52,7 +52,7 @@ const GanttTask = ({
           {title}
         </p>
         <div
-          className={`absolute z-20 bg-white mt-10 ml-5 rounded-sm max-w-100 max-h-50 overflow-y-hidden ${
+          className={`absolute z-70 bg-white mt-10 ml-5 rounded-sm max-w-100 max-h-50 overflow-y-hidden ${
             hover ? "scale-100" : "scale-0"
           }`}
         >
@@ -100,7 +100,7 @@ const AddGanttTask = ({ submitFunction }) => {
   return (
     <div
       className={
-        "absolute z-50 w-fit h-fit bg-white top-2 left-12 border-2 border-black text-black flex flex-col text-center p-2 transition-all duration-150"
+        "absolute w-fit h-fit bg-white top-2 left-12 border-2 border-black text-black flex flex-col text-center p-2 transition-all duration-150"
       }
     >
       <form action={() => submitFunction()} id="addTask">
@@ -197,7 +197,7 @@ export const GanttChart = () => {
             <FaPlus className="text-green-500 m-auto z-20" size={30} />
 
             <div
-              className={`absolute bg-white mt-7 ml-9 z-60 text-black text-sm whitespace-nowrap transition-all duration-150 border-1 px-1 ${
+              className={`absolute bg-white mt-7 ml-9 z-80 text-black text-sm whitespace-nowrap transition-all duration-150 border-1 px-1 ${
                 addTaskHover ? "scale-100" : "scale-0"
               }`}
             >
@@ -207,7 +207,7 @@ export const GanttChart = () => {
         </div>
 
         <div
-          className={`relative transition-all duration-150 w-fit h-fit ${
+          className={`relative z-100 transition-all duration-150 w-fit h-fit ${
             addTaskClicked ? "scale-100" : "scale-0"
           }`}
         >
@@ -318,7 +318,7 @@ export const GanttChart = () => {
           </div>
         </div>
       </div>
-      <div className="bg-ganttbottom h-6 w-fit flex sticky bottom-0 z-100">
+      <div className="bg-ganttbottom h-6 w-fit flex sticky bottom-0 z-60">
         {dates.map((date) => (
           <div key={date.format("DD/MM/YYYY")} className="w-20">
             <p
@@ -334,7 +334,7 @@ export const GanttChart = () => {
         ))}
       </div>
       <div
-        className={`fixed top-[35%] transition-all duration-150 w-fit h-fit ${
+        className={`fixed z-100 top-[35%] transition-all duration-150 w-fit h-fit ${
           addTaskClicked ? "scale-100" : "scale-0"
         }`}
       >
