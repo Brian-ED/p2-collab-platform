@@ -48,7 +48,7 @@ const GanttTask = ({
         >
           <span>Remove task...</span>
         </div>
-        <p className="ml-1 m-auto overflow-hidden group-hover/task:overflow-visible whitespace-nowrap">
+        <p className="ml-2 m-auto overflow-hidden group-hover/task:overflow-visible whitespace-nowrap">
           {title}
         </p>
         <div
@@ -70,13 +70,13 @@ const GanttTask = ({
         <p>Are you sure you want to remove this task?</p>
         <div className="flex flex-row justify-center mt-2">
           <button
-            className="mr-2 border-2 px-2 rounded-full hover:bg-gray-500/30"
+            className="mx-2 border-2 px-2 rounded-full hover:bg-gray-500/30"
             onClick={() => setRemoveTaskClicked(false)}
           >
             Yes
           </button>
           <button
-            className="ml-2 border-2 px-2 rounded-full hover:bg-gray-500/30"
+            className="mx-2 border-2 px-2 rounded-full hover:bg-gray-500/30"
             onClick={() => setRemoveTaskClicked(false)}
           >
             No

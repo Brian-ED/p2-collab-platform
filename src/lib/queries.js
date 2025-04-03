@@ -112,3 +112,10 @@ export async function addGanttTask(projectId, title, description, startDate, end
     [projectId, title, description, startDate, endDate, false]
   );
 }
+
+export async function removeGanttTask(taskId) {
+  await pool.query(
+    "DELETE FROM gantt_charts WHERE id='$1';",
+    [taskId]
+  );
+}
