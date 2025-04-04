@@ -12,7 +12,7 @@ export const BoxedProject = ({
       className="py-5 rounded-md bg-blue-600 hover:bg-blue-500 hover:cursor-pointer size-50"
     >
       <div className={`${ellipses} leading-10`}>{title}</div>
-      {memberNames[0].map((member) => (
+      {memberNames.map((member) => (
         <div key={member.id} className={`${ellipses} text-[12px] leading-7`}>
           {member.name}
         </div>

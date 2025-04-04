@@ -96,19 +96,50 @@ export async function getUserProjects(session) {
 }
 
 export async function getProjectMembers(projectId) {
-  const result = await pool.query(
-    `
-    SELECT users.name AS name, users.id AS id FROM users
-    JOIN access ON users.id = access.user_id
-    WHERE access.project_id = $1
-    UNION ALL
-    SELECT users.name as name, users.id AS id FROM users
-    JOIN projects ON users.id = projects.user_id
-    WHERE projects.id = $2;
-    `,
-    [projectId, projectId]
-  );
-  return result.rows;
+  const result = await prisma.projects.findFirst({
+    where: {
+      OR: [
+        {
+          access: {
+            some: {
+              project_id: projectId,
+            },
+          },
+        },
+        { id: projectId },
+      ],
+    },
+    select: {
+      users: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      access: {
+        select: {
+          users: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  let members = [];
+
+  members[0] = { id: result.users.id, name: result.users.name };
+  for (let i = 0; i < result.access.length; i++) {
+    members[i + 1] = {
+      id: result.access[i].users.id,
+      name: result.access[i].users.name,
+    };
+  }
+
+  return members;
 }
 
 export async function addProject(session, projectName) {
