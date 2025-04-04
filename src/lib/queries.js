@@ -2,27 +2,23 @@
 
 import prisma from "@/lib/prisma";
 
-import pg from "pg";
-
-const { Pool } = pg;
-
-const pool = new Pool({
-  connectionTimeoutMillis: 10000,
-  connectionString: process.env.DATABASE_URL,
-  allowExitOnIdle: false,
-});
+import dayjs from "dayjs";
 
 export async function addUser(name, userId) {
-  const result = await pool.query(
-    "SELECT * FROM users WHERE (name = $1) AND (user_id = $2);",
-    [name, userId]
-  );
+  const count = await prisma.users.count({
+    where: {
+      name: name,
+      user_id: userId,
+    },
+  });
 
-  if (result.rowCount === 0) {
-    await pool.query(
-      "INSERT INTO users (name, user_id) VALUES ($1, $2) ON CONFLICT (user_id) DO NOTHING;",
-      [name, userId]
-    );
+  if (count === 0) {
+    await prisma.users.create({
+      data: {
+        name: name,
+        user_id: userId,
+      },
+    });
   }
 }
 
@@ -145,20 +141,24 @@ export async function getProjectMembers(projectId) {
 export async function addProject(session, projectName) {
   const userId = session.user.image.split("/")[4].split("?")[0];
   const id = (
-    await pool.query("SELECT id FROM users WHERE (user_id = $1);", [userId])
-  ).rows[0].id;
+    await prisma.users.findFirst({
+      where: {
+        user_id: userId,
+      },
+      select: {
+        id: true,
+      },
+    })
+  ).id;
 
-  await pool.query(
-    "INSERT INTO projects (user_id, project_name) VALUES ($1, $2);",
-    [id, projectName]
-  );
+  const creation = await prisma.projects.create({
+    data: {
+      user_id: id,
+      project_name: projectName,
+    },
+  });
 
-  const result = await pool.query(
-    "SELECT id FROM projects WHERE (project_name = $1) and (user_id = $2);",
-    [projectName, id]
-  );
-
-  return result.rows[0].id;
+  return creation.id;
 }
 
 export async function addGanttTask(
@@ -168,8 +168,13 @@ export async function addGanttTask(
   startDate,
   endDate
 ) {
-  await pool.query(
-    "INSERT INTO gantt_charts (project_id, title, description, start_date, end_date, completed) VALUES ($1, $2, $3, $4, $5, $6);",
-    [projectId, title, description, startDate, endDate, false]
-  );
+  await prisma.gantt_charts.create({
+    data: {
+      project_id: projectId,
+      title: title,
+      description: description,
+      start_date: dayjs(startDate),
+      end_date: dayjs(endDate),
+    },
+  });
 }

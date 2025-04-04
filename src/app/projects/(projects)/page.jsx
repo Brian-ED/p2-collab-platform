@@ -33,7 +33,7 @@ export default function Page() {
             key={project.id}
             title={project.project_name}
             memberNames={project.members}
-            onClick={() => redirect("/projects/" + project.project_id)}
+            onClick={() => redirect("/projects/" + project.id)}
           />
         ))}
       </div>
