@@ -12,12 +12,12 @@ const GanttTask = ({
   id,
   title,
   description,
-  startdate,
-  enddate,
+  start_date,
+  end_date,
   percentComplete, //TODO: Should just be "complete" as we won't have percentages.
 }) => {
   const [hover, setHover] = useState(false);
-  const taskDuration = dayjs(enddate).diff(dayjs(startdate), "day");
+  const taskDuration = dayjs(end_date).diff(dayjs(start_date), "day");
 
   return (
     <div className="h-12 w-fit flex">
@@ -39,9 +39,9 @@ const GanttTask = ({
             hover ? "scale-100" : "scale-0"
           }`}
         >
-          <p className="text-black p-2 m-auto pb-1">{`${dayjs(startdate).format(
-            "DD/MM"
-          )} - ${dayjs(enddate).format("DD/MM")}`}</p>
+          <p className="text-black p-2 m-auto pb-1">{`${dayjs(
+            start_date
+          ).format("DD/MM")} - ${dayjs(end_date).format("DD/MM")}`}</p>
           <p className="text-black p-2 m-auto pt-0">{description}</p>
         </div>
       </div>
@@ -86,13 +86,13 @@ const AddGanttTask = ({ submitFunction }) => {
           name="gantt-description"
         />
         <br />
-        <label className="font-semibold" htmlFor="startdate">
+        <label className="font-semibold" htmlFor="start_date">
           Start date:
         </label>
         <br />
         <input className="mb-2" type="date" name="gantt-startdate" />
         <br />
-        <label className="font-semibold" htmlFor="enddate">
+        <label className="font-semibold" htmlFor="end_date">
           End date:
         </label>
         <br />
@@ -182,18 +182,18 @@ export const GanttChart = () => {
   let data = tasks.data;
 
   data = data.toSorted((a, b) => {
-    if (dayjs(a.startdate).diff(dayjs(b.startdate, "day")) === 0) {
-      return dayjs(a.enddate).diff(dayjs(b.enddate, "day"));
+    if (dayjs(a.start_date).diff(dayjs(b.start_date, "day")) === 0) {
+      return dayjs(a.end_date).diff(dayjs(b.end_date, "day"));
     }
-    return dayjs(a.startdate).diff(dayjs(b.startdate, "day"));
+    return dayjs(a.start_date).diff(dayjs(b.start_date, "day"));
   });
 
-  const lastEndDate = data.toSorted((a, b) =>
-    dayjs(b.enddate).diff(dayjs(a.enddate, "day"))
-  )[0].enddate;
+  const lastenddate = data.toSorted((a, b) =>
+    dayjs(b.end_date).diff(dayjs(a.end_date, "day"))
+  )[0].end_date;
 
-  const tasksDuration = dayjs(lastEndDate).diff(
-    dayjs(data[0].startdate),
+  const tasksDuration = dayjs(lastenddate).diff(
+    dayjs(data[0].start_date),
     "day"
   );
 
@@ -201,7 +201,7 @@ export const GanttChart = () => {
 
   if (bgLength < 22 * 20) bgLength = 22 * 20;
 
-  let dates = [dayjs(data[0].startdate)];
+  let dates = [dayjs(data[0].start_date)];
 
   if (tasksDuration + 1 > 22) {
     for (let i = 1; i < tasksDuration + 1; i++) {
@@ -249,7 +249,7 @@ export const GanttChart = () => {
               style={{
                 width:
                   "calc(var(--spacing) * " +
-                  dayjs(task.startdate).diff(dates[0], "day") * 20 +
+                  dayjs(task.start_date).diff(dates[0], "day") * 20 +
                   ")",
               }}
             ></div>

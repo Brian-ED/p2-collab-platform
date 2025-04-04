@@ -24,14 +24,13 @@ export default function Page() {
   if (projects.error != null) return <p>{projects.error}</p>;
   if (projects.data.length === 0) return <p>No projects</p>;
 
-
   return (
     <div className="flex flex-row">
       <div className="m-auto mt-20 grid grid-cols-5 gap-15">
         <AddProjectButton />
         {projects.data.map((project) => (
           <BoxedProject
-            key={project.project_id}
+            key={project.id}
             title={project.project_name}
             memberNames={project.members}
             onClick={() => redirect("/projects/" + project.project_id)}
