@@ -42,6 +42,14 @@ export async function checkIfUserHasAccessToProject(session, projectId) {
   return !!result.rowCount;
 }
 
+export async function checkIfTaskBelongsToProject(projectId, taskId) {
+  const result = await pool.query(
+    "select gantt_charts.id from gantt_charts inner join projects on gantt_charts.project_id = projects.id where gantt_charts.id = $1 and projects.id = $2;",
+    [taskId, projectId]
+  );
+  return !!result.rowCount;
+}
+
 export async function getGanttTasks(projectId) {
   const result = await pool.query(
     "SELECT id, title, description, start_date as startdate, end_date as enddate, completed FROM gantt_charts WHERE (project_id = $1);",

@@ -3,11 +3,10 @@ import {
   removeGanttTask,
   checkIfUserHasAccessToProject,
   checkIfUserOwnsProject,
+  checkIfTaskBelongsToProject,
 } from "@/lib/queries";
 
 export async function DELETE(req) {
-  console.log(req);
-
   let projectId = new URL(req.url).searchParams.get("projectId");
   projectId = parseInt(projectId);
   let taskId = new URL(req.url).searchParams.get("taskId");
@@ -17,8 +16,9 @@ export async function DELETE(req) {
   let userHasAccess = false;
   if (Number.isInteger(projectId)) {
     userHasAccess =
-      (await checkIfUserOwnsProject(session, projectId)) ||
-      (await checkIfUserHasAccessToProject(session, projectId));
+      ((await checkIfUserOwnsProject(session, projectId)) ||
+        (await checkIfUserHasAccessToProject(session, projectId))) &&
+      (await checkIfTaskBelongsToProject(projectId, taskId));
   }
 
   if (userHasAccess && !!session) {
