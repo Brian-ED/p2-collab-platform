@@ -11,10 +11,10 @@
     "test": "jest"
   },
   "dependencies": {
+    "@prisma/client": "^6.5.0",
     "dayjs": "^1.11.13",
     "next": "^15.2.3",
     "next-auth": "^5.0.0-beta.25",
-    "pg": "^8.14.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0"
@@ -24,6 +24,7 @@
     "@tailwindcss/postcss": "^4.0.14",
     "eslint": "^9",
     "eslint-config-next": "15.1.7",
+    "prisma": "^6.5.0",
     "tailwindcss": "^4.0.14"
   }
 }
