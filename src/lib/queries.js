@@ -42,6 +42,14 @@ export async function checkIfUserHasAccessToProject(session, projectId) {
   return !!result.rowCount;
 }
 
+export async function checkIfTaskBelongsToProject(projectId, taskId) {
+  const result = await pool.query(
+    "select gantt_charts.id from gantt_charts inner join projects on gantt_charts.project_id = projects.id where gantt_charts.id = $1 and projects.id = $2;",
+    [taskId, projectId]
+  );
+  return !!result.rowCount;
+}
+
 export async function getGanttTasks(projectId) {
   const result = await pool.query(
     "SELECT id, title, description, start_date as startdate, end_date as enddate, completed FROM gantt_charts WHERE (project_id = $1);",
@@ -106,9 +114,19 @@ export async function addProject(session, projectName) {
   return result.rows[0].id;
 }
 
-export async function addGanttTask(projectId, title, description, startDate, endDate) {
+export async function addGanttTask(
+  projectId,
+  title,
+  description,
+  startDate,
+  endDate
+) {
   await pool.query(
     "INSERT INTO gantt_charts (project_id, title, description, start_date, end_date, completed) VALUES ($1, $2, $3, $4, $5, $6);",
     [projectId, title, description, startDate, endDate, false]
   );
+}
+
+export async function removeGanttTask(taskId) {
+  await pool.query("DELETE FROM gantt_charts WHERE id=$1;", [taskId]);
 }

@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 
 import { Loading } from "@/components/loading";
 
-import { FaPlus } from "react-icons/fa6";
+import { FaPlus, FaX } from "react-icons/fa6";
 
 const GanttTask = ({
   id,
@@ -15,14 +15,17 @@ const GanttTask = ({
   startdate,
   enddate,
   percentComplete, //TODO: Should just be "complete" as we won't have percentages.
+  removeGanttTask,
 }) => {
   const [hover, setHover] = useState(false);
+  const [removeTaskHover, setRemoveTaskHover] = useState(false);
+  const [removeTaskClicked, setRemoveTaskClicked] = useState(false);
   const taskDuration = dayjs(enddate).diff(dayjs(startdate), "day");
 
   return (
     <div className="h-12 w-fit flex">
       <div
-        className={`rounded-lg bg-taskcolor h-8 m-auto ml-10 flex group/task`}
+        className={`rounded-lg bg-taskcolor h-8 m-auto ml-10 flex flex-row justify-start group/task overflow-hidden`}
         style={{ width: "calc(var(--spacing) * " + taskDuration * 20 + ")" }}
         onMouseEnter={async () => {
           setHover(true);
@@ -31,11 +34,26 @@ const GanttTask = ({
           setHover(false);
         }}
       >
-        <p className="m-auto ml-1 overflow-hidden group-hover/task:overflow-visible whitespace-nowrap">
+        <div
+          className="flex"
+          onMouseEnter={() => setRemoveTaskHover(true)}
+          onMouseLeave={() => setRemoveTaskHover(false)}
+          onClick={() => setRemoveTaskClicked(!removeTaskClicked)}
+        >
+          {hover && <FaX size={20} className="m-auto ml-2 text-red-600" />}
+        </div>
+        <div
+          className={`absolute bg-white mt-7 ml-9 z-80 text-black text-sm whitespace-nowrap transition-all duration-150 border-1 px-1 ${
+            removeTaskHover ? "scale-100" : "scale-0"
+          }`}
+        >
+          <span>Remove task...</span>
+        </div>
+        <p className="ml-2 m-auto overflow-hidden group-hover/task:overflow-visible whitespace-nowrap">
           {title}
         </p>
         <div
-          className={`absolute z-20 bg-white mt-10 ml-5 rounded-sm max-w-100 max-h-50 overflow-y-hidden ${
+          className={`absolute z-70 bg-white mt-10 ml-5 rounded-sm max-w-100 max-h-50 overflow-y-hidden ${
             hover ? "scale-100" : "scale-0"
           }`}
         >
@@ -43,6 +61,31 @@ const GanttTask = ({
             "DD/MM"
           )} - ${dayjs(enddate).format("DD/MM")}`}</p>
           <p className="text-black p-2 m-auto pt-0">{description}</p>
+        </div>
+      </div>
+      <div
+        className={`bg-white h-fit w-fit text-black border-2 p-2 z-80 ${
+          removeTaskClicked ? "scale-100" : "scale-0"
+        }`}
+      >
+        <p>Are you sure you want to remove this task?</p>
+        <div className="flex flex-row justify-center mt-2">
+          <button
+            className="mx-2 border-2 px-2 rounded-full hover:bg-gray-500/30"
+            onClick={() => {
+              console.log(id);
+              removeGanttTask(id);
+              setRemoveTaskClicked(false);
+            }}
+          >
+            Yes
+          </button>
+          <button
+            className="mx-2 border-2 px-2 rounded-full hover:bg-gray-500/30"
+            onClick={() => setRemoveTaskClicked(false)}
+          >
+            No
+          </button>
         </div>
       </div>
     </div>
@@ -62,7 +105,7 @@ const AddGanttTask = ({ submitFunction }) => {
   return (
     <div
       className={
-        "absolute z-50 w-fit h-fit bg-white top-2 left-12 border-2 border-black text-black flex flex-col text-center p-2 transition-all duration-150"
+        "absolute w-fit h-fit bg-white top-2 left-12 border-2 border-black text-black flex flex-col text-center p-2 transition-all duration-150"
       }
     >
       <form action={() => submitFunction()} id="addTask">
@@ -114,7 +157,7 @@ export const GanttChart = () => {
   const { pid } = useParams();
   const [addTaskHover, setAddTaskHover] = useState(false);
   const [addTaskClicked, setAddTaskClicked] = useState(false);
-  const [addTask, setAddTask] = useState(false);
+  const [changeTask, setChangeTask] = useState(false);
 
   useEffect(() => {
     fetch(`/api/db/getGantt?projectId=${pid}`)
@@ -123,7 +166,7 @@ export const GanttChart = () => {
         setTasks(data);
         setIsLoading(false);
       });
-  }, [addTask]);
+  }, [changeTask]);
 
   const addNewGanttTask = () => {
     setIsLoading(true);
@@ -137,8 +180,19 @@ export const GanttChart = () => {
         "Content-Type": "application/x-www-form-urlencoded",
       },
     }).then(() => {
-      setAddTask(!addTask);
+      setChangeTask(!changeTask);
       setAddTaskClicked(false);
+    });
+  };
+
+  const removeGanttTask = (taskId) => {
+    setIsLoading(true);
+
+    fetch(`/api/db/removeGantt?projectId=${pid}&taskId=${taskId}`, {
+      method: "DELETE",
+    }).then(() => {
+      setChangeTask(!changeTask);
+      setIsLoading(false);
     });
   };
 
@@ -159,7 +213,7 @@ export const GanttChart = () => {
             <FaPlus className="text-green-500 m-auto z-20" size={30} />
 
             <div
-              className={`absolute bg-white mt-7 ml-9 z-60 text-black text-sm whitespace-nowrap transition-all duration-150 border-1 px-1 ${
+              className={`absolute bg-white mt-7 ml-9 z-80 text-black text-sm whitespace-nowrap transition-all duration-150 border-1 px-1 ${
                 addTaskHover ? "scale-100" : "scale-0"
               }`}
             >
@@ -169,7 +223,7 @@ export const GanttChart = () => {
         </div>
 
         <div
-          className={`relative transition-all duration-150 w-fit h-fit ${
+          className={`relative z-100 transition-all duration-150 w-fit h-fit ${
             addTaskClicked ? "scale-100" : "scale-0"
           }`}
         >
@@ -253,7 +307,7 @@ export const GanttChart = () => {
                   ")",
               }}
             ></div>
-            <GanttTask {...task} />
+            <GanttTask {...task} removeGanttTask={removeGanttTask} />
           </div>
         ))}
         <div
@@ -280,7 +334,7 @@ export const GanttChart = () => {
           </div>
         </div>
       </div>
-      <div className="bg-ganttbottom h-6 w-fit flex sticky bottom-0">
+      <div className="bg-ganttbottom h-6 w-fit flex sticky bottom-0 z-60">
         {dates.map((date) => (
           <div key={date.format("DD/MM/YYYY")} className="w-20">
             <p
@@ -296,7 +350,7 @@ export const GanttChart = () => {
         ))}
       </div>
       <div
-        className={`fixed top-[35%] transition-all duration-150 w-fit h-fit ${
+        className={`fixed z-100 top-[35%] transition-all duration-150 w-fit h-fit ${
           addTaskClicked ? "scale-100" : "scale-0"
         }`}
       >
