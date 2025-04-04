@@ -10,6 +10,8 @@ export async function DELETE(req) {
 
   let projectId = new URL(req.url).searchParams.get("projectId");
   projectId = parseInt(projectId);
+  let taskId = new URL(req.url).searchParams.get("taskId");
+  taskId = parseInt(taskId);
 
   const session = await auth();
   let userHasAccess = false;
@@ -20,9 +22,7 @@ export async function DELETE(req) {
   }
 
   if (userHasAccess && !!session) {
-    let taskId = new URL(req.url).searchParams.get("taskId");
-    taskId = parseInt(taskId);
-    //await removeGanttTask(taskId);
+    await removeGanttTask(taskId);
 
     console.log("task id: " + taskId);
 

@@ -15,22 +15,12 @@ const GanttTask = ({
   startdate,
   enddate,
   percentComplete, //TODO: Should just be "complete" as we won't have percentages.
+  removeGanttTask,
 }) => {
   const [hover, setHover] = useState(false);
   const [removeTaskHover, setRemoveTaskHover] = useState(false);
   const [removeTaskClicked, setRemoveTaskClicked] = useState(false);
   const taskDuration = dayjs(enddate).diff(dayjs(startdate), "day");
-  const { pid } = useParams();
-
-  const removeGanttTask = (taskId) => {
-    //setIsLoading(true);
-
-    fetch(`/api/db/removeGantt?projectId=${pid}&taskId=${taskId}`, {
-      method: "DELETE",
-    }).then(() => {
-      //setIsLoading(false);
-    });
-  };
 
   return (
     <div className="h-12 w-fit flex">
@@ -167,7 +157,7 @@ export const GanttChart = () => {
   const { pid } = useParams();
   const [addTaskHover, setAddTaskHover] = useState(false);
   const [addTaskClicked, setAddTaskClicked] = useState(false);
-  const [addTask, setAddTask] = useState(false);
+  const [changeTask, setChangeTask] = useState(false);
 
   useEffect(() => {
     fetch(`/api/db/getGantt?projectId=${pid}`)
@@ -176,7 +166,7 @@ export const GanttChart = () => {
         setTasks(data);
         setIsLoading(false);
       });
-  }, [addTask]);
+  }, [changeTask]);
 
   const addNewGanttTask = () => {
     setIsLoading(true);
@@ -190,8 +180,19 @@ export const GanttChart = () => {
         "Content-Type": "application/x-www-form-urlencoded",
       },
     }).then(() => {
-      setAddTask(!addTask);
+      setChangeTask(!changeTask);
       setAddTaskClicked(false);
+    });
+  };
+
+  const removeGanttTask = (taskId) => {
+    setIsLoading(true);
+
+    fetch(`/api/db/removeGantt?projectId=${pid}&taskId=${taskId}`, {
+      method: "DELETE",
+    }).then(() => {
+      setChangeTask(!changeTask);
+      setIsLoading(false);
     });
   };
 
@@ -306,7 +307,7 @@ export const GanttChart = () => {
                   ")",
               }}
             ></div>
-            <GanttTask {...task} />
+            <GanttTask {...task} removeGanttTask={removeGanttTask} />
           </div>
         ))}
         <div
