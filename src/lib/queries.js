@@ -54,11 +54,15 @@ export async function checkIfUserHasAccessToProject(session, projectId) {
 }
 
 export async function checkIfTaskBelongsToProject(projectId, taskId) {
-  const result = await pool.query(
-    "select gantt_charts.id from gantt_charts inner join projects on gantt_charts.project_id = projects.id where gantt_charts.id = $1 and projects.id = $2;",
-    [taskId, projectId]
-  );
-  return !!result.rowCount;
+  const count = await prisma.gantt_charts.count({
+    where: {
+      projects: {
+        id: projectId,
+      },
+      id: taskId,
+    },
+  });
+  return !!count;
 }
 
 export async function getGanttTasks(projectId) {
@@ -188,5 +192,9 @@ export async function addGanttTask(
 }
 
 export async function removeGanttTask(taskId) {
-  await pool.query("DELETE FROM gantt_charts WHERE id=$1;", [taskId]);
+  await prisma.gantt_charts.delete({
+    where: {
+      id: taskId,
+    },
+  });
 }
