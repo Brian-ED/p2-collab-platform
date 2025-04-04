@@ -8,8 +8,6 @@ import {
 } from "@/lib/queries";
 
 export async function POST(req) {
-  console.log(req);
-
   let projectId = new URL(req.url).searchParams.get("projectId");
   projectId = parseInt(projectId);
 

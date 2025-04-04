@@ -20,6 +20,17 @@ const GanttTask = ({
   const [removeTaskHover, setRemoveTaskHover] = useState(false);
   const [removeTaskClicked, setRemoveTaskClicked] = useState(false);
   const taskDuration = dayjs(enddate).diff(dayjs(startdate), "day");
+  const { pid } = useParams();
+
+  const removeGanttTask = (taskId) => {
+    //setIsLoading(true);
+
+    fetch(`/api/db/removeGantt?projectId=${pid}&taskId=${taskId}`, {
+      method: "DELETE",
+    }).then(() => {
+      //setIsLoading(false);
+    });
+  };
 
   return (
     <div className="h-12 w-fit flex">
@@ -71,7 +82,11 @@ const GanttTask = ({
         <div className="flex flex-row justify-center mt-2">
           <button
             className="mx-2 border-2 px-2 rounded-full hover:bg-gray-500/30"
-            onClick={() => setRemoveTaskClicked(false)}
+            onClick={() => {
+              console.log(id);
+              removeGanttTask(id);
+              setRemoveTaskClicked(false);
+            }}
           >
             Yes
           </button>
