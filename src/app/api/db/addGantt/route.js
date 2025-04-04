@@ -3,7 +3,6 @@ import dayjs from "dayjs";
 
 import {
   addGanttTask,
-  addProject,
   checkIfUserHasAccessToProject,
   checkIfUserOwnsProject,
 } from "@/lib/queries";
