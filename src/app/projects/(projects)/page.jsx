@@ -22,8 +22,14 @@ export default function Page() {
 
   if (isLoading) return <Loading />;
   if (projects.error != null) return <p>{projects.error}</p>;
-  if (projects.data.length === 0) return <p>No projects</p>;
-
+  if (projects.data.length === 0)
+    return (
+      <div className="flex flex-row">
+        <div className="m-auto mt-20">
+          <AddProjectButton />
+        </div>
+      </div>
+    );
 
   return (
     <div className="flex flex-row">
@@ -31,10 +37,10 @@ export default function Page() {
         <AddProjectButton />
         {projects.data.map((project) => (
           <BoxedProject
-            key={project.project_id}
+            key={project.id}
             title={project.project_name}
             memberNames={project.members[0]}
-            onClick={() => redirect("/projects/" + project.project_id)}
+            onClick={() => redirect("/projects/" + project.id)}
           />
         ))}
       </div>
