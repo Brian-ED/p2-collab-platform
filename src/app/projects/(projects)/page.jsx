@@ -25,7 +25,7 @@ export default function Page() {
   if (projects.data.length === 0)
     return (
       <div className="flex flex-row">
-        <div className="m-auto mt-20 grid grid-cols-5 gap-15">
+        <div className="m-auto mt-20">
           <AddProjectButton />
         </div>
       </div>
