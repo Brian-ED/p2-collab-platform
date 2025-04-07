@@ -50,7 +50,7 @@ export async function checkIfUserHasAccessToProject(session, projectId) {
     },
   });
 
-  return count;
+  return !!count;
 }
 
 export async function checkIfTaskBelongsToProject(projectId, taskId) {
