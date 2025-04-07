@@ -1,6 +1,6 @@
 "use client";
 
-import { BoxedProject } from "@/components/boxed-project";
+import { BoxedProject } from "@/components/boxedProject";
 import { AddProjectButton } from "@/components/addProjectButton";
 import { Loading } from "@/components/loading";
 
