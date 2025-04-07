@@ -134,13 +134,13 @@ const AddGanttTask = ({ submitFunction }) => {
           Start date:
         </label>
         <br />
-        <input className="mb-2" type="date" name="gantt-start_date" />
+        <input className="mb-2" type="date" name="gantt-startdate" />
         <br />
         <label className="font-semibold" htmlFor="end_date">
           End date:
         </label>
         <br />
-        <input className="mb-4" type="date" name="gantt-end_date" />
+        <input className="mb-4" type="date" name="gantt-enddate" />
         <br />
         <input
           className="border-2 px-2 rounded-full hover:bg-gray-500/30"
