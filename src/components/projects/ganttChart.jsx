@@ -6,6 +6,8 @@ import { useParams } from "next/navigation";
 
 import { Loading } from "@/components/loading";
 
+import { FaPlus } from "react-icons/fa6";
+
 const GanttTask = ({
   id,
   title,
@@ -56,10 +58,63 @@ const isCurrentDateInChart = (day, dates) => {
   return false;
 };
 
+const AddGanttTask = ({ submitFunction }) => {
+  return (
+    <div
+      className={
+        "absolute z-50 w-fit h-fit bg-white top-2 left-12 border-2 border-black text-black flex flex-col text-center p-2 transition-all duration-150"
+      }
+    >
+      <form action={() => submitFunction()} id="addTask">
+        <h3 className="text-center font-bold text-lg mb-2">
+          Add new Gantt task
+        </h3>
+        <label className="font-semibold" htmlFor="title">
+          Title:
+        </label>
+        <br />
+        <input className="border-1 mb-2 " type="text" name="gantt-title" />
+        <br />
+        <label className="font-semibold" htmlFor="description">
+          Description:
+        </label>
+        <br />
+        <textarea
+          className="border-1 mb-2 text-sm resize-none"
+          rows="3"
+          cols="21"
+          name="gantt-description"
+        />
+        <br />
+        <label className="font-semibold" htmlFor="startdate">
+          Start date:
+        </label>
+        <br />
+        <input className="mb-2" type="date" name="gantt-startdate" />
+        <br />
+        <label className="font-semibold" htmlFor="enddate">
+          End date:
+        </label>
+        <br />
+        <input className="mb-4" type="date" name="gantt-enddate" />
+        <br />
+        <input
+          className="border-2 px-2 rounded-full hover:bg-gray-500/30"
+          type="submit"
+          value="Add task"
+        />
+      </form>
+    </div>
+  );
+};
+
 export const GanttChart = () => {
   const [tasks, setTasks] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const { pid } = useParams();
+  const [addTaskHover, setAddTaskHover] = useState(false);
+  const [addTaskClicked, setAddTaskClicked] = useState(false);
+  const [addTask, setAddTask] = useState(false);
 
   useEffect(() => {
     fetch(`/api/db/getGantt?projectId=${pid}`)
@@ -68,11 +123,61 @@ export const GanttChart = () => {
         setTasks(data);
         setIsLoading(false);
       });
-  }, []);
+  }, [addTask]);
+
+  const addNewGanttTask = () => {
+    setIsLoading(true);
+    const data = new URLSearchParams(
+      new FormData(document.querySelector("#addTask"))
+    );
+    fetch(`/api/db/addGantt?projectId=${pid}`, {
+      method: "POST",
+      body: data,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    }).then(() => {
+      setAddTask(!addTask);
+      setAddTaskClicked(false);
+    });
+  };
 
   if (isLoading) return <Loading />;
   if (tasks.error != null) return <p>{tasks.error}</p>;
-  if (tasks.data.length === 0) return <p>No tasks</p>;
+  if (tasks.data.length === 0) {
+    return (
+      <>
+        <h1 className="text-xl">No tasks...</h1>
+        <div className="relative flex flex-row w-fit">
+          <h2 className="text-lg m-auto">Add your first task:</h2>
+          <div
+            className="h-12 w-12 flex"
+            onMouseEnter={() => setAddTaskHover(true)}
+            onMouseLeave={() => setAddTaskHover(false)}
+            onClick={() => setAddTaskClicked(!addTaskClicked)}
+          >
+            <FaPlus className="text-green-500 m-auto z-20" size={30} />
+
+            <div
+              className={`absolute bg-white mt-7 ml-9 z-60 text-black text-sm whitespace-nowrap transition-all duration-150 border-1 px-1 ${
+                addTaskHover ? "scale-100" : "scale-0"
+              }`}
+            >
+              <span>Add task...</span>
+            </div>
+          </div>
+        </div>
+
+        <div
+          className={`relative transition-all duration-150 w-fit h-fit ${
+            addTaskClicked ? "scale-100" : "scale-0"
+          }`}
+        >
+          <AddGanttTask submitFunction={addNewGanttTask} />
+        </div>
+      </>
+    );
+  }
 
   let data = tasks.data;
 
@@ -120,9 +225,9 @@ export const GanttChart = () => {
     >
       {inChart && (
         <div
-          className="w-0.5 bg-currentdatecolor absolute"
+          className="w-0.5 bg-currentdatecolor absolute z-10"
           style={{
-            height: "calc(var(--spacing) * " + data.length * 12 + ")",
+            height: "calc(var(--spacing) * " + (data.length + 1) * 12 + ")",
             marginLeft:
               "calc(var(--spacing) * " +
               (dayjs(currentDate).diff(dayjs(dates[0]), "day") * 20 + 10) +
@@ -130,7 +235,8 @@ export const GanttChart = () => {
           }}
         ></div>
       )}
-      <div className="[&>*:nth-child(odd)]:bg-trackcolorodd [&>*:nth-child(even)]:bg-trackcolor">
+
+      <div className="[&>*:nth-child(odd)]:bg-trackcolorodd [&>*:nth-child(even)]:bg-trackcolor relative">
         {data.map((task) => (
           <div
             style={{
@@ -150,6 +256,29 @@ export const GanttChart = () => {
             <GanttTask {...task} />
           </div>
         ))}
+        <div
+          className="h-12 flex flex-row"
+          style={{
+            width: "calc(var(--spacing) * " + (bgLength + 20) + ")",
+          }}
+        >
+          <div
+            className="h-12 w-12 flex"
+            onMouseEnter={() => setAddTaskHover(true)}
+            onMouseLeave={() => setAddTaskHover(false)}
+            onClick={() => setAddTaskClicked(!addTaskClicked)}
+          >
+            <FaPlus className="text-green-500 m-auto z-20" size={30} />
+
+            <div
+              className={`absolute bg-white mt-7 ml-9 z-60 text-black text-sm whitespace-nowrap transition-all duration-150 border-1 px-1 ${
+                addTaskHover ? "scale-100" : "scale-0"
+              }`}
+            >
+              <span>Add task...</span>
+            </div>
+          </div>
+        </div>
       </div>
       <div className="bg-ganttbottom h-6 w-fit flex sticky bottom-0">
         {dates.map((date) => (
@@ -165,6 +294,13 @@ export const GanttChart = () => {
             </p>
           </div>
         ))}
+      </div>
+      <div
+        className={`fixed top-[35%] transition-all duration-150 w-fit h-fit ${
+          addTaskClicked ? "scale-100" : "scale-0"
+        }`}
+      >
+        <AddGanttTask submitFunction={addNewGanttTask} />
       </div>
     </div>
   );
