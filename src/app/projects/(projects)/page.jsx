@@ -22,7 +22,14 @@ export default function Page() {
 
   if (isLoading) return <Loading />;
   if (projects.error != null) return <p>{projects.error}</p>;
-  if (projects.data.length === 0) return <p>No projects</p>;
+  if (projects.data.length === 0)
+    return (
+      <div className="flex flex-row">
+        <div className="m-auto mt-20 grid grid-cols-5 gap-15">
+          <AddProjectButton />
+        </div>
+      </div>
+    );
 
   return (
     <div className="flex flex-row">
