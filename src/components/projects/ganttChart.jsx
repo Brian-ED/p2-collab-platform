@@ -62,30 +62,30 @@ const GanttTask = ({
           )} - ${dayjs(enddate).format("DD/MM")}`}</p>
           <p className="text-black p-2 m-auto pt-0">{description}</p>
         </div>
-      </div>
-      <div
-        className={`bg-white h-fit w-fit text-black border-2 p-2 z-80 ${
-          removeTaskClicked ? "scale-100" : "scale-0"
-        }`}
-      >
-        <p>Are you sure you want to remove this task?</p>
-        <div className="flex flex-row justify-center mt-2">
-          <button
-            className="mx-2 border-2 px-2 rounded-full hover:bg-gray-500/30"
-            onClick={() => {
-              console.log(id);
-              removeGanttTask(id);
-              setRemoveTaskClicked(false);
-            }}
-          >
-            Yes
-          </button>
-          <button
-            className="mx-2 border-2 px-2 rounded-full hover:bg-gray-500/30"
-            onClick={() => setRemoveTaskClicked(false)}
-          >
-            No
-          </button>
+        <div
+          className={`absolute ml-16 mt-3 bg-white h-fit w-fit text-black border-2 p-2 z-80 ${
+            removeTaskClicked ? "scale-100" : "scale-0"
+          }`}
+        >
+          <p>Are you sure you want to remove this task?</p>
+          <div className="flex flex-row justify-center mt-2">
+            <button
+              className="mx-2 border-2 px-2 rounded-full hover:bg-gray-500/30"
+              onClick={() => {
+                console.log(id);
+                removeGanttTask(id);
+                setRemoveTaskClicked(false);
+              }}
+            >
+              Yes
+            </button>
+            <button
+              className="mx-2 border-2 px-2 rounded-full hover:bg-gray-500/30"
+              onClick={() => setRemoveTaskClicked(false)}
+            >
+              No
+            </button>
+          </div>
         </div>
       </div>
     </div>
