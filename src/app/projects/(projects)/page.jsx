@@ -1,6 +1,6 @@
 "use client";
 
-import { BoxedProject } from "@/components/boxed-project";
+import { BoxedProject } from "@/components/boxedProject";
 import { AddProjectButton } from "@/components/addProjectButton";
 import { Loading } from "@/components/loading";
 
@@ -35,12 +35,12 @@ export default function Page() {
     <div className="flex flex-row">
       <div className="m-auto mt-20 grid grid-cols-5 gap-15">
         <AddProjectButton />
-        {projects.data.map((project) => (
+        {projects.data.map(({id, project_name, members}) => (
           <BoxedProject
-            key={project.id}
-            title={project.project_name}
-            memberNames={project.members}
-            onClick={() => redirect("/projects/" + project.id)}
+            key={id}
+            title={project_name}
+            memberNames={members}
+            onClick={() => redirect("/projects/" + id)}
           />
         ))}
       </div>
