@@ -1,6 +1,6 @@
 "use client";
 
-import { FaPlus, FaTrash } from "react-icons/fa";
+import { FaPlus, FaTrash, FaRegEdit } from "react-icons/fa";
 import { useState } from "react";
 
 export const GroupContract = () => {
@@ -20,6 +20,12 @@ export const GroupContract = () => {
 
   // State for creating new rules inside categories
   const [newRuleInputs, setNewRuleInputs] = useState({});
+
+  // State for selecting a rule to edit
+  const [editingRuleId, setEditingRuleId] = useState(null);
+
+  // State for the text to edit in a rule
+  const [editedRuleText, setEditedRuleText] = useState("");
 
   // Handle input changes for a new rule
   const handleCategoryInputChange = (value) => {
@@ -81,6 +87,35 @@ export const GroupContract = () => {
     setNewRuleInputs((prevInputs) => ({ ...prevInputs, [categoryId]: "" }));
   };
 
+  // Edit a rule
+  const handleEdit = (rule) => {
+    setEditingRuleId(rule.id);
+    setEditedRuleText(rule.description);
+  };
+
+  const cancelEdit = () => {
+    setEditingRuleId(null);
+    setEditedRuleText("");
+  };
+
+  const savedEditedRule = (categoryId, ruleId) => {
+    setContractRules((prevRules) =>
+      prevRules.map((category) =>
+        category.id === categoryId
+          ? {
+              ...category,
+              rules: category.rules.map((rule) =>
+                rule.id === ruleId
+                  ? { ...rule, description: editedRuleText }
+                  : rule
+              ),
+            }
+          : category
+      )
+    );
+    cancelEdit();
+  };
+
   return (
     <div className="p-4">
       <h2 className="text-5xl font-bold mb-4">Group Contract</h2>
@@ -117,8 +152,48 @@ export const GroupContract = () => {
             <h3 className="text-xl font-bold my-2">{category.title}</h3>
             <ul>
               {category.rules.map((rule) => (
-                <li key={rule.id} className="py-3 flex content-center border-b">
-                  {rule.description}
+                <li key={rule.id} className="py-3 content-center border-b">
+                  <div className="flex items-center justify-between">
+                    {editingRuleId === rule.id ? (
+                      <textarea
+                        value={editedRuleText}
+                        onChange={(e) => setEditedRuleText(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && !e.shiftKey) {
+                            e.preventDefault();
+                            savedEditedRule(category.id, rule.id);
+                          } else if (e.key === "Escape") {
+                            cancelEdit();
+                          }
+                        }}
+                        autoFocus
+                        className="border p-2 rounded w-full resize-none"
+                      />
+                    ) : (
+                      <span>{rule.description}</span>
+                    )}
+                    <div className="flex gap-2 relative">
+                      <button
+                        onClick={() => handleEdit(rule)}
+                        className="text-white hover:text-white/75"
+                        aria-label="Edit"
+                      >
+                        <FaRegEdit />
+                      </button>
+                      <div className="absolute bottom-full mb-2 hidden w-max rounded bg-gray-800 px-2 py-1 text-sm text-white group-hover:block">
+                        Edit
+                        <div className="absolute left-1/2 top-full -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45"></div>
+                      </div>
+
+                      <button
+                        onClick={() => handleDelete(rule.id)}
+                        className="text-white hover:text-white/75"
+                        aria-label="Delete"
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
+                  </div>
                 </li>
               ))}
             </ul>
