@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model access {
+  id          Int         @id @default(autoincrement())
+  user_id     Int
+  project_id  Int
+  permission  Int
+  permissions permissions @relation(fields: [permission], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  projects    projects    @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users       users       @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model gantt_charts {
+  id          Int      @id @default(autoincrement())
+  project_id  Int
+  start_date  DateTime @db.Date
+  end_date    DateTime @db.Date
+  title       String   @db.Char(50)
+  description String   @default("") @db.Char(255)
+  completed   Boolean  @default(false)
+  projects    projects @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model group_contracts {
+  id                      Int                       @id @default(autoincrement())
+  project_id              Int
+  projects                projects                  @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  group_contracts_content group_contracts_content[]
+}
+
+model group_contracts_content {
+  id                Int             @id @default(autoincrement())
+  parent            Int?
+  group_contract_id Int
+  rule_title        String          @default("") @db.Char(50)
+  rule_description  String          @default("")
+  group_contracts   group_contracts @relation(fields: [group_contract_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model messages {
+  id         Int       @id @default(autoincrement())
+  project_id Int
+  sender_id  Int
+  message    String
+  time_sent  DateTime? @default(now()) @db.Timestamp(6)
+  projects   projects  @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users      users     @relation(fields: [sender_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model permissions {
+  id     Int      @id @default(autoincrement())
+  name   String?  @db.Char(20)
+  access access[]
+}
+
+model projects {
+  id              Int               @id @default(autoincrement())
+  user_id         Int
+  project_name    String            @default("") @db.Char(50)
+  access          access[]
+  gantt_charts    gantt_charts[]
+  group_contracts group_contracts[]
+  messages        messages[]
+  users           users             @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model users {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique @db.Char(30)
+  user_id   String     @unique @db.Char(150)
+  joined_at DateTime?  @default(now()) @db.Timestamp(6)
+  access    access[]
+  messages  messages[]
+  projects  projects[]
+}

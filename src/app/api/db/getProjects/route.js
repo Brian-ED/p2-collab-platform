@@ -8,7 +8,7 @@ export async function GET() {
     const data = await getUserProjects(session);
 
     for (let i = 0; i < data.length; i++) {
-      data[i].members = [await getProjectMembers(data[i].project_id)];
+      data[i].members = await getProjectMembers(data[i].id);
     }
 
     return Response.json({ data: data, error: null });
