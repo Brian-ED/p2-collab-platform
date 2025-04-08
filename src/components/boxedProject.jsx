@@ -21,7 +21,7 @@ export const BoxedProject = ({
               key={id}
               className="whitespace-nowrap overflow-hidden overflow-ellipsis text-[12px] max-w-40 mx-auto"
             >
-              {name}
+              {""===name? "Non-named User": name}
             </p>
           ))}
         </div>
