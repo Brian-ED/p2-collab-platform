@@ -11,19 +11,18 @@ export const BoxedProject = ({
       className="py-5 rounded-md bg-blue-600 hover:bg-blue-500 hover:cursor-pointer size-50"
     >
       <div className="h-full">
-        <div className="whitespace-nowrap overflow-hidden overflow-ellipsi leading-10">
+        <div className="whitespace-nowrap overflow-hidden leading-10">
           {title}
         </div>
         Members:
-        <div className="w-40">
+        <div className="flex flex-col">
           {memberNames.slice(0, 3).map(({ id, name }) => (
-            <div
+            <p
               key={id}
-              className="whitespace-nowrap overflow-hidden overflow-ellipsis text-[12px] leading-7"
+              className="whitespace-nowrap overflow-hidden overflow-ellipsis text-[12px] max-w-40 mx-auto"
             >
-              {name +
-                "abcdefghijklmenopopawokdpowefowejfijwwjefojfoeiwejfowjefoeifjwoiefjowef"}
-            </div>
+              {name}
+            </p>
           ))}
         </div>
         {memberNames.length > 3 ? <>...</> : <></>}
