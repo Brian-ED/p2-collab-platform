@@ -1,6 +1,7 @@
 "use client";
 
-import { FaPlus, FaTrash, FaRegEdit } from "react-icons/fa";
+import { FaPlus, FaRegEdit } from "react-icons/fa";
+import { FaRegTrashCan } from "react-icons/fa6";
 import { useState } from "react";
 
 export const GroupContract = () => {
@@ -116,6 +117,10 @@ export const GroupContract = () => {
     cancelEdit();
   };
 
+  const handleDelete = (categoryId, ruleId) => {
+    console.log("hello");
+  }
+
   return (
     <div className="p-4">
       <h2 className="text-5xl font-bold mb-4">Group Contract</h2>
@@ -160,7 +165,6 @@ export const GroupContract = () => {
                         onChange={(e) => setEditedRuleText(e.target.value)}
                         onKeyDown={(e) => {
                           if (e.key === "Enter" && !e.shiftKey) {
-                            e.preventDefault();
                             savedEditedRule(category.id, rule.id);
                           } else if (e.key === "Escape") {
                             cancelEdit();
@@ -172,26 +176,36 @@ export const GroupContract = () => {
                     ) : (
                       <span>{rule.description}</span>
                     )}
-                    <div className="flex gap-2 relative">
-                      <button
-                        onClick={() => handleEdit(rule)}
-                        className="text-white hover:text-white/75"
-                        aria-label="Edit"
-                      >
-                        <FaRegEdit />
-                      </button>
-                      <div className="absolute bottom-full mb-2 hidden w-max rounded bg-gray-800 px-2 py-1 text-sm text-white group-hover:block">
-                        Edit
-                        <div className="absolute left-1/2 top-full -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45"></div>
+                    <div className="flex gap-2">
+                      <div className="relative group">
+                        <button
+                          onClick={() => handleEdit(rule)}
+                          className="text-white hover:text-white/75 flex items-center"
+                          aria-label="Edit"
+                        >
+                          <FaRegEdit />
+                        </button>
+
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 hidden w-max rounded bg-gray-800 px-2 py-1 group-hover:block">
+                          Edit
+                          <div className="absolute left-1/2 top-full -translate-x-1/2 w-3 h-2 bg-gray-800 rotate-180 [clip-path:polygon(50%_0%,_0%_100%,_100%_100%)]"></div>
+                        </div>
                       </div>
 
-                      <button
-                        onClick={() => handleDelete(rule.id)}
-                        className="text-white hover:text-white/75"
-                        aria-label="Delete"
-                      >
-                        <FaTrash />
-                      </button>
+                      <div className="relative group">
+                        <button
+                          onClick={() => handleDelete(rule.id)}
+                          className="white hover:text-white/75 flex items-center"
+                          aria-label="Delete"
+                        >
+                          <FaRegTrashCan />
+                        </button>
+
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 hidden w-max rounded bg-gray-800 px-2 py-1 text-sm group-hover:block">
+                          Delete
+                          <div className="absolute left-1/2 top-full -translate-x-1/2 w-3 h-2 bg-gray-800 rotate-180 [clip-path:polygon(50%_0%,_0%_100%,_100%_100%)]"></div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </li>
