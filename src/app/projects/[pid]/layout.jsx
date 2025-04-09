@@ -77,6 +77,12 @@ export default function ProjectsLayout({ children }) {
             >
               GitHub
             </button>
+            <button
+              className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
+              onClick={() => setSection("messaging")}
+            >
+              Messages
+            </button>
           </nav>
         )}
       </div>
