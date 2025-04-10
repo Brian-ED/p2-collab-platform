@@ -220,3 +220,25 @@ export async function getMessages(projectId) {
 
   return messages;
 }
+
+export async function addMessage(projectId, session, message) {
+  const userId = session.user.image.split("/")[4].split("?")[0];
+  const id = (
+    await prisma.users.findFirst({
+      where: {
+        user_id: userId,
+      },
+      select: {
+        id: true,
+      },
+    })
+  ).id;
+
+  await prisma.messages.create({
+    data: {
+      project_id: projectId,
+      sender_id: id,
+      message: message,
+    },
+  });
+}
