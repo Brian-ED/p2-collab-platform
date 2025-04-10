@@ -1,19 +1,20 @@
 "use client";
 
 import { useEffect } from "react";
+import { useParams } from "next/navigation";
 
 export const InstantMessaging = () => {
-  useEffect(() => {
-    const eventSource = new EventSource("/api/chat");
+  const { pid } = useParams();
 
-    console.log(eventSource);
+  useEffect(() => {
+    const eventSource = new EventSource(`/api/chat?projectId=${pid}`);
 
     eventSource.onopen = () => {
       console.log("Forbindelse oprettet!");
     };
 
     eventSource.onmessage = (event) => {
-      console.log(event);
+      console.log(JSON.parse(event.data));
     };
   }, []);
 

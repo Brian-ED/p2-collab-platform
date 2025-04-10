@@ -198,3 +198,24 @@ export async function removeGanttTask(taskId) {
     },
   });
 }
+
+export async function getMessages(projectId) {
+  const messages = await prisma.messages.findMany({
+    where: {
+      projects: {
+        id: projectId,
+      },
+    },
+    select: {
+      users: {
+        select: {
+          name: true,
+        },
+      },
+      message: true,
+      time_sent: true,
+    },
+  });
+
+  return messages;
+}

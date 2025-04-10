@@ -1,39 +1,71 @@
-export async function GET(request) {
-  const encoder = new TextEncoder();
-  const { readable, writable } = new TransformStream();
-  const writer = writable.getWriter();
+import { auth } from "@/auth/authSetup";
+import {
+  checkIfUserOwnsProject,
+  checkIfUserHasAccessToProject,
+  getMessages,
+} from "@/lib/queries";
 
-  let interval;
+export async function GET(req) {
+  let projectId = new URL(req.url).searchParams.get("projectId");
+  projectId = parseInt(projectId);
 
-  // Helper to send SSE-formatted messages
-  const send = async (data) => {
-    const formatted = `data: ${data}\n\n`;
-    await writer.write(encoder.encode(formatted));
-  };
+  const session = await auth();
+  let userHasAccess = false;
 
-  // Start pushing events
-  const start = async () => {
-    await send("Connected to SSE stream");
+  if (Number.isInteger(projectId)) {
+    userHasAccess =
+      (await checkIfUserOwnsProject(session, projectId)) ||
+      (await checkIfUserHasAccessToProject(session, projectId));
+  }
 
-    interval = setInterval(async () => {
-      const message = JSON.stringify({ time: new Date().toISOString() });
-      await send(message);
-    }, 2000);
-  };
+  if (!!session && userHasAccess) {
+    const encoder = new TextEncoder();
+    const { readable, writable } = new TransformStream();
+    const writer = writable.getWriter();
 
-  // Handle client disconnect
-  request.signal?.addEventListener("abort", () => {
-    clearInterval(interval);
-    writer.close();
-  });
+    let sendDataInterval;
+    let pullDBDataInterval;
+    let messages = await getMessages(projectId);
 
-  start();
+    // RETURN DATA
+    const send = async (data) => {
+      const formatted = `data: ${data}\n\n`;
+      await writer.write(encoder.encode(formatted));
+    };
 
-  return new Response(readable, {
-    headers: {
-      "Content-Type": "text/event-stream",
-      "Cache-Control": "no-cache",
-      Connection: "keep-alive",
-    },
-  });
+    // START FUNCTION
+    const start = async () => {
+      await send(JSON.stringify({ messages: messages }));
+
+      sendDataInterval = setInterval(async () => {
+        const message = JSON.stringify({ messages: messages });
+        await send(message);
+      }, 2000);
+
+      pullDBDataInterval = setInterval(async () => {
+        const result = await getMessages(projectId);
+        messages = result;
+      }, 5000);
+    };
+
+    // USER DISCONNECTS
+    req.signal?.addEventListener("abort", () => {
+      console.log("User disconnected");
+      clearInterval(sendDataInterval);
+      clearInterval(pullDBDataInterval);
+      writer.close();
+    });
+
+    start();
+
+    return new Response(readable, {
+      headers: {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
+      },
+    });
+  }
+
+  return Response.json({ data: null, error: "Not authorized" });
 }
