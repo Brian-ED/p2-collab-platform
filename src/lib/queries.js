@@ -206,6 +206,9 @@ export async function getMessages(projectId) {
         id: projectId,
       },
     },
+    orderBy: {
+      time_sent: "asc",
+    },
     select: {
       id: true,
       users: {
