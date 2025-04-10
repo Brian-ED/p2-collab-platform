@@ -2,7 +2,8 @@
 
 import { FaPlus, FaRegEdit } from "react-icons/fa";
 import { FaRegTrashCan } from "react-icons/fa6";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { useOutsideClick } from "@/app/hooks/useOutsideClick"; // Custom hook
 
 export const GroupContract = () => {
   const [contractRules, setContractRules] = useState([]);
@@ -117,9 +118,37 @@ export const GroupContract = () => {
     cancelEdit();
   };
 
+  // Leave edit mode when mouse clicks outside the textfield
+  const textareaRef = useRef(null);
+  useOutsideClick(
+    textareaRef,
+    () => {
+      if (editingRuleId !== null) {
+        const category = contractRules.find((category) =>
+          category.rules.some((rule) => rule.id === editingRuleId)
+        );
+        if (!category) return;
+
+        const rule = category.rules.find((rule) => rule.id === editingRuleId);
+        if (!rule) return;
+
+        const trimmedNewText = editedRuleText.trim();
+        const trimmedOldText = rule.description.trim();
+
+        // Only save if the text is actually changed, otherwise just cancel edit
+        if (trimmedNewText !== trimmedOldText && trimmedNewText !== "") {
+          savedEditedRule(category.id, editingRuleId);
+        } else {
+          cancelEdit(); // Nothing happend, just cancel edit
+        }
+      }
+    },
+    editingRuleId !== null
+  );
+
   const handleDelete = (categoryId, ruleId) => {
     console.log("hello");
-  }
+  };
 
   return (
     <div className="p-4">
@@ -161,6 +190,7 @@ export const GroupContract = () => {
                   <div className="flex items-center justify-between">
                     {editingRuleId === rule.id ? (
                       <textarea
+                        ref={textareaRef}
                         value={editedRuleText}
                         onChange={(e) => setEditedRuleText(e.target.value)}
                         onKeyDown={(e) => {
@@ -169,6 +199,10 @@ export const GroupContract = () => {
                           } else if (e.key === "Escape") {
                             cancelEdit();
                           }
+                        }}
+                        onFocus={(e) => {
+                          const value = e.target.value;
+                          e.target.setSelectionRange(value.length, value.length);
                         }}
                         autoFocus
                         className="border p-2 rounded w-full resize-none"
