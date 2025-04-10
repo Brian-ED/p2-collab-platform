@@ -38,14 +38,10 @@ export async function GET(req) {
     const start = async () => {
       await send(JSON.stringify({ messages: messages }));
 
-      sendDataInterval = setInterval(async () => {
-        const message = JSON.stringify({ messages: messages });
-        await send(message);
-      }, 2000);
-
       pullDBDataInterval = setInterval(async () => {
         const result = await getMessages(projectId);
-        messages = result;
+        const message = JSON.stringify({ messages: result });
+        await send(message);
       }, 5000);
     };
 
@@ -96,6 +92,8 @@ export async function POST(req) {
   }
 
   if (userHasAccess && !!session) {
-    await addMessage(projectId, session, message);
+    const addedMessage = await addMessage(projectId, session, message);
+    return Response.json({ data: ["Message sent", addedMessage], error: null });
   }
+  return Response.json({ data: null, error: "Not authorized" });
 }

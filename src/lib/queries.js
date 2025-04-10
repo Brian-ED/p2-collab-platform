@@ -234,11 +234,21 @@ export async function addMessage(projectId, session, message) {
     })
   ).id;
 
-  await prisma.messages.create({
+  return await prisma.messages.create({
     data: {
       project_id: projectId,
       sender_id: id,
       message: message,
+    },
+    select: {
+      id: true,
+      users: {
+        select: {
+          name: true,
+        },
+      },
+      message: true,
+      time_sent: true,
     },
   });
 }

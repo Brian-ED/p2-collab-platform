@@ -27,13 +27,19 @@ export const InstantMessaging = () => {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-    }).then((response) => {
-      console.log(response);
-    });
+    })
+      .then((data) => data.json())
+      .then((response) => {
+        if (response.data[0] === "Message sent") {
+          const returnedMessage = response.data[1];
+          let currentMessages = messages.concat([returnedMessage]);
+          setMessages(currentMessages);
+        }
+      });
   };
 
   return (
-    <div>
+    <div id="message-container">
       {messages.map((message) => (
         <Message
           key={message.id}
