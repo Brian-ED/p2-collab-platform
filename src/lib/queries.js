@@ -207,6 +207,7 @@ export async function getMessages(projectId) {
       },
     },
     select: {
+      id: true,
       users: {
         select: {
           name: true,
