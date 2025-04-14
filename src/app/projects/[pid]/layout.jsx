@@ -3,14 +3,12 @@
 import { LoginButton } from "@/components/loginButton";
 import Link from "next/link";
 
-import { useState } from "react";
 import { useAppContext } from "@/context/AppContext";
 
 import { FaBars, FaX } from "react-icons/fa6";
 
 export default function ProjectsLayout({ children }) {
-  const [sidebar, setSidebar] = useState(false);
-  const { setSection } = useAppContext();
+  const { setSection, sidebar, setSidebar } = useAppContext();
 
   return (
     <div className="min-h-screen bg-backdrop">

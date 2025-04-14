@@ -23,6 +23,7 @@ export default function Projects() {
     else if (hash === "#gantt") setSection("gantt");
     else if (hash === "#trello") setSection("trello");
     else if (hash === "#github") setSection("github");
+    else if (hash === "#messaging") setSection("messaging");
   };
 
   // TODO: Make a not authorized page.

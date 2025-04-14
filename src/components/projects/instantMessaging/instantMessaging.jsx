@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Message } from "@/components/projects/instantMessaging/message";
 import { IoSend } from "react-icons/io5";
+import { useAppContext } from "@/context/AppContext";
 
 export const InstantMessaging = () => {
   const { pid } = useParams();
+  const { sidebar } = useAppContext();
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
@@ -27,13 +29,19 @@ export const InstantMessaging = () => {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-    }).then((response) => {
-      console.log(response);
-    });
+    })
+      .then((data) => data.json())
+      .then((response) => {
+        if (response.data[0] === "Message sent") {
+          const returnedMessage = response.data[1];
+          let currentMessages = messages.concat([returnedMessage]);
+          setMessages(currentMessages);
+        }
+      });
   };
 
   return (
-    <div>
+    <div id="message-container">
       {messages.map((message) => (
         <Message
           key={message.id}
@@ -46,7 +54,9 @@ export const InstantMessaging = () => {
         action={() => {
           sendMessage();
         }}
-        className="flex w-[calc(100%-var(--spacing)*68)] rounded-3xl bg-button fixed bottom-5"
+        className={`flex ${
+          sidebar ? "w-[calc(100%-var(--spacing)*68)]" : "w-[99%]"
+        } rounded-3xl bg-button fixed bottom-5 duration-280 transition-all`}
         id="message"
       >
         <input
