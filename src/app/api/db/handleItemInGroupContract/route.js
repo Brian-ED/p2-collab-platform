@@ -4,7 +4,8 @@ export async function GET() {
   const session = await auth();
 
   if (!!session) {
-    return Response.json({ data: "GET HANDLED", error: null });
+    let projectId = new URL(req.url).searchParams.get("projectId");
+    projectId = parseInt(projectId);
   } else {
     return Response.json({ data: null, error: "Not authorized" });
   }

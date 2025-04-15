@@ -198,3 +198,14 @@ export async function removeGanttTask(taskId) {
     },
   });
 }
+
+export async function getGroupContract(project_id) {
+  const result = await prisma.group_contracts.findMany({
+    where: {
+      projects: {
+        id: project_id,
+      },
+    },
+  });
+  return result;
+}
