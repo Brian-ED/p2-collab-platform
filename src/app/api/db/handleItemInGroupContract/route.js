@@ -1,5 +1,27 @@
 import { auth } from "@/auth/authSetup";
 
+export async function GET() {
+  const session = await auth();
+
+  if (!!session) {
+    return Response.json({ data: "GET HANDLED", error: null });
+  } else {
+    return Response.json({ data: null, error: "Not authorized" });
+  }
+}
+
+export async function POST(req) {
+  const session = await auth();
+
+  console.log(req);
+
+  if (!!session) {
+    return Response.json({ data: "POST HANDLED", error: null });
+  } else {
+    return Response.json({ data: null, error: "Not authorized" });
+  }
+}
+
 export async function DELETE(req) {
   const session = await auth();
 
