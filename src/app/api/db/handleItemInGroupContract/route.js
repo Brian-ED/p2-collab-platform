@@ -5,7 +5,7 @@ import {
   checkIfUserHasAccessToProject,
 } from "@/lib/queries";
 
-export async function GET() {
+export async function GET(req) {
   let projectId = new URL(req.url).searchParams.get("projectId");
   projectId = parseInt(projectId);
 
