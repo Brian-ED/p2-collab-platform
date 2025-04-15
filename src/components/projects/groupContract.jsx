@@ -3,7 +3,7 @@
 import { FaPlus, FaRegEdit } from "react-icons/fa";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { useState, useRef } from "react";
-import { useOutsideClick } from "@/app/hooks/useOutsideClick"; // Custom hook
+import { useOutsideClick } from "@/hooks/useOutsideClick"; // Custom hook
 
 export const GroupContract = () => {
   const [contractRules, setContractRules] = useState([]);
