@@ -41,7 +41,7 @@ export const InstantMessaging = () => {
   };
 
   return (
-    <div id="message-container" className="mb-10">
+    <div id="message-container" className="mx-auto my-2 mb-2">
       {messages.map((message) => (
         <Message
           key={message.id}
