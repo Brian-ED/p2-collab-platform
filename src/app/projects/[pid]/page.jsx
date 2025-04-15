@@ -3,6 +3,7 @@
 import { Overview } from "@/components/projects/overview";
 import { GroupContract } from "@/components/projects/groupContract";
 import { GanttChart } from "@/components/projects/ganttChart";
+import { KanbanBoard } from "@/components/projects/kanbanBoard";
 import { Loading } from "@/components/loading";
 import { useAppContext } from "@/context/AppContext";
 
@@ -46,7 +47,7 @@ export default function Projects() {
       {section === "group contract" && <GroupContract />}
       {section === "calendar" && <h1 className="text-2xl">calendar</h1>}
       {section === "gantt" && <GanttChart />}
-      {section === "kanban" && <h1 className="text-2xl">kanban</h1>}
+      {section === "kanban" && <KanbanBoard />}
       {section === "github" && <h1 className="text-2xl">github</h1>}
     </>
   );
