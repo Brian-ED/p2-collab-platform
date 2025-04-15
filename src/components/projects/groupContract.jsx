@@ -146,7 +146,13 @@ export const GroupContract = () => {
     editingRuleId !== null
   );
 
-  const handleDelete = (categoryId, ruleId) => {
+  const deleteCategory = (categoryId) => {
+    setContractRules((prevRules) =>
+      prevRules.filter((category) => category.id != categoryId)
+    );
+  };
+
+  const deleteRule = (categoryId, ruleId) => {
     setContractRules((prevRules) =>
       prevRules.map((category) =>
         category.id === categoryId
@@ -195,7 +201,10 @@ export const GroupContract = () => {
             <h3 className="text-xl font-bold my-2">{category.title}</h3>
             <ul>
               {category.rules.map((rule) => (
-                <li key={rule.id} className="py-3 content-center border-b border-gray-400">
+                <li
+                  key={rule.id}
+                  className="py-3 content-center border-b border-gray-400"
+                >
                   <div className="flex items-center justify-between">
                     {editingRuleId === rule.id ? (
                       <textarea
@@ -240,7 +249,7 @@ export const GroupContract = () => {
 
                       <div className="relative group">
                         <button
-                          onClick={() => handleDelete(category.id, rule.id)}
+                          onClick={() => deleteRule(category.id, rule.id)}
                           className="white hover:text-white/75 flex items-center"
                           aria-label="Delete"
                         >
