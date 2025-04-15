@@ -199,6 +199,13 @@ export const GroupContract = () => {
         <div key={category.id} className="">
           <div className="py-4">
             <h3 className="text-xl font-bold my-2">{category.title}</h3>
+            <button
+              onClick={() => deleteCategory(category.id)}
+              className="text-red-600 hover:text-red-800"
+              aria-label="Delete Category"
+            >
+              <FaRegTrashCan />
+            </button>
             <ul>
               {category.rules.map((rule) => (
                 <li
