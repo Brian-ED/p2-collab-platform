@@ -202,9 +202,20 @@ export async function removeGanttTask(taskId) {
 export async function getGroupContract(project_id) {
   const result = await prisma.group_contracts.findMany({
     where: {
-      projects: {
-        id: project_id,
+      project_id: project_id,
+    },
+    select: {
+      id: true,
+      rule_title: true,
+      group_contract_rules: {
+        select: {
+          id: true,
+          description: true,
+        },
       },
+    },
+    orderBy: {
+      id: "asc",
     },
   });
   return result;

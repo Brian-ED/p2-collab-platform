@@ -29,11 +29,18 @@ model gantt_charts {
 }
 
 model group_contracts {
-  id         Int      @id @default(autoincrement())
-  project_id Int
-  rule_title String   @default("") @db.Char(50)
-  rules      String[] @default([])
-  projects   projects @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id                   Int                    @id @default(autoincrement())
+  project_id           Int
+  rule_title           String                 @default("") @db.Char(50)
+  group_contract_rules group_contract_rules[]
+  projects             projects               @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model group_contract_rules {
+  id                Int             @id @default(autoincrement())
+  group_contract_id Int
+  description       String          @default("")
+  group_contracts   group_contracts @relation(fields: [group_contract_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model messages {

@@ -2,20 +2,34 @@
 
 import { FaPlus, FaRegEdit } from "react-icons/fa";
 import { FaRegTrashCan } from "react-icons/fa6";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useParams } from "next/navigation";
 import { useOutsideClick } from "@/hooks/useOutsideClick"; // Custom hook
+import { Loading } from "@/components/loading";
 
 export const GroupContract = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const { pid } = useParams();
+
   const [contractRules, setContractRules] = useState([]);
   // The objects inside the contractRules array looks like the following:
   // {
   //      id: 1,
-  //      title: "Meetings",
-  //      rules: [
-  //        { id: 101, description: "Attend on time" },
-  //        { id: 102, description: "Notify if you are late" },
+  //      rule_title: "Meetings",
+  //      group_contract_rules: [
+  //        {id: 1, description: "notify members if you are late"},
+  //        {id: 2, description: "we use discord for communication"},
   //      ],
   // }
+
+  useEffect(() => {
+    fetch(`/api/db/handleItemInGroupContract?projectId=${pid}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setContractRules(data);
+        setIsLoading(false);
+      });
+  }, []);
 
   // State for creating new categories
   const [newCategoryInputs, setNewCategoryInputs] = useState("");
@@ -165,6 +179,11 @@ export const GroupContract = () => {
     );
   };
 
+  const getRules = () => {};
+
+  if (isLoading) return <Loading />;
+  if (contractRules.error !== null) return <p>Error: {contractRules.error}</p>;
+
   return (
     <div className="p-4">
       <h2 className="text-5xl font-bold mb-4">Group Contract</h2>
@@ -195,19 +214,28 @@ export const GroupContract = () => {
       >
         <FaPlus className="text-sm" />
       </button>
-      {contractRules.map((category) => (
+      {contractRules.data.map((category) => (
         <div key={category.id} className="">
           <div className="py-4">
-            <h3 className="text-xl font-bold my-2">{category.title}</h3>
-            <button
-              onClick={() => deleteCategory(category.id)}
-              className="text-red-600 hover:text-red-800"
-              aria-label="Delete Category"
-            >
-              <FaRegTrashCan />
-            </button>
+            <div className="flex">
+              <h3 className="text-xl font-bold my-2">{category.rule_title}</h3>
+              <div className="relative group flex pl-2">
+                <button
+                  onClick={() => deleteCategory(category.id)}
+                  className="text-white hover:text-white/75"
+                  aria-label="Delete Category"
+                >
+                  <FaRegTrashCan />
+                </button>
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 hidden w-max rounded bg-gray-800 px-2 py-1 group-hover:block">
+                  Delete
+                  <div className="absolute left-1/2 top-full -translate-x-1/2 w-3 h-2 bg-gray-800 rotate-180 [clip-path:polygon(50%_0%,_0%_100%,_100%_100%)]"></div>
+                </div>
+              </div>
+            </div>
+
             <ul>
-              {category.rules.map((rule) => (
+              {category.group_contract_rules.map((rule) => (
                 <li
                   key={rule.id}
                   className="py-3 content-center border-b border-gray-400"
@@ -276,7 +304,7 @@ export const GroupContract = () => {
             <div className="mt-2 flex items-start">
               <textarea
                 type="text"
-                placeholder={`Enter new rule for ${category.title.toLowerCase()}`}
+                placeholder={`Enter new rule for ${category.rule_title.toLowerCase()}`}
                 value={newRuleInputs[category.id] || ""}
                 onChange={(e) =>
                   handleRuleInputChange(category.id, e.target.value)
