@@ -7,9 +7,7 @@ import dayjs from "dayjs";
 export async function addUser(name, userId, email) {
   const count = await prisma.users.count({
     where: {
-      name: name,
       user_id: userId,
-      email: email,
     },
   });
 
