@@ -51,13 +51,7 @@ export default function ProjectsLayout({ children }) {
               className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
               onClick={() => setSection("group contract")}
             >
-              Group Contract
-            </button>
-            <button
-              className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
-              onClick={() => setSection("calendar")}
-            >
-              Calender
+              Group contract
             </button>
             <button
               className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
@@ -67,9 +61,9 @@ export default function ProjectsLayout({ children }) {
             </button>
             <button
               className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
-              onClick={() => setSection("trello")}
+              onClick={() => setSection("kanban")}
             >
-              Trello
+              Kanban board
             </button>
             <button
               className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
