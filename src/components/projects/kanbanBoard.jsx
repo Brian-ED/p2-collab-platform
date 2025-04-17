@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useDroppable, useDraggable, DndContext } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 
-const entries = [
+const mockData = [
   {
     name: "backlog test 1",
     section: "backlog",
@@ -57,108 +57,114 @@ const entries = [
   },
 ];
 
-const KanbanEntry = ({ name, section, users }) => {
+const KanbanEntry = ({ name }) => {
   return (
-    <div className="h-fit w-full p-2">
+    <div className="h-fit w-full p-2 cursor-grab hover:bg-white/20">
       <h3 className="text-lg">{name}</h3>
     </div>
   );
 };
 
-function Droppable(props) {
-  const { isOver, setNodeRef } = useDroppable({
-    id: props.id,
-  });
-  const style = {
-    opacity: isOver ? 1 : 0.5,
-  };
+function Droppable({ id, children }) {
+  const { isOver, setNodeRef } = useDroppable({ id });
+  const style = {};
 
   return (
     <div ref={setNodeRef} style={style}>
-      {props.children}
+      {children}
     </div>
   );
 }
 
-function Draggable(props) {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: props.id,
-  });
+function Draggable({ id, children }) {
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({ id });
   const style = {
-    // Outputs `translate3d(x, y, 0)`
     transform: CSS.Translate.toString(transform),
   };
 
   return (
-    <button ref={setNodeRef} style={style} {...listeners} {...attributes}>
-      {props.children}
-    </button>
+    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
+      {children}
+    </div>
   );
 }
 
 export const KanbanBoard = () => {
-  const [parent, setParent] = useState(null);
-  const draggable = <Draggable id="draggable">Go ahead, drag me.</Draggable>;
+  const [entries, setEntries] = useState(mockData);
 
-  return (
-    <DndContext onDragEnd={handleDragEnd}>
-      {!parent ? draggable : null}
-      <Droppable id="droppable">
-        {parent === "droppable" ? draggable : "Drop here"}
-      </Droppable>
-    </DndContext>
-  );
-
-  function handleDragEnd({ over }) {
-    setParent(over ? over.id : null);
+  function handleDragEnd({ active, over }) {
+    if (!over) return;
+    setEntries((prev) =>
+      prev.map((entry) =>
+        entry.name === active.id ? { ...entry, section: over.id } : entry
+      )
+    );
   }
 
   return (
     <div className="flex flex-row">
-      <section className="m-2 w-full h-fit border-3 rounded-3xl">
-        <h1 className="text-xl text-center my-2">Backlog</h1>
-        <div>
-          {entries.map(
-            (entry) =>
-              entry.section === "backlog" && (
-                <KanbanEntry key={entry.name} {...entry} />
-              )
-          )}
-        </div>
-      </section>
-      <section className="m-2 w-full border-3 rounded-3xl">
-        <h1 className="text-xl text-center my-2">In progress</h1>
-        <div>
-          {entries.map(
-            (entry) =>
-              entry.section === "progress" && (
-                <KanbanEntry key={entry.name} {...entry} />
-              )
-          )}
-        </div>
-      </section>
-      <section className="m-2 w-full border-3 rounded-3xl">
-        <h1 className="text-xl text-center my-2">In review</h1>
-        <div>
-          {entries.map(
-            (entry) =>
-              entry.section === "review" && (
-                <KanbanEntry key={entry.name} {...entry} />
-              )
-          )}
-        </div>
-      </section>
-      <section className="m-2 w-full border-3 rounded-3xl">
-        <h1 className="text-xl text-center my-2">Done</h1>
-        <div>
-          {entries.map(
-            (entry) =>
-              entry.section === "done" && (
-                <KanbanEntry key={entry.name} {...entry} />
-              )
-          )}
-        </div>
-      </section>
+      <DndContext onDragEnd={handleDragEnd}>
+        <section className="m-2 w-full h-fit border-3 rounded-3xl">
+          <h1 className="text-xl text-center my-2">Backlog</h1>
+          <div className="flex flex-col">
+            <Droppable id="backlog">
+              {entries.map(
+                (entry) =>
+                  entry.section === "backlog" && (
+                    <Draggable key={entry.name} id={entry.name}>
+                      <KanbanEntry {...entry} />
+                    </Draggable>
+                  )
+              )}
+            </Droppable>
+          </div>
+        </section>
+        <section className="m-2 w-full border-3 rounded-3xl">
+          <h1 className="text-xl text-center my-2">In progress</h1>
+          <div>
+            <Droppable id="progress">
+              {entries.map(
+                (entry) =>
+                  entry.section === "progress" && (
+                    <Draggable key={entry.name} id={entry.name}>
+                      <KanbanEntry {...entry} />
+                    </Draggable>
+                  )
+              )}
+            </Droppable>
+          </div>
+        </section>
+        <section className="m-2 w-full border-3 rounded-3xl">
+          <h1 className="text-xl text-center my-2">In review</h1>
+          <div>
+            <Droppable id="review">
+              {entries.map(
+                (entry) =>
+                  entry.section === "review" && (
+                    <Draggable key={entry.name} id={entry.name}>
+                      <KanbanEntry {...entry} />
+                    </Draggable>
+                  )
+              )}
+            </Droppable>
+          </div>
+        </section>
+        <section className="m-2 w-full border-3 rounded-3xl">
+          <h1 className="text-xl text-center my-2">Done</h1>
+          <div>
+            <Droppable id="done">
+              {entries.map(
+                (entry) =>
+                  entry.section === "done" && (
+                    <Draggable key={entry.name} id={entry.name}>
+                      <KanbanEntry {...entry} />
+                    </Draggable>
+                  )
+              )}
+            </Droppable>
+          </div>
+        </section>
+      </DndContext>
     </div>
   );
 };
