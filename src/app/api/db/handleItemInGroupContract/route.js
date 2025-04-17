@@ -36,9 +36,9 @@ export async function POST(req) {
 
   try {
     const { category_title, projectId } = await req.json();
-    await addGroupContractCategory(projectId, category_title);
+    const data = await addGroupContractCategory(projectId, category_title);
 
-    return Response.json({ data: "Category added", error: null });
+    return Response.json({ data: data, error: null });
   } catch (error) {
     console.error("POST error:", error);
     return Response.json({ data: null, error: "Invalid JSON" });

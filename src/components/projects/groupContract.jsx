@@ -26,10 +26,13 @@ export const GroupContract = () => {
     fetch(`/api/db/handleItemInGroupContract?projectId=${pid}`)
       .then((res) => res.json())
       .then((data) => {
-        setContractRules(data);
+        setContractRules(data.data);
         setIsLoading(false);
       });
   }, []);
+
+  console.log("LOL");
+  console.log(contractRules[0]);
 
   // State for creating new categories
   const [newCategoryInputs, setNewCategoryInputs] = useState("");
@@ -49,45 +52,38 @@ export const GroupContract = () => {
   };
 
   // Add a new category
-  const addCategory = () => {
+  const addCategory = async () => {
     if (newCategoryInputs === "") {
       return;
     }
 
-    setContractRules((prevRules) => [
-      ...prevRules,
-      {
-        id: Date.now(),
-        title: newCategoryInputs,
-        rules: [],
-      },
-    ]);
-    setNewCategoryInputs("");
-  };
+    try {
+      const res = await fetch(
+        `/api/db/handleItemInGroupContract?projectId=${pid}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            category_title: newCategoryInputs,
+            projectId: pid,
+          }),
+        }
+      );
+      const data = await res.json();
 
-  const addCategoryApi = () => {
-    if (newCategoryInputs === "") {
-      return;
+      const newCategory = {
+        id: data.id,
+        category_title: data.category_title,
+        group_contract_rules: [],
+      };
+
+      setContractRules((prevRules) => [...prevRules, newCategory]);
+      setNewCategoryInputs("");
+    } catch (error) {
+      console.error("Failed to add category:", error);
     }
-  
-    fetch(`/api/db/handleItemInGroupContract?projectId=${pid}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        category_title: newCategoryInputs,
-        projectId: pid,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        
-        console.log(data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
   };
 
   // Update the category title
@@ -203,11 +199,9 @@ export const GroupContract = () => {
       )
     );
   };
-
-  const getRules = () => {};
-
+  console.log(contractRules);
   if (isLoading) return <Loading />;
-  if (contractRules.error !== null) return <p>Error: {contractRules.error}</p>;
+  // if (contractRules.error !== null) return <p>Error: {contractRules.error}</p>;
 
   return (
     <div className="p-4">
@@ -228,7 +222,7 @@ export const GroupContract = () => {
         value={newCategoryInputs}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
-            addCategoryApi();
+            addCategory();
           }
         }}
         className="border p-2 rounded w-[30%] mr-2"
@@ -239,11 +233,13 @@ export const GroupContract = () => {
       >
         <FaPlus className="text-sm" />
       </button>
-      {contractRules.data.map((category) => (
+      {contractRules.map((category) => (
         <div key={category.id} className="">
           <div className="py-4">
             <div className="flex">
-              <h3 className="text-xl font-bold my-2">{category.category_title}</h3>
+              <h3 className="text-xl font-bold my-2">
+                {category.category_title}
+              </h3>
               <div className="relative group flex pl-2">
                 <button
                   onClick={() => deleteCategory(category.id)}
@@ -329,7 +325,7 @@ export const GroupContract = () => {
             <div className="mt-2 flex items-start">
               <textarea
                 type="text"
-                placeholder={`Enter new rule for ${category.category_title.toLowerCase()}`}
+                //placeholder={`Enter new rule for ${category.category_title.toLowerCase()}`}
                 value={newRuleInputs[category.id] || ""}
                 onChange={(e) =>
                   handleRuleInputChange(category.id, e.target.value)
