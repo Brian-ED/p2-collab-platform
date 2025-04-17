@@ -1,3 +1,9 @@
+"use client";
+
+import { useState } from "react";
+import { useDroppable, useDraggable, DndContext } from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
+
 const entries = [
   {
     name: "backlog test 1",
@@ -59,7 +65,54 @@ const KanbanEntry = ({ name, section, users }) => {
   );
 };
 
+function Droppable(props) {
+  const { isOver, setNodeRef } = useDroppable({
+    id: props.id,
+  });
+  const style = {
+    opacity: isOver ? 1 : 0.5,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style}>
+      {props.children}
+    </div>
+  );
+}
+
+function Draggable(props) {
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: props.id,
+  });
+  const style = {
+    // Outputs `translate3d(x, y, 0)`
+    transform: CSS.Translate.toString(transform),
+  };
+
+  return (
+    <button ref={setNodeRef} style={style} {...listeners} {...attributes}>
+      {props.children}
+    </button>
+  );
+}
+
 export const KanbanBoard = () => {
+  const [parent, setParent] = useState(null);
+  const draggable = <Draggable id="draggable">Go ahead, drag me.</Draggable>;
+
+  return (
+    <DndContext onDragEnd={handleDragEnd}>
+      {!parent ? draggable : null}
+      <Droppable id="droppable">
+        {parent === "droppable" ? draggable : "Drop here"}
+      </Droppable>
+    </DndContext>
+  );
+
+  function handleDragEnd({ over }) {
+    setParent(over ? over.id : null);
+  }
+
   return (
     <div className="flex flex-row">
       <section className="m-2 w-full h-fit border-3 rounded-3xl">
