@@ -2,20 +2,34 @@
 
 import { FaPlus, FaRegEdit } from "react-icons/fa";
 import { FaRegTrashCan } from "react-icons/fa6";
-import { useState, useRef } from "react";
-import { useOutsideClick } from "@/app/hooks/useOutsideClick"; // Custom hook
+import { useState, useRef, useEffect } from "react";
+import { useParams } from "next/navigation";
+import { useOutsideClick } from "@/hooks/useOutsideClick"; // Custom hook
+import { Loading } from "@/components/loading";
 
 export const GroupContract = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const { pid } = useParams();
+
   const [contractRules, setContractRules] = useState([]);
   // The objects inside the contractRules array looks like the following:
   // {
   //      id: 1,
-  //      title: "Meetings",
-  //      rules: [
-  //        { id: 101, description: "Attend on time" },
-  //        { id: 102, description: "Notify if you are late" },
+  //      category_title: "Meetings",
+  //      group_contract_rules: [
+  //        {id: 1, rule_description: "notify members if you are late"},
+  //        {id: 2, rule_description: "we use discord for communication"},
   //      ],
   // }
+
+  useEffect(() => {
+    fetch(`/api/db/handleItemInGroupContract?projectId=${pid}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setContractRules(data);
+        setIsLoading(false);
+      });
+  }, []);
 
   // State for creating new categories
   const [newCategoryInputs, setNewCategoryInputs] = useState("");
@@ -51,6 +65,31 @@ export const GroupContract = () => {
     setNewCategoryInputs("");
   };
 
+  const addCategoryApi = () => {
+    if (newCategoryInputs === "") {
+      return;
+    }
+  
+    fetch(`/api/db/handleItemInGroupContract?projectId=${pid}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        category_title: newCategoryInputs,
+        projectId: pid,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   // Update the category title
   const updateCategoryTitle = (id, newTitle) => {
     setContractRules((prevRules) =>
@@ -79,7 +118,7 @@ export const GroupContract = () => {
               ...category,
               rules: [
                 ...category.rules,
-                { id: Date.now(), description: newRuleInputs[categoryId] },
+                { id: Date.now(), rule_description: newRuleInputs[categoryId] },
               ],
             }
           : category
@@ -92,7 +131,7 @@ export const GroupContract = () => {
   // Edit a rule
   const handleEdit = (rule) => {
     setEditingRuleId(rule.id);
-    setEditedRuleText(rule.description);
+    setEditedRuleText(rule.rule_description);
   };
 
   const cancelEdit = () => {
@@ -108,7 +147,7 @@ export const GroupContract = () => {
               ...category,
               rules: category.rules.map((rule) =>
                 rule.id === ruleId
-                  ? { ...rule, description: editedRuleText }
+                  ? { ...rule, rule_description: editedRuleText }
                   : rule
               ),
             }
@@ -133,7 +172,7 @@ export const GroupContract = () => {
         if (!rule) return;
 
         const trimmedNewText = editedRuleText.trim();
-        const trimmedOldText = rule.description.trim();
+        const trimmedOldText = rule.rule_description.trim();
 
         // Only save if the text is actually changed, otherwise just cancel edit
         if (trimmedNewText !== trimmedOldText && trimmedNewText !== "") {
@@ -146,7 +185,13 @@ export const GroupContract = () => {
     editingRuleId !== null
   );
 
-  const handleDelete = (categoryId, ruleId) => {
+  const deleteCategory = (categoryId) => {
+    setContractRules((prevRules) =>
+      prevRules.filter((category) => category.id != categoryId)
+    );
+  };
+
+  const deleteRule = (categoryId, ruleId) => {
     setContractRules((prevRules) =>
       prevRules.map((category) =>
         category.id === categoryId
@@ -158,6 +203,11 @@ export const GroupContract = () => {
       )
     );
   };
+
+  const getRules = () => {};
+
+  if (isLoading) return <Loading />;
+  if (contractRules.error !== null) return <p>Error: {contractRules.error}</p>;
 
   return (
     <div className="p-4">
@@ -178,7 +228,7 @@ export const GroupContract = () => {
         value={newCategoryInputs}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
-            addCategory();
+            addCategoryApi();
           }
         }}
         className="border p-2 rounded w-[30%] mr-2"
@@ -189,13 +239,32 @@ export const GroupContract = () => {
       >
         <FaPlus className="text-sm" />
       </button>
-      {contractRules.map((category) => (
+      {contractRules.data.map((category) => (
         <div key={category.id} className="">
           <div className="py-4">
-            <h3 className="text-xl font-bold my-2">{category.title}</h3>
+            <div className="flex">
+              <h3 className="text-xl font-bold my-2">{category.category_title}</h3>
+              <div className="relative group flex pl-2">
+                <button
+                  onClick={() => deleteCategory(category.id)}
+                  className="text-white hover:text-white/75"
+                  aria-label="Delete Category"
+                >
+                  <FaRegTrashCan />
+                </button>
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 hidden w-max rounded bg-gray-800 px-2 py-1 group-hover:block">
+                  Delete
+                  <div className="absolute left-1/2 top-full -translate-x-1/2 w-3 h-2 bg-gray-800 rotate-180 [clip-path:polygon(50%_0%,_0%_100%,_100%_100%)]"></div>
+                </div>
+              </div>
+            </div>
+
             <ul>
-              {category.rules.map((rule) => (
-                <li key={rule.id} className="py-3 content-center border-b border-gray-400">
+              {category.group_contract_rules.map((rule) => (
+                <li
+                  key={rule.id}
+                  className="py-3 content-center border-b border-gray-400"
+                >
                   <div className="flex items-center justify-between">
                     {editingRuleId === rule.id ? (
                       <textarea
@@ -220,7 +289,7 @@ export const GroupContract = () => {
                         className="border p-2 rounded w-full resize-none"
                       />
                     ) : (
-                      <span>{rule.description}</span>
+                      <span>{rule.rule_description}</span>
                     )}
                     <div className="flex gap-2">
                       <div className="relative group">
@@ -240,7 +309,7 @@ export const GroupContract = () => {
 
                       <div className="relative group">
                         <button
-                          onClick={() => handleDelete(category.id, rule.id)}
+                          onClick={() => deleteRule(category.id, rule.id)}
                           className="white hover:text-white/75 flex items-center"
                           aria-label="Delete"
                         >
@@ -260,7 +329,7 @@ export const GroupContract = () => {
             <div className="mt-2 flex items-start">
               <textarea
                 type="text"
-                placeholder={`Enter new rule for ${category.title.toLowerCase()}`}
+                placeholder={`Enter new rule for ${category.category_title.toLowerCase()}`}
                 value={newRuleInputs[category.id] || ""}
                 onChange={(e) =>
                   handleRuleInputChange(category.id, e.target.value)
