@@ -1,6 +1,7 @@
 import { auth } from "@/auth/authSetup";
 import {
   getGroupContract,
+  addGroupContractCategory,
   checkIfUserOwnsProject,
   checkIfUserHasAccessToProject,
 } from "@/lib/queries";
@@ -29,12 +30,18 @@ export async function GET(req) {
 export async function POST(req) {
   const session = await auth();
 
-  console.log(req);
-
-  if (!!session) {
-    return Response.json({ data: "POST HANDLED", error: null });
-  } else {
+  if (!session) {
     return Response.json({ data: null, error: "Not authorized" });
+  }
+
+  try {
+    const { category_title, projectId } = await req.json();
+    await addGroupContractCategory(projectId, category_title);
+
+    return Response.json({ data: "Category added", error: null });
+  } catch (error) {
+    console.error("POST error:", error);
+    return Response.json({ data: null, error: "Invalid JSON" });
   }
 }
 

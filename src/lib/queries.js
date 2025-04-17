@@ -206,11 +206,11 @@ export async function getGroupContract(project_id) {
     },
     select: {
       id: true,
-      rule_title: true,
+      category_title: true,
       group_contract_rules: {
         select: {
           id: true,
-          description: true,
+          rule_description: true,
         },
       },
     },
@@ -220,3 +220,14 @@ export async function getGroupContract(project_id) {
   });
   return result;
 }
+
+export async function addGroupContractCategory(projectId, category_title) {
+  const result = await prisma.group_contracts.create({
+    data: {
+      category_title,
+      project_id: parseInt(projectId),
+    },
+  });
+  return result;
+}
+

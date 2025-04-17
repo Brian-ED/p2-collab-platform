@@ -15,10 +15,10 @@ export const GroupContract = () => {
   // The objects inside the contractRules array looks like the following:
   // {
   //      id: 1,
-  //      rule_title: "Meetings",
+  //      category_title: "Meetings",
   //      group_contract_rules: [
-  //        {id: 1, description: "notify members if you are late"},
-  //        {id: 2, description: "we use discord for communication"},
+  //        {id: 1, rule_description: "notify members if you are late"},
+  //        {id: 2, rule_description: "we use discord for communication"},
   //      ],
   // }
 
@@ -65,6 +65,31 @@ export const GroupContract = () => {
     setNewCategoryInputs("");
   };
 
+  const addCategoryApi = () => {
+    if (newCategoryInputs === "") {
+      return;
+    }
+  
+    fetch(`/api/db/handleItemInGroupContract?projectId=${pid}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        category_title: newCategoryInputs,
+        projectId: pid,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   // Update the category title
   const updateCategoryTitle = (id, newTitle) => {
     setContractRules((prevRules) =>
@@ -93,7 +118,7 @@ export const GroupContract = () => {
               ...category,
               rules: [
                 ...category.rules,
-                { id: Date.now(), description: newRuleInputs[categoryId] },
+                { id: Date.now(), rule_description: newRuleInputs[categoryId] },
               ],
             }
           : category
@@ -106,7 +131,7 @@ export const GroupContract = () => {
   // Edit a rule
   const handleEdit = (rule) => {
     setEditingRuleId(rule.id);
-    setEditedRuleText(rule.description);
+    setEditedRuleText(rule.rule_description);
   };
 
   const cancelEdit = () => {
@@ -122,7 +147,7 @@ export const GroupContract = () => {
               ...category,
               rules: category.rules.map((rule) =>
                 rule.id === ruleId
-                  ? { ...rule, description: editedRuleText }
+                  ? { ...rule, rule_description: editedRuleText }
                   : rule
               ),
             }
@@ -147,7 +172,7 @@ export const GroupContract = () => {
         if (!rule) return;
 
         const trimmedNewText = editedRuleText.trim();
-        const trimmedOldText = rule.description.trim();
+        const trimmedOldText = rule.rule_description.trim();
 
         // Only save if the text is actually changed, otherwise just cancel edit
         if (trimmedNewText !== trimmedOldText && trimmedNewText !== "") {
@@ -203,7 +228,7 @@ export const GroupContract = () => {
         value={newCategoryInputs}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
-            addCategory();
+            addCategoryApi();
           }
         }}
         className="border p-2 rounded w-[30%] mr-2"
@@ -218,7 +243,7 @@ export const GroupContract = () => {
         <div key={category.id} className="">
           <div className="py-4">
             <div className="flex">
-              <h3 className="text-xl font-bold my-2">{category.rule_title}</h3>
+              <h3 className="text-xl font-bold my-2">{category.category_title}</h3>
               <div className="relative group flex pl-2">
                 <button
                   onClick={() => deleteCategory(category.id)}
@@ -264,7 +289,7 @@ export const GroupContract = () => {
                         className="border p-2 rounded w-full resize-none"
                       />
                     ) : (
-                      <span>{rule.description}</span>
+                      <span>{rule.rule_description}</span>
                     )}
                     <div className="flex gap-2">
                       <div className="relative group">
@@ -304,7 +329,7 @@ export const GroupContract = () => {
             <div className="mt-2 flex items-start">
               <textarea
                 type="text"
-                placeholder={`Enter new rule for ${category.rule_title.toLowerCase()}`}
+                placeholder={`Enter new rule for ${category.category_title.toLowerCase()}`}
                 value={newRuleInputs[category.id] || ""}
                 onChange={(e) =>
                   handleRuleInputChange(category.id, e.target.value)
