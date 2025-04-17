@@ -68,6 +68,7 @@ model users {
   id        Int        @id @default(autoincrement())
   name      String     @unique @db.Char(30)
   user_id   String     @unique @db.Char(150)
+  email     String     @default("")
   joined_at DateTime?  @default(now()) @db.Timestamp(6)
   access    access[]
   messages  messages[]
