@@ -16,6 +16,16 @@ const mockData = [
     users: [],
   },
   {
+    name: "backlog test 3",
+    section: "backlog",
+    users: [],
+  },
+  {
+    name: "backlog test 4",
+    section: "backlog",
+    users: [],
+  },
+  {
     name: "progress test 1",
     section: "progress",
     users: [],
@@ -31,12 +41,32 @@ const mockData = [
     users: [],
   },
   {
+    name: "progress test 4",
+    section: "progress",
+    users: [],
+  },
+  {
+    name: "progress test 5",
+    section: "progress",
+    users: [],
+  },
+  {
     name: "review test 1",
     section: "review",
     users: [],
   },
   {
     name: "review test 2",
+    section: "review",
+    users: [],
+  },
+  {
+    name: "review test 3",
+    section: "review",
+    users: [],
+  },
+  {
+    name: "review test 4",
     section: "review",
     users: [],
   },
@@ -52,6 +82,16 @@ const mockData = [
   },
   {
     name: "done test 3",
+    section: "done",
+    users: [],
+  },
+  {
+    name: "done test 4",
+    section: "done",
+    users: [],
+  },
+  {
+    name: "done test 5",
     section: "done",
     users: [],
   },
@@ -104,9 +144,9 @@ export const KanbanBoard = () => {
   return (
     <div className="flex flex-row">
       <DndContext onDragEnd={handleDragEnd}>
-        <section className="m-2 w-full h-fit border-3 rounded-3xl">
+        <section className="m-2 w-full border-3 rounded-3xl h-fit">
           <h1 className="text-xl text-center my-2">Backlog</h1>
-          <div className="flex flex-col">
+          <div className="flex flex-col p-2">
             <Droppable id="backlog">
               {entries.map(
                 (entry) =>
@@ -119,9 +159,9 @@ export const KanbanBoard = () => {
             </Droppable>
           </div>
         </section>
-        <section className="m-2 w-full border-3 rounded-3xl">
+        <section className="m-2 w-full border-3 rounded-3xl h-fit">
           <h1 className="text-xl text-center my-2">In progress</h1>
-          <div>
+          <div className="flex flex-col p-2">
             <Droppable id="progress">
               {entries.map(
                 (entry) =>
@@ -134,9 +174,9 @@ export const KanbanBoard = () => {
             </Droppable>
           </div>
         </section>
-        <section className="m-2 w-full border-3 rounded-3xl">
+        <section className="m-2 w-full border-3 rounded-3xl h-fit">
           <h1 className="text-xl text-center my-2">In review</h1>
-          <div>
+          <div className="flex flex-col p-2">
             <Droppable id="review">
               {entries.map(
                 (entry) =>
@@ -149,9 +189,9 @@ export const KanbanBoard = () => {
             </Droppable>
           </div>
         </section>
-        <section className="m-2 w-full border-3 rounded-3xl">
+        <section className="m-2 w-full border-3 rounded-3xl h-fit">
           <h1 className="text-xl text-center my-2">Done</h1>
-          <div>
+          <div className="flex flex-col p-2">
             <Droppable id="done">
               {entries.map(
                 (entry) =>
