@@ -9,7 +9,8 @@ export const getSessionAndUpdateUser = async () => {
   if (!!session) {
     const userId = session.user.image.split("/")[4].split("?")[0];
     const userName = session.user.name;
-    await addUser(userName, userId);
+    const userEmail = session.user.email;
+    await addUser(userName, userId, userEmail);
   }
 
   return session;

@@ -4,11 +4,12 @@ import prisma from "@/lib/prisma";
 
 import dayjs from "dayjs";
 
-export async function addUser(name, userId) {
+export async function addUser(name, userId, email) {
   const count = await prisma.users.count({
     where: {
       name: name,
       user_id: userId,
+      email: email,
     },
   });
 
@@ -17,6 +18,7 @@ export async function addUser(name, userId) {
       data: {
         name: name,
         user_id: userId,
+        email: email,
       },
     });
   }
@@ -197,4 +199,36 @@ export async function removeGanttTask(taskId) {
       id: taskId,
     },
   });
+}
+
+export async function getGroupContract(project_id) {
+  const result = await prisma.group_contracts.findMany({
+    where: {
+      project_id: project_id,
+    },
+    select: {
+      id: true,
+      category_title: true,
+      group_contract_rules: {
+        select: {
+          id: true,
+          rule_description: true,
+        },
+      },
+    },
+    orderBy: {
+      id: "asc",
+    },
+  });
+  return result;
+}
+
+export async function addGroupContractCategory(projectId, category_title) {
+  const result = await prisma.group_contracts.create({
+    data: {
+      category_title,
+      project_id: parseInt(projectId),
+    },
+  });
+  return result;
 }
