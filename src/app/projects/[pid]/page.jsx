@@ -9,6 +9,7 @@ import { useAppContext } from "@/context/AppContext";
 
 import { useState, useEffect } from "react";
 import { useParams, redirect } from "next/navigation";
+import { InstantMessaging } from "@/components/projects/instantMessaging/instantMessaging";
 
 export default function Projects() {
   const { section, setSection } = useAppContext();
@@ -23,6 +24,7 @@ export default function Projects() {
     else if (hash === "#gantt") setSection("gantt");
     else if (hash === "#kanban") setSection("kanban");
     else if (hash === "#github") setSection("github");
+    else if (hash === "#messaging") setSection("messaging");
   };
 
   // TODO: Make a not authorized page.
@@ -49,6 +51,7 @@ export default function Projects() {
       {section === "gantt" && <GanttChart />}
       {section === "kanban" && <KanbanBoard />}
       {section === "github" && <h1 className="text-2xl">github</h1>}
+      {section === "messaging" && <InstantMessaging />}
     </>
   );
 }

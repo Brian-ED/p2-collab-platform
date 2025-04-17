@@ -230,3 +230,60 @@ export async function addGroupContractCategory(projectId, category_title) {
   });
   return result;
 }
+
+export async function getMessages(projectId) {
+  const messages = await prisma.messages.findMany({
+    where: {
+      projects: {
+        id: projectId,
+      },
+    },
+    orderBy: {
+      time_sent: "asc",
+    },
+    select: {
+      id: true,
+      users: {
+        select: {
+          name: true,
+        },
+      },
+      message: true,
+      time_sent: true,
+    },
+  });
+
+  return messages;
+}
+
+export async function addMessage(projectId, session, message) {
+  const userId = session.user.image.split("/")[4].split("?")[0];
+  const id = (
+    await prisma.users.findFirst({
+      where: {
+        user_id: userId,
+      },
+      select: {
+        id: true,
+      },
+    })
+  ).id;
+
+  return await prisma.messages.create({
+    data: {
+      project_id: projectId,
+      sender_id: id,
+      message: message,
+    },
+    select: {
+      id: true,
+      users: {
+        select: {
+          name: true,
+        },
+      },
+      message: true,
+      time_sent: true,
+    },
+  });
+}

@@ -3,14 +3,12 @@
 import { LoginButton } from "@/components/loginButton";
 import Link from "next/link";
 
-import { useState } from "react";
 import { useAppContext } from "@/context/AppContext";
 
 import { FaBars, FaX } from "react-icons/fa6";
 
 export default function ProjectsLayout({ children }) {
-  const [sidebar, setSidebar] = useState(false);
-  const { setSection } = useAppContext();
+  const { setSection, sidebar, setSidebar } = useAppContext();
 
   return (
     <div className="min-h-screen bg-backdrop">
@@ -70,6 +68,12 @@ export default function ProjectsLayout({ children }) {
               onClick={() => setSection("github")}
             >
               GitHub
+            </button>
+            <button
+              className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
+              onClick={() => setSection("messaging")}
+            >
+              Messages
             </button>
           </nav>
         )}

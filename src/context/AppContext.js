@@ -6,9 +6,10 @@ const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const [section, setSection] = useState("overview");
+  const [sidebar, setSidebar] = useState(false);
 
   return (
-    <AppContext.Provider value={{ section, setSection }}>
+    <AppContext.Provider value={{ section, setSection, sidebar, setSidebar }}>
       {children}
     </AppContext.Provider>
   );
