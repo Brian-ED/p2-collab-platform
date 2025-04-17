@@ -287,3 +287,53 @@ export async function addMessage(projectId, session, message) {
     },
   });
 }
+
+export async function getUsersWithAccess(projectId) {
+  return await prisma.access.findMany({
+    where: {
+      project_id: projectId,
+    },
+    select: {
+      id: true,
+      permissions: {
+        select: {
+          name: true,
+        },
+      },
+      users: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+}
+
+export async function removeAccessFromUser(projectId, accessId) {
+  try {
+    await prisma.access.delete({
+      where: {
+        id: accessId,
+        project_id: projectId,
+      },
+    });
+    return { data: "Access deleted", error: null };
+  } catch {
+    return { data: null, error: "Not authorized" };
+  }
+}
+
+/* export async function grantAccessToUser(projectId, email) {
+  try {
+    await prisma.access.grant({
+      where: {
+        email: email,
+        project_id: projectId,
+      },
+    });
+    return { data: "Access granted", error: null };
+  } catch {
+    return { data: null, error: "Not authorized" };
+  }
+} */
