@@ -30,11 +30,10 @@ export const Permissions = () => {
     });
   };
 
-  const givePermission = (email) => {
+  const givePermission = () => {
     setIsLoading(true);
 
-    const form = new FormData();
-    form.append("email", email);
+    const form = new FormData(document.querySelector("#email-form"));
 
     const data = new URLSearchParams(form);
 
@@ -55,8 +54,25 @@ export const Permissions = () => {
     return <p>Error: {usersWithAccess.error}</p>;
 
   return (
-    <div>
-      <table className="text-center w-[70%] table-fixed">
+    <div className="flex flex-col gap-2">
+      <h1 className="text-3xl">Add user</h1>
+      <form id="email-form" className="flex flex-row gap-5">
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          className="border-amber-50 border-2 rounded-sm"
+        />
+        <button className="hover:cursor-pointer">
+          <IoIosAddCircle
+            className="text-green-600 scale-200"
+            onClick={() => {
+              givePermission();
+            }}
+          />
+        </button>
+      </form>
+      <table className="text-center w-[70%] table-fixed mt-10">
         <thead>
           <tr>
             <th>Name</th>
@@ -66,7 +82,13 @@ export const Permissions = () => {
           </tr>
         </thead>
         <tbody>
-          {usersWithAccess.data.map((access) => (
+          <tr>
+            <td>{usersWithAccess.data.owner.users.name}</td>
+            <td>{usersWithAccess.data.owner.users.email}</td>
+            <td>Project owner</td>
+            <td></td>
+          </tr>
+          {usersWithAccess.data.users.map((access) => (
             <tr key={access.id}>
               <td>{access.users.name}</td>
               <td>{access.users.email}</td>
@@ -85,14 +107,6 @@ export const Permissions = () => {
           ))}
         </tbody>
       </table>
-      <button className="hover:cursor-pointer">
-        <IoIosAddCircle
-          className="text-green-600 scale-200"
-          onClick={() => {
-            givePermission(email);
-          }}
-        />
-      </button>
     </div>
   );
 };

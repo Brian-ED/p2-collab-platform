@@ -4,6 +4,7 @@ import {
   checkIfUserHasAccessToProject,
   removeAccessFromUser,
   getUsersWithAccess,
+  grantAccessToUser,
 } from "@/lib/queries";
 
 export async function GET(req) {
@@ -47,4 +48,27 @@ export async function DELETE(req) {
   } else {
     return Response.json({ data: null, error: "Not authorized" });
   }
+}
+
+export async function POST(req) {
+  let searchParams = new URL(req.url).searchParams;
+  let projectId = searchParams.get("projectId");
+  projectId = parseInt(projectId);
+
+  const session = await auth();
+
+  let userHasAccess = false;
+  if (Number.isInteger(projectId)) {
+    userHasAccess = await checkIfUserOwnsProject(session, projectId);
+  }
+
+  if (!!session && userHasAccess) {
+    const formData = await req.formData();
+    const email = formData.get("email");
+
+    const data = await grantAccessToUser(projectId, email);
+
+    return Response.json(data);
+  }
+  return Response.json({ data: null, error: "Not authorized" });
 }
