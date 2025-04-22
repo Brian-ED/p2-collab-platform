@@ -287,3 +287,92 @@ export async function addMessage(projectId, session, message) {
     },
   });
 }
+
+export async function getUsersWithAccess(projectId) {
+  const owner = await prisma.projects.findFirst({
+    where: {
+      id: projectId,
+    },
+    select: {
+      users: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  const users = await prisma.access.findMany({
+    where: {
+      project_id: projectId,
+    },
+    select: {
+      id: true,
+      permissions: {
+        select: {
+          name: true,
+        },
+      },
+      users: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+  return { owner: owner, users: users };
+}
+
+export async function removeAccessFromUser(projectId, accessId) {
+  try {
+    await prisma.access.delete({
+      where: {
+        id: accessId,
+        project_id: projectId,
+      },
+    });
+    return { data: "Access deleted", error: null };
+  } catch {
+    return { data: null, error: "Not authorized" };
+  }
+}
+
+export async function grantAccessToUser(projectId, email) {
+  try {
+    const id = (
+      await prisma.users.findFirst({
+        where: {
+          email: email,
+        },
+        select: {
+          id: true,
+        },
+      })
+    ).id;
+
+    const userOwnsProject = await prisma.projects.count({
+      where: {
+        users: {
+          email: email,
+        },
+        id: projectId,
+      },
+    });
+
+    if (!!userOwnsProject) return { data: null, error: "User owns project" };
+
+    const data = await prisma.access.create({
+      data: {
+        permission: 1,
+        project_id: projectId,
+        user_id: id,
+      },
+    });
+
+    return { data: data, error: null };
+  } catch {
+    return { data: null, error: "Not authorized" };
+  }
+}

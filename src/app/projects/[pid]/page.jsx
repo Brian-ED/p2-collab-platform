@@ -4,6 +4,7 @@ import { Overview } from "@/components/projects/overview";
 import { GroupContract } from "@/components/projects/groupContract";
 import { GanttChart } from "@/components/projects/ganttChart";
 import { KanbanBoard } from "@/components/projects/kanbanBoard";
+import { Permissions } from "@/components/projects/permissions";
 import { Loading } from "@/components/loading";
 import { useAppContext } from "@/context/AppContext";
 
@@ -25,6 +26,7 @@ export default function Projects() {
     else if (hash === "#kanban") setSection("kanban");
     else if (hash === "#github") setSection("github");
     else if (hash === "#messaging") setSection("messaging");
+    else if (hash === "#permissions") setSection("permissions");
   };
 
   // TODO: Make a not authorized page.
@@ -52,6 +54,7 @@ export default function Projects() {
       {section === "kanban" && <KanbanBoard />}
       {section === "github" && <h1 className="text-2xl">github</h1>}
       {section === "messaging" && <InstantMessaging />}
+      {section === "permissions" && <Permissions />}
     </>
   );
 }
