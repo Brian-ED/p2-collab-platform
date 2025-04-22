@@ -71,13 +71,15 @@ export const GroupContract = () => {
           }),
         }
       );
-      const data = await res.json();
+      const response = await res.json();
 
       const newCategory = {
         id: data.id,
-        category_title: data.category_title,
+        category_title: response.data.category_title,
         group_contract_rules: [],
       };
+
+      console.log(newCategory);
 
       setContractRules((prevRules) => [...prevRules, newCategory]);
       setNewCategoryInputs("");
@@ -101,27 +103,51 @@ export const GroupContract = () => {
   };
 
   // Add a rule to a category
-  const addRule = (categoryId) => {
+  const addRule = async (categoryId) => {
     // Prevent users from adding an empty rule
     if (!newRuleInputs[categoryId] || newRuleInputs[categoryId.trim === ""]) {
       return;
     }
 
-    setContractRules((prevRules) =>
-      prevRules.map((category) =>
-        category.id === categoryId
-          ? {
-              ...category,
-              rules: [
-                ...category.rules,
-                { id: Date.now(), rule_description: newRuleInputs[categoryId] },
-              ],
-            }
-          : category
-      )
-    );
-    // Clear the input field after submitting
-    setNewRuleInputs((prevInputs) => ({ ...prevInputs, [categoryId]: "" }));
+    const ruleText = newRuleInputs[categoryId];
+    if (!ruleText || ruleText.trim() === "") return;
+
+    try {
+      const res = await fetch(
+        `/api/db/handleItemInGroupContract?projectId=${pid}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            group_contract_id: categoryId,
+            rule_description: ruleText,
+          }),
+        }
+      );
+
+      const response = await res.json();
+      const newRule = response.data;
+
+      setContractRules((prevRules) =>
+        prevRules.map((category) =>
+          category.id === categoryId
+            ? {
+                ...category,
+                group_contract_rules: [
+                  ...category.group_contract_rules,
+                  newRule,
+                ],
+              }
+            : category
+        )
+      );
+      // Clear the input field after submitting
+      setNewRuleInputs((prevInputs) => ({ ...prevInputs, [categoryId]: "" }));
+    } catch (error) {
+      console.error("Failed to add rule:", error);
+    }
   };
 
   // Edit a rule
@@ -233,8 +259,8 @@ export const GroupContract = () => {
       >
         <FaPlus className="text-sm" />
       </button>
-      {contractRules.map((category) => (
-        <div key={category.id} className="">
+      {contractRules.map((category, index) => (
+        <div key={index} className="">
           <div className="py-4">
             <div className="flex">
               <h3 className="text-xl font-bold my-2">

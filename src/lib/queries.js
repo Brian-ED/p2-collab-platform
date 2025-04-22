@@ -231,6 +231,15 @@ export async function addGroupContractCategory(projectId, category_title) {
   return result;
 }
 
+export async function addGroupContractRule(groupContractId, ruleDescription) {
+  return await prisma.group_contract_rules.create({
+    data: {
+      group_contract_id: groupContractId,
+      rule_description: ruleDescription,
+    },
+  });
+}
+
 export async function getMessages(projectId) {
   const messages = await prisma.messages.findMany({
     where: {

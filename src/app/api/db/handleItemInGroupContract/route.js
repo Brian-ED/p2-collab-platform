@@ -2,6 +2,7 @@ import { auth } from "@/auth/authSetup";
 import {
   getGroupContract,
   addGroupContractCategory,
+  addGroupContractRule,
   checkIfUserOwnsProject,
   checkIfUserHasAccessToProject,
 } from "@/lib/queries";
@@ -35,10 +36,28 @@ export async function POST(req) {
   }
 
   try {
-    const { category_title, projectId } = await req.json();
-    const data = await addGroupContractCategory(projectId, category_title);
+    const body = await req.json();
+    
+    // Add category
+    if (body.category_title && body.projectId) {
+      const data = await addGroupContractCategory(
+        body.projectId,
+        body.category_title
+      );
+      return Response.json({ data, error: null });
+    }
 
-    return Response.json({ data: data, error: null });
+    // Add rule
+    if (body.group_contract_id && body.rule_description) {
+      const data = await addGroupContractRule(
+        body.group_contract_id,
+        body.rule_description
+      );
+      return Response.json({ data, error: null });
+    }
+
+    return Response.json({ data: null, error: "Invalid request body" });
+
   } catch (error) {
     console.error("POST error:", error);
     return Response.json({ data: null, error: "Invalid JSON" });
