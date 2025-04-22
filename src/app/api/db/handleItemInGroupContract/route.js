@@ -3,6 +3,9 @@ import {
   getGroupContract,
   addGroupContractCategory,
   addGroupContractRule,
+  updateGroupContractRule,
+  deleteCategory,
+  deleteRule,
   checkIfUserOwnsProject,
   checkIfUserHasAccessToProject,
 } from "@/lib/queries";
@@ -77,8 +80,6 @@ export async function PATCH(req) {
   projectId = parseInt(projectId);
   const session = await auth();
 
-  console.log(req);
-
   let userHasAccess = false;
   if (Number.isInteger(projectId)) {
     userHasAccess =
@@ -87,7 +88,16 @@ export async function PATCH(req) {
   }
 
   if (!!session && userHasAccess) {
-    return Response.json({ data: "PATCH HANDLED", error: null });
+    try {
+      const { ruleId, rule_description } = await req.json();
+
+      const updated = await updateGroupContractRule(ruleId, rule_description);
+
+      return Response.json({ data: updated, error: null });
+    } catch (error) {
+      console.error("PATCH error:", error);
+      return Response.json({ data: null, error: "Failed to update rule" });
+    }
   }
   return Response.json({ data: null, error: "Not authorized" });
 }
@@ -107,7 +117,24 @@ export async function DELETE(req) {
   }
 
   if (!!session && userHasAccess) {
-    return Response.json({ data: "DELETE HANDLED", error: null });
+    const body = await req.json();
+    const { categoryId, ruleId } = body;
+
+    try {
+      let deleted = null;
+
+      if (categoryId) {
+        deleted = await deleteCategory(categoryId);
+      } else if (ruleId) {
+        deleted = await deleteRule(ruleId);
+      }
+      return Response.json({ data: deleted, error: null });
+    } catch (error) {
+      return Response.json({
+        data: null,
+        error: "Something went wrong deleting the item: " + error,
+      });
+    }
   } else {
     return Response.json({ data: null, error: "Not authorized" });
   }

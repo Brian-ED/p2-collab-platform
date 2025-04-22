@@ -31,9 +31,6 @@ export const GroupContract = () => {
       });
   }, []);
 
-  console.log("LOL");
-  console.log(contractRules[0]);
-
   // State for creating new categories
   const [newCategoryInputs, setNewCategoryInputs] = useState("");
 
@@ -71,15 +68,14 @@ export const GroupContract = () => {
           }),
         }
       );
-      const response = await res.json();
+
+      const { data } = await res.json();
 
       const newCategory = {
         id: data.id,
-        category_title: response.data.category_title,
+        category_title: data.category_title,
         group_contract_rules: [],
       };
-
-      console.log(newCategory);
 
       setContractRules((prevRules) => [...prevRules, newCategory]);
       setNewCategoryInputs("");
@@ -161,22 +157,49 @@ export const GroupContract = () => {
     setEditedRuleText("");
   };
 
-  const savedEditedRule = (categoryId, ruleId) => {
-    setContractRules((prevRules) =>
-      prevRules.map((category) =>
-        category.id === categoryId
-          ? {
-              ...category,
-              rules: category.rules.map((rule) =>
-                rule.id === ruleId
-                  ? { ...rule, rule_description: editedRuleText }
-                  : rule
-              ),
-            }
-          : category
-      )
-    );
-    cancelEdit();
+  const savedEditedRule = async (categoryId, ruleId) => {
+    try {
+      const res = await fetch(
+        `/api/db/handleItemInGroupContract?projectId=${pid}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ruleId: ruleId,
+            rule_description: editedRuleText,
+          }),
+        }
+      );
+
+      const { data, error } = await res.json();
+
+      if (error) {
+        console.error("Failed to update rule:", error);
+        return;
+      }
+
+      // Update the local state with the new rule description
+      setContractRules((prevRules) =>
+        prevRules.map((category) =>
+          category.id === categoryId
+            ? {
+                ...category,
+                group_contract_rules: category.group_contract_rules.map(
+                  (rule) =>
+                    rule.id === ruleId
+                      ? { ...rule, rule_description: data.rule_description }
+                      : rule
+                ),
+              }
+            : category
+        )
+      );
+      cancelEdit();
+    } catch (error) {
+      console.log("Error saving edited rule", error);
+    }
   };
 
   // Leave edit mode when mouse clicks outside the textfield
@@ -186,11 +209,15 @@ export const GroupContract = () => {
     () => {
       if (editingRuleId !== null) {
         const category = contractRules.find((category) =>
-          category.rules.some((rule) => rule.id === editingRuleId)
+          category.group_contract_rules.some(
+            (rule) => rule.id === editingRuleId
+          )
         );
         if (!category) return;
 
-        const rule = category.rules.find((rule) => rule.id === editingRuleId);
+        const rule = category.group_contract_rules.find(
+          (rule) => rule.id === editingRuleId
+        );
         if (!rule) return;
 
         const trimmedNewText = editedRuleText.trim();
@@ -207,27 +234,78 @@ export const GroupContract = () => {
     editingRuleId !== null
   );
 
-  const deleteCategory = (categoryId) => {
-    setContractRules((prevRules) =>
-      prevRules.filter((category) => category.id != categoryId)
-    );
+  const deleteCategory = async (categoryId) => {
+    try {
+      const res = await fetch(
+        `/api/db/handleItemInGroupContract?projectId=${pid}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            categoryId: categoryId,
+          }),
+        }
+      );
+
+      const { error } = await res.json();
+
+      if (error) {
+        console.error("Failed to delete category: ", error);
+        return;
+      }
+
+      // Remove category from local state
+      setContractRules((prevRules) =>
+        prevRules.filter((category) => category.id !== categoryId)
+      );
+    } catch (error) {
+      console.error("Error deleting category:", error);
+    }
   };
 
-  const deleteRule = (categoryId, ruleId) => {
-    setContractRules((prevRules) =>
-      prevRules.map((category) =>
-        category.id === categoryId
-          ? {
-              ...category,
-              rules: category.rules.filter((rule) => rule.id != ruleId),
-            }
-          : category
-      )
-    );
+  const deleteRule = async (categoryId, ruleId) => {
+    try {
+      const res = await fetch(
+        `/api/db/handleItemInGroupContract?projectId=${pid}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ruleId: ruleId,
+          }),
+        }
+      );
+
+      const { error } = await res.json();
+      console.log(error);
+
+      if (error) {
+        console.error("Failed to delete rule:", error);
+        return;
+      }
+
+      setContractRules((prevRules) =>
+        prevRules.map((category) =>
+          category.id === categoryId
+            ? {
+                ...category,
+                group_contract_rules: category.group_contract_rules.filter(
+                  (rule) => rule.id != ruleId
+                ),
+              }
+            : category
+        )
+      );
+    } catch (error) {
+      console.log("Error deleting rule", error);
+    }
   };
-  console.log(contractRules);
+
   if (isLoading) return <Loading />;
-  // if (contractRules.error !== null) return <p>Error: {contractRules.error}</p>;
 
   return (
     <div className="p-4">
@@ -351,7 +429,7 @@ export const GroupContract = () => {
             <div className="mt-2 flex items-start">
               <textarea
                 type="text"
-                //placeholder={`Enter new rule for ${category.category_title.toLowerCase()}`}
+                placeholder={`Enter new rule for ${category.category_title.toLowerCase()}`}
                 value={newRuleInputs[category.id] || ""}
                 onChange={(e) =>
                   handleRuleInputChange(category.id, e.target.value)
