@@ -12,7 +12,7 @@ export async function GET(req) {
       },
     });
 
-    const octokit = await app.getInstallationOctokit(65132728);
+    const octokit = await app.getInstallationOctokit(65132728); // TODO: Pass installation ID with req
 
     const response = await octokit.request(
       "GET /repos/Brian-ED/p2-collab-platform/issues",
