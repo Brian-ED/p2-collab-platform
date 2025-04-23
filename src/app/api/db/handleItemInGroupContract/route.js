@@ -2,6 +2,10 @@ import { auth } from "@/auth/authSetup";
 import {
   getGroupContract,
   addGroupContractCategory,
+  addGroupContractRule,
+  updateGroupContractRule,
+  deleteCategory,
+  deleteRule,
   checkIfUserOwnsProject,
   checkIfUserHasAccessToProject,
 } from "@/lib/queries";
@@ -28,42 +32,109 @@ export async function GET(req) {
 }
 
 export async function POST(req) {
+  let projectId = new URL(req.url).searchParams.get("projectId");
+  projectId = parseInt(projectId);
   const session = await auth();
 
-  if (!session) {
-    return Response.json({ data: null, error: "Not authorized" });
+  let userHasAccess = false;
+  if (Number.isInteger(projectId)) {
+    userHasAccess =
+      (await checkIfUserOwnsProject(session, projectId)) ||
+      (await checkIfUserHasAccessToProject(session, projectId));
   }
 
-  try {
-    const { category_title, projectId } = await req.json();
-    await addGroupContractCategory(projectId, category_title);
+  if (!!session && userHasAccess) {
+    try {
+      const body = await req.json();
 
-    return Response.json({ data: "Category added", error: null });
-  } catch (error) {
-    console.error("POST error:", error);
-    return Response.json({ data: null, error: "Invalid JSON" });
+      // Add category
+      if (body.category_title && body.projectId) {
+        const data = await addGroupContractCategory(
+          body.projectId,
+          body.category_title
+        );
+        return Response.json({ data, error: null });
+      }
+
+      // Add rule
+      if (body.group_contract_id && body.rule_description) {
+        const data = await addGroupContractRule(
+          body.group_contract_id,
+          body.rule_description
+        );
+        return Response.json({ data, error: null });
+      }
+
+      return Response.json({ data: null, error: "Invalid request body" });
+    } catch (error) {
+      console.error("POST error:", error);
+      return Response.json({ data: null, error: "Invalid JSON" });
+    }
   }
-}
 
-export async function DELETE(req) {
-  const session = await auth();
-
-  console.log(req);
-
-  if (!!session) {
-    return Response.json({ data: "DELETE HANDLED", error: null });
-  } else {
-    return Response.json({ data: null, error: "Not authorized" });
-  }
+  return Response.json({ data: null, error: "Not authorized" });
 }
 
 export async function PATCH(req) {
+  let projectId = new URL(req.url).searchParams.get("projectId");
+  projectId = parseInt(projectId);
+  const session = await auth();
+
+  let userHasAccess = false;
+  if (Number.isInteger(projectId)) {
+    userHasAccess =
+      (await checkIfUserOwnsProject(session, projectId)) ||
+      (await checkIfUserHasAccessToProject(session, projectId));
+  }
+
+  if (!!session && userHasAccess) {
+    try {
+      const { ruleId, rule_description } = await req.json();
+
+      const updated = await updateGroupContractRule(ruleId, rule_description);
+
+      return Response.json({ data: updated, error: null });
+    } catch (error) {
+      console.error("PATCH error:", error);
+      return Response.json({ data: null, error: "Failed to update rule" });
+    }
+  }
+  return Response.json({ data: null, error: "Not authorized" });
+}
+
+export async function DELETE(req) {
+  let projectId = new URL(req.url).searchParams.get("projectId");
+  projectId = parseInt(projectId);
   const session = await auth();
 
   console.log(req);
 
-  if (!!session) {
-    return Response.json({ data: "PATCH HANDLED", error: null });
+  let userHasAccess = false;
+  if (Number.isInteger(projectId)) {
+    userHasAccess =
+      (await checkIfUserOwnsProject(session, projectId)) ||
+      (await checkIfUserHasAccessToProject(session, projectId));
+  }
+
+  if (!!session && userHasAccess) {
+    const body = await req.json();
+    const { categoryId, ruleId } = body;
+
+    try {
+      let deleted = null;
+
+      if (categoryId) {
+        deleted = await deleteCategory(categoryId);
+      } else if (ruleId) {
+        deleted = await deleteRule(ruleId);
+      }
+      return Response.json({ data: deleted, error: null });
+    } catch (error) {
+      return Response.json({
+        data: null,
+        error: "Something went wrong deleting the item: " + error,
+      });
+    }
   } else {
     return Response.json({ data: null, error: "Not authorized" });
   }

@@ -231,6 +231,42 @@ export async function addGroupContractCategory(projectId, category_title) {
   return result;
 }
 
+export async function addGroupContractRule(groupContractId, ruleDescription) {
+  return await prisma.group_contract_rules.create({
+    data: {
+      group_contract_id: groupContractId,
+      rule_description: ruleDescription,
+    },
+  });
+}
+
+export async function updateGroupContractRule(ruleId, newDescription) {
+  return await prisma.group_contract_rules.update({
+    where: { id: ruleId },
+    data: { rule_description: newDescription },
+  });
+}
+
+export const deleteCategory = async (categoryId) => {
+  // Delete associated rules first
+  await prisma.group_contract_rules.deleteMany({
+    where: {
+      group_contract_id: categoryId,
+    },
+  });
+
+  // Delete the category
+  return await prisma.group_contracts.delete({
+    where: { id: categoryId },
+  });
+};
+
+export const deleteRule = async (ruleId) => {
+  return await prisma.group_contract_rules.delete({
+    where: { id: ruleId },
+  });
+};
+
 export async function getMessages(projectId) {
   const messages = await prisma.messages.findMany({
     where: {

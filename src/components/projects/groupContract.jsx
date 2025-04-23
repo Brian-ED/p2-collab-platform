@@ -26,7 +26,7 @@ export const GroupContract = () => {
     fetch(`/api/db/handleItemInGroupContract?projectId=${pid}`)
       .then((res) => res.json())
       .then((data) => {
-        setContractRules(data);
+        setContractRules(data.data);
         setIsLoading(false);
       });
   }, []);
@@ -49,45 +49,39 @@ export const GroupContract = () => {
   };
 
   // Add a new category
-  const addCategory = () => {
+  const addCategory = async () => {
     if (newCategoryInputs === "") {
       return;
     }
 
-    setContractRules((prevRules) => [
-      ...prevRules,
-      {
-        id: Date.now(),
-        title: newCategoryInputs,
-        rules: [],
-      },
-    ]);
-    setNewCategoryInputs("");
-  };
+    try {
+      const res = await fetch(
+        `/api/db/handleItemInGroupContract?projectId=${pid}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            category_title: newCategoryInputs,
+            projectId: pid,
+          }),
+        }
+      );
 
-  const addCategoryApi = () => {
-    if (newCategoryInputs === "") {
-      return;
+      const { data } = await res.json();
+
+      const newCategory = {
+        id: data.id,
+        category_title: data.category_title,
+        group_contract_rules: [],
+      };
+
+      setContractRules((prevRules) => [...prevRules, newCategory]);
+      setNewCategoryInputs("");
+    } catch (error) {
+      console.error("Failed to add category:", error);
     }
-  
-    fetch(`/api/db/handleItemInGroupContract?projectId=${pid}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        category_title: newCategoryInputs,
-        projectId: pid,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        
-        console.log(data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
   };
 
   // Update the category title
@@ -105,27 +99,51 @@ export const GroupContract = () => {
   };
 
   // Add a rule to a category
-  const addRule = (categoryId) => {
+  const addRule = async (categoryId) => {
     // Prevent users from adding an empty rule
     if (!newRuleInputs[categoryId] || newRuleInputs[categoryId.trim === ""]) {
       return;
     }
 
-    setContractRules((prevRules) =>
-      prevRules.map((category) =>
-        category.id === categoryId
-          ? {
-              ...category,
-              rules: [
-                ...category.rules,
-                { id: Date.now(), rule_description: newRuleInputs[categoryId] },
-              ],
-            }
-          : category
-      )
-    );
-    // Clear the input field after submitting
-    setNewRuleInputs((prevInputs) => ({ ...prevInputs, [categoryId]: "" }));
+    const ruleText = newRuleInputs[categoryId];
+    if (!ruleText || ruleText.trim() === "") return;
+
+    try {
+      const res = await fetch(
+        `/api/db/handleItemInGroupContract?projectId=${pid}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            group_contract_id: categoryId,
+            rule_description: ruleText,
+          }),
+        }
+      );
+
+      const response = await res.json();
+      const newRule = response.data;
+
+      setContractRules((prevRules) =>
+        prevRules.map((category) =>
+          category.id === categoryId
+            ? {
+                ...category,
+                group_contract_rules: [
+                  ...category.group_contract_rules,
+                  newRule,
+                ],
+              }
+            : category
+        )
+      );
+      // Clear the input field after submitting
+      setNewRuleInputs((prevInputs) => ({ ...prevInputs, [categoryId]: "" }));
+    } catch (error) {
+      console.error("Failed to add rule:", error);
+    }
   };
 
   // Edit a rule
@@ -139,22 +157,49 @@ export const GroupContract = () => {
     setEditedRuleText("");
   };
 
-  const savedEditedRule = (categoryId, ruleId) => {
-    setContractRules((prevRules) =>
-      prevRules.map((category) =>
-        category.id === categoryId
-          ? {
-              ...category,
-              rules: category.rules.map((rule) =>
-                rule.id === ruleId
-                  ? { ...rule, rule_description: editedRuleText }
-                  : rule
-              ),
-            }
-          : category
-      )
-    );
-    cancelEdit();
+  const savedEditedRule = async (categoryId, ruleId) => {
+    try {
+      const res = await fetch(
+        `/api/db/handleItemInGroupContract?projectId=${pid}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ruleId: ruleId,
+            rule_description: editedRuleText,
+          }),
+        }
+      );
+
+      const { data, error } = await res.json();
+
+      if (error) {
+        console.error("Failed to update rule:", error);
+        return;
+      }
+
+      // Update the local state with the new rule description
+      setContractRules((prevRules) =>
+        prevRules.map((category) =>
+          category.id === categoryId
+            ? {
+                ...category,
+                group_contract_rules: category.group_contract_rules.map(
+                  (rule) =>
+                    rule.id === ruleId
+                      ? { ...rule, rule_description: data.rule_description }
+                      : rule
+                ),
+              }
+            : category
+        )
+      );
+      cancelEdit();
+    } catch (error) {
+      console.log("Error saving edited rule", error);
+    }
   };
 
   // Leave edit mode when mouse clicks outside the textfield
@@ -164,11 +209,15 @@ export const GroupContract = () => {
     () => {
       if (editingRuleId !== null) {
         const category = contractRules.find((category) =>
-          category.rules.some((rule) => rule.id === editingRuleId)
+          category.group_contract_rules.some(
+            (rule) => rule.id === editingRuleId
+          )
         );
         if (!category) return;
 
-        const rule = category.rules.find((rule) => rule.id === editingRuleId);
+        const rule = category.group_contract_rules.find(
+          (rule) => rule.id === editingRuleId
+        );
         if (!rule) return;
 
         const trimmedNewText = editedRuleText.trim();
@@ -185,29 +234,78 @@ export const GroupContract = () => {
     editingRuleId !== null
   );
 
-  const deleteCategory = (categoryId) => {
-    setContractRules((prevRules) =>
-      prevRules.filter((category) => category.id != categoryId)
-    );
+  const deleteCategory = async (categoryId) => {
+    try {
+      const res = await fetch(
+        `/api/db/handleItemInGroupContract?projectId=${pid}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            categoryId: categoryId,
+          }),
+        }
+      );
+
+      const { error } = await res.json();
+
+      if (error) {
+        console.error("Failed to delete category: ", error);
+        return;
+      }
+
+      // Remove category from local state
+      setContractRules((prevRules) =>
+        prevRules.filter((category) => category.id !== categoryId)
+      );
+    } catch (error) {
+      console.error("Error deleting category:", error);
+    }
   };
 
-  const deleteRule = (categoryId, ruleId) => {
-    setContractRules((prevRules) =>
-      prevRules.map((category) =>
-        category.id === categoryId
-          ? {
-              ...category,
-              rules: category.rules.filter((rule) => rule.id != ruleId),
-            }
-          : category
-      )
-    );
-  };
+  const deleteRule = async (categoryId, ruleId) => {
+    try {
+      const res = await fetch(
+        `/api/db/handleItemInGroupContract?projectId=${pid}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ruleId: ruleId,
+          }),
+        }
+      );
 
-  const getRules = () => {};
+      const { error } = await res.json();
+      console.log(error);
+
+      if (error) {
+        console.error("Failed to delete rule:", error);
+        return;
+      }
+
+      setContractRules((prevRules) =>
+        prevRules.map((category) =>
+          category.id === categoryId
+            ? {
+                ...category,
+                group_contract_rules: category.group_contract_rules.filter(
+                  (rule) => rule.id != ruleId
+                ),
+              }
+            : category
+        )
+      );
+    } catch (error) {
+      console.log("Error deleting rule", error);
+    }
+  };
 
   if (isLoading) return <Loading />;
-  if (contractRules.error !== null) return <p>Error: {contractRules.error}</p>;
 
   return (
     <div className="p-4">
@@ -228,7 +326,7 @@ export const GroupContract = () => {
         value={newCategoryInputs}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
-            addCategoryApi();
+            addCategory();
           }
         }}
         className="border p-2 rounded w-[30%] mr-2"
@@ -239,11 +337,13 @@ export const GroupContract = () => {
       >
         <FaPlus className="text-sm" />
       </button>
-      {contractRules.data.map((category) => (
-        <div key={category.id} className="">
+      {contractRules.map((category, index) => (
+        <div key={index} className="">
           <div className="py-4">
             <div className="flex">
-              <h3 className="text-xl font-bold my-2">{category.category_title}</h3>
+              <h3 className="text-xl font-bold my-2">
+                {category.category_title}
+              </h3>
               <div className="relative group flex pl-2">
                 <button
                   onClick={() => deleteCategory(category.id)}
