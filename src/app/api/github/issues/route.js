@@ -33,7 +33,7 @@ export async function GET(req) {
         },
       });
 
-      const installationId = await getAppInstallationId(projectId);
+      const installationId = process.env.APP_INSTALL_ID;
 
       if (installationId === -1)
         return Response.json({
