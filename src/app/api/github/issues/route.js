@@ -9,7 +9,12 @@ import {
 export async function GET(req) {
   const searchparams = new URL(req.url).searchParams;
   let projectId = searchparams.get("projectId");
-  const githuburl = new URL(searchparams.get("githuburl"));
+  let githuburl;
+  try {
+    githuburl = new URL(searchparams.get("githuburl"));
+  } catch {
+    return Response.json({ data: null, error: "No GitHub URL is set." });
+  }
   const [owner, repo] = githuburl.pathname.split("/").slice(1);
 
   projectId = parseInt(projectId);
