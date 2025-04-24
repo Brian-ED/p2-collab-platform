@@ -34,7 +34,6 @@ export async function GET(req) {
       });
 
       const installationId = await getAppInstallationId(projectId);
-      console.log(installationId);
 
       if (installationId === -1)
         return Response.json({
@@ -55,7 +54,21 @@ export async function GET(req) {
         }
       );
 
-      return Response.json(response.data);
+      const comments = await octokit.request(
+        `GET /repos/${owner}/${repo}/issues/comments`,
+        {
+          owner: owner,
+          repo: repo,
+          headers: {
+            "X-GitHub-Api-Version": "2022-11-28",
+          },
+        }
+      );
+
+      return Response.json({
+        response: response.data,
+        comments: comments.data,
+      });
     } catch (error) {
       console.error("GitHub API Error:", error);
       return Response.json({ error: "GitHub API error" });
