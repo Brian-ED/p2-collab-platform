@@ -1,5 +1,11 @@
 import { auth } from "@/auth/authSetup";
 
+import {
+  getGroupContractInfo,
+  checkIfUserOwnsProject,
+  checkIfUserHasAccessToProject,
+} from "@/lib/queries";
+
 export async function GET(req) {
   let projectId = new URL(req.url).searchParams.get("projectId");
   projectId = parseInt(projectId);
@@ -14,8 +20,10 @@ export async function GET(req) {
   }
 
   if (!!session && userHasAccess) {
-    
+    const data = await getGroupContractInfo(projectId);
+    console.log(data);
+    return Response.json(data);
   } else {
     return Response.json({ data: null, error: "Not authorized" });
-  } 
+  }
 }

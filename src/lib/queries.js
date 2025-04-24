@@ -412,3 +412,34 @@ export async function grantAccessToUser(projectId, email) {
     return { data: null, error: "Not authorized" };
   }
 }
+
+export async function getGroupContractInfo(projectId) {
+  try {
+    const contractCategories = await prisma.group_contracts.findMany({
+      where: { project_id: projectId },
+      select: {
+        id: true,
+        category_title: true,
+        _count: {
+          select: {
+            group_contract_rules: true,
+          },
+        },
+      },
+    });
+
+    const data = {
+      totalCategories: contractCategories.length,
+      categories: contractCategories.map((category) => ({
+        id: category.id,
+        title: category.category_title,
+        ruleCount: category._count.group_contract_rules,
+      })),
+    };
+
+    return { data: data, error: null };
+  } catch (err) {
+    console.log(err);
+    return { data: null, error: "Not authorized" };
+  }
+}

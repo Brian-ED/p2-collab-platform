@@ -3,25 +3,23 @@
 import { SetupTask } from "@/components/projects/overview/setupTask";
 
 import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 
-useEffect(() => {
-    fetch(`/api/db/handleItemInGroupContract?projectId=${pid}`)
+export const ProjectSetup = () => {
+  const { pid } = useParams();
+
+  const [groupContractCount, setGroupContractCount] = useState(0);
+  const [ganttChartCount, setGanttChartCount] = useState(0);
+  const [gitHubIssues, setGitHubIssues] = useState(0);
+
+  useEffect(() => {
+    fetch(`/api/db/projectSetup?projectId=${pid}`)
       .then((res) => res.json())
       .then((data) => {
-        setContractRules(data.data);
-        setIsLoading(false);
+        console.log(data);
       });
   }, []);
 
-export const ProjectSetup = () => {
-    useEffect(() => {
-        fetch(`/api/db/handleItemInGroupContract?projectId=${pid}`)
-          .then((res) => res.json())
-          .then((data) => {
-            setContractRules(data.data);
-            setIsLoading(false);
-          });
-      }, []);
   return (
     <div>
       <SetupTask task="Create 3 group contract categories" requiredAmount="3" />

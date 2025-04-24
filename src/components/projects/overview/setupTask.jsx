@@ -3,10 +3,6 @@
 import { useState, useEffect, useParams } from "react";
 
 export const SetupTask = (props) => {
-  const { pid } = useParams();
-
-  
-
   return (
     <>
       <h3 className="text-2xl text-center">Get started with your project!</h3>
