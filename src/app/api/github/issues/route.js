@@ -64,12 +64,15 @@ export async function GET(req) {
       );
 
       return Response.json({
-        issues: issues.data,
-        comments: comments.data,
+        data: {
+          issues: issues.data,
+          comments: comments.data,
+        },
+        error: null,
       });
     } catch (error) {
       console.error("GitHub API Error:", error);
-      return Response.json({ error: "GitHub API error" });
+      return Response.json({ data: null, error: "GitHub API error" });
     }
   } else {
     return Response.json({ data: null, error: "Not authorized" });
@@ -105,7 +108,7 @@ export async function POST(req) {
     if (title.length > 50 || title.length < 1)
       return Response.json({ data: null, error: "Title not allowed." });
     if (body.length > 250 || body.length < 1)
-      return Response.json({ data: null, error: "Title not allowed." });
+      return Response.json({ data: null, error: "Body not allowed." });
 
     try {
       const app = new App({
@@ -134,7 +137,7 @@ export async function POST(req) {
       return Response.json({ data: "Issue created", error: null });
     } catch (error) {
       console.error("GitHub API Error:", error);
-      return Response.json({ error: "GitHub API error" });
+      return Response.json({ data: null, error: "GitHub API error" });
     }
   } else {
     return Response.json({ data: null, error: "Not authorized" });
