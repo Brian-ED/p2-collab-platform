@@ -412,3 +412,16 @@ export async function grantAccessToUser(projectId, email) {
     return { data: null, error: "Not authorized" };
   }
 }
+
+export async function getAppInstallationId(projectId) {
+  return (
+    await prisma.projects.findFirst({
+      where: {
+        id: projectId,
+      },
+      select: {
+        app_install_id: true,
+      },
+    })
+  ).app_install_id;
+}
