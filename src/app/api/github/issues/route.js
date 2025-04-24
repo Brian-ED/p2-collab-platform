@@ -3,7 +3,6 @@ import { App } from "octokit";
 import {
   checkIfUserHasAccessToProject,
   checkIfUserOwnsProject,
-  getAppInstallationId,
 } from "@/lib/queries";
 
 export async function GET(req) {
@@ -40,15 +39,9 @@ export async function GET(req) {
 
       const installationId = process.env.APP_INSTALL_ID;
 
-      if (installationId === -1)
-        return Response.json({
-          data: null,
-          error: "No Github App Installation id found.",
-        });
-
       const octokit = await app.getInstallationOctokit(installationId);
 
-      const response = await octokit.request(
+      const issues = await octokit.request(
         `GET /repos/${owner}/${repo}/issues`,
         {
           owner: owner,
@@ -71,9 +64,74 @@ export async function GET(req) {
       );
 
       return Response.json({
-        response: response.data,
+        issues: issues.data,
         comments: comments.data,
       });
+    } catch (error) {
+      console.error("GitHub API Error:", error);
+      return Response.json({ error: "GitHub API error" });
+    }
+  } else {
+    return Response.json({ data: null, error: "Not authorized" });
+  }
+}
+
+export async function POST(req) {
+  const searchparams = new URL(req.url).searchParams;
+  let projectId = searchparams.get("projectId");
+  let githuburl;
+  try {
+    githuburl = new URL(searchparams.get("githuburl"));
+  } catch {
+    return Response.json({ data: null, error: "No GitHub URL is set." });
+  }
+  const [owner, repo] = githuburl.pathname.split("/").slice(1);
+
+  projectId = parseInt(projectId);
+
+  const session = await auth();
+  let userHasAccess = false;
+  if (Number.isInteger(projectId)) {
+    userHasAccess =
+      (await checkIfUserOwnsProject(session, projectId)) ||
+      (await checkIfUserHasAccessToProject(session, projectId));
+  }
+
+  if (!!session && userHasAccess) {
+    const formData = await req.formData();
+    const title = formData.get("title");
+    const body = formData.get("body");
+
+    if (title.length > 50 || title.length < 1)
+      return Response.json({ data: null, error: "Title not allowed." });
+    if (body.length > 250 || body.length < 1)
+      return Response.json({ data: null, error: "Title not allowed." });
+
+    try {
+      const app = new App({
+        appId: Number(process.env.APP_ID),
+        privateKey: process.env.APP_PRIVATE_KEY,
+        oauth: {
+          clientId: process.env.AUTH_GITHUB_ID,
+          clientSecret: process.env.AUTH_GITHUB_SECRET,
+        },
+      });
+
+      const installationId = process.env.APP_INSTALL_ID;
+
+      const octokit = await app.getInstallationOctokit(installationId);
+
+      await octokit.request(`POST /repos/${owner}/${repo}/issues`, {
+        owner: owner,
+        repo: repo,
+        title: `[${session.user.name}] ${title}`,
+        body: body,
+        headers: {
+          "X-GitHub-Api-Version": "2022-11-28",
+        },
+      });
+
+      return Response.json({ data: "Issue created", error: null });
     } catch (error) {
       console.error("GitHub API Error:", error);
       return Response.json({ error: "GitHub API error" });

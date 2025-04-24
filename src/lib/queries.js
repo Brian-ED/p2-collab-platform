@@ -23,6 +23,7 @@ export async function addUser(name, userId, email) {
 }
 
 export async function checkIfUserOwnsProject(session, projectId) {
+  if (!!session === false) return false;
   let userId = session.user.image.split("/")[4].split("?")[0];
 
   const count = await prisma.projects.count({
@@ -37,6 +38,7 @@ export async function checkIfUserOwnsProject(session, projectId) {
 }
 
 export async function checkIfUserHasAccessToProject(session, projectId) {
+  if (!!session === false) return false;
   const userId = session.user.image.split("/")[4].split("?")[0];
 
   const count = await prisma.access.count({
