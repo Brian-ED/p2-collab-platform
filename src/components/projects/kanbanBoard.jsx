@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useDroppable, useDraggable, DndContext } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import { mockData } from "./kanbanMockData";
 import { useParams } from "next/navigation";
 import { Loading } from "@/components/loading";
 
@@ -109,7 +108,7 @@ const AddKanbanEntry = ({ submitFunction }) => {
 export const KanbanBoard = () => {
   const { pid } = useParams();
   const [isLoading, setIsLoading] = useState(true);
-  const [entries, setEntries] = useState(mockData);
+  const [entries, setEntries] = useState();
   const [changeEntry, setChangeEntry] = useState(false);
   const [addEntryHover, setAddEntryHover] = useState(false);
   const [addEntryClicked, setAddEntryClicked] = useState(false);
@@ -117,12 +116,23 @@ export const KanbanBoard = () => {
   function handleDragEnd({ active, over }) {
     if (!over) return;
     setEntries((prev) =>
-      prev.map((entry) =>
-        entry.id.toString() === active.id
-          ? { ...entry, status: over.id }
-          : entry
-      )
+      prev.map((entry) => {
+        if (entry.id.toString() === active.id) {
+          changeKanbanStatus(entry.id, over.id);
+          return { ...entry, status: over.id };
+        } else return entry;
+      })
     );
+  }
+
+  function changeKanbanStatus(id, status) {
+    fetch(`/api/db/handleKanban?projectId=${pid}`, {
+      method: "PATCH",
+      body: JSON.stringify({ entryId: id, entryStatus: status }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   }
 
   useEffect(() => {
@@ -141,7 +151,7 @@ export const KanbanBoard = () => {
     const data = new URLSearchParams(
       new FormData(document.querySelector("#addEntry"))
     );
-    fetch(`/api/db/addKanban?projectId=${pid}`, {
+    fetch(`/api/db/handleKanban?projectId=${pid}`, {
       method: "POST",
       body: data,
       headers: {
