@@ -158,6 +158,33 @@ export const KanbanBoard = () => {
   // dnd-kit requires the draggable ids to be strings x.x
   return (
     <>
+      <div className="relative flex flex-row w-fit m-2">
+        <h2 className="text-lg m-auto">Add a new Kanban entry:</h2>
+        <div
+          className="h-12 w-12 flex"
+          onMouseEnter={() => setAddEntryHover(true)}
+          onMouseLeave={() => setAddEntryHover(false)}
+          onClick={() => setAddEntryClicked(!addEntryClicked)}
+        >
+          <FaPlus className="text-green-500 m-auto z-20" size={30} />
+
+          <div
+            className={`absolute bg-white mt-7 ml-9 z-80 text-black text-sm whitespace-nowrap transition-all duration-150 border-1 px-1 ${
+              addEntryHover ? "scale-100" : "scale-0"
+            }`}
+          >
+            <span>Add entry...</span>
+          </div>
+        </div>
+        <div
+          className={`relative z-100 transition-all duration-150 w-fit h-fit ${
+            addEntryClicked ? "scale-100" : "scale-0"
+          }`}
+        >
+          <AddKanbanEntry submitFunction={addNewKanbanEntry} />
+        </div>
+      </div>
+
       <div className="flex flex-row">
         <DndContext onDragEnd={handleDragEnd}>
           {kanbanSections.map((section) => (
@@ -191,34 +218,6 @@ export const KanbanBoard = () => {
             </section>
           ))}
         </DndContext>
-      </div>
-      <div className="flex mt-2 w-full">
-        <div className="relative flex flex-row w-fit m-auto">
-          <h2 className="text-lg m-auto">Add a new Kanban entry:</h2>
-          <div
-            className="h-12 w-12 flex"
-            onMouseEnter={() => setAddEntryHover(true)}
-            onMouseLeave={() => setAddEntryHover(false)}
-            onClick={() => setAddEntryClicked(!addEntryClicked)}
-          >
-            <FaPlus className="text-green-500 m-auto z-20" size={30} />
-
-            <div
-              className={`absolute bg-white mt-7 ml-9 z-80 text-black text-sm whitespace-nowrap transition-all duration-150 border-1 px-1 ${
-                addEntryHover ? "scale-100" : "scale-0"
-              }`}
-            >
-              <span>Add entry...</span>
-            </div>
-          </div>
-          <div
-            className={`relative z-100 transition-all duration-150 w-fit h-fit ${
-              addEntryClicked ? "scale-100" : "scale-0"
-            }`}
-          >
-            <AddKanbanEntry submitFunction={addNewKanbanEntry} />
-          </div>
-        </div>
       </div>
     </>
   );
