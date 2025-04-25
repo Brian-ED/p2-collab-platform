@@ -6,6 +6,7 @@ import { GanttChart } from "@/components/projects/ganttChart";
 import { KanbanBoard } from "@/components/projects/kanbanBoard";
 import { Permissions } from "@/components/projects/permissions";
 import { Loading } from "@/components/loading";
+import { Github } from "@/components/projects/github/github";
 import { useAppContext } from "@/context/AppContext";
 
 import { useState, useEffect } from "react";
@@ -19,9 +20,8 @@ export default function Projects() {
   const [isLoading, setIsLoading] = useState(true);
 
   const setHashSection = (hash) => {
-    if (hash === "#overview") setSection("overview");
+    if (hash === "") setSection("overview");
     else if (hash === "#group-contract") setSection("group contract");
-    else if (hash === "#calender") setSection("calender");
     else if (hash === "#gantt") setSection("gantt");
     else if (hash === "#kanban") setSection("kanban");
     else if (hash === "#github") setSection("github");
@@ -52,7 +52,7 @@ export default function Projects() {
       {section === "calendar" && <h1 className="text-2xl">calendar</h1>}
       {section === "gantt" && <GanttChart />}
       {section === "kanban" && <KanbanBoard />}
-      {section === "github" && <h1 className="text-2xl">github</h1>}
+      {section === "github" && <Github />}
       {section === "messaging" && <InstantMessaging />}
       {section === "permissions" && <Permissions />}
     </>

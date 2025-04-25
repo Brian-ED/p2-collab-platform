@@ -23,6 +23,7 @@ export async function addUser(name, userId, email) {
 }
 
 export async function checkIfUserOwnsProject(session, projectId) {
+  if (!!session === false) return false;
   let userId = session.user.image.split("/")[4].split("?")[0];
 
   const count = await prisma.projects.count({
@@ -37,6 +38,7 @@ export async function checkIfUserOwnsProject(session, projectId) {
 }
 
 export async function checkIfUserHasAccessToProject(session, projectId) {
+  if (!!session === false) return false;
   const userId = session.user.image.split("/")[4].split("?")[0];
 
   const count = await prisma.access.count({
@@ -411,6 +413,31 @@ export async function grantAccessToUser(projectId, email) {
   } catch {
     return { data: null, error: "Not authorized" };
   }
+}
+
+
+export async function getGithubUrl(pid) {
+  return (
+    await prisma.projects.findFirst({
+      where: {
+        id: pid,
+      },
+      select: {
+        github_url: true,
+      },
+    })
+  ).github_url;
+}
+
+export async function setProjectGithub(pid, github_url) {
+  await prisma.projects.update({
+    where: {
+      id: pid,
+    },
+    data: {
+      github_url: github_url,
+    },
+  });
 }
 
 export async function getKanbanEntries(projectId) {
