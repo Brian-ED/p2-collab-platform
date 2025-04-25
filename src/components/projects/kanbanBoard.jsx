@@ -5,6 +5,7 @@ import { useDroppable, useDraggable, DndContext } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { mockData } from "./kanbanMockData";
 import { useParams } from "next/navigation";
+import { Loading } from "@/components/loading";
 
 const KanbanEntry = ({ name }) => {
   return (
@@ -40,6 +41,7 @@ function Draggable({ id, children }) {
 
 export const KanbanBoard = () => {
   const { pid } = useParams();
+  const [isLoading, setIsLoading] = useState(true);
   const [entries, setEntries] = useState(mockData);
   const [changeEntry, setChangeEntry] = useState(false);
 
@@ -59,9 +61,11 @@ export const KanbanBoard = () => {
       .then((res) => res.json())
       .then((data) => {
         setEntries(data.data);
-        //setIsLoading(false);
+        setIsLoading(false);
       });
   }, [changeEntry]);
+
+  if (isLoading) return <Loading />;
 
   // dnd-kit requires the draggable ids to be strings x.x
   return (
