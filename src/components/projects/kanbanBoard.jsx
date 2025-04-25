@@ -69,8 +69,24 @@ const AddKanbanEntry = ({ submitFunction }) => {
           name="kanban-description"
         />
         <br />
+        <label className="font-semibold" htmlFor="status">
+          Status:
+        </label>
+        <br />
+        <label for="backlog">Backlog </label>
+        <input type="radio" id="backlog" name="status" value="Backlog" />
+        <br />
+        <label for="progress">In progress </label>
+        <input type="radio" id="progress" name="status" value="In progress" />
+        <br />
+        <label for="review">In review </label>
+        <input type="radio" id="review" name="status" value="In review" />
+        <br />
+        <label for="done">Done </label>
+        <input type="radio" id="done" name="status" value="Done" />
+        <br />
         <input
-          className="border-2 px-2 rounded-full hover:bg-gray-500/30"
+          className="border-2 px-2 rounded-full mt-2 hover:bg-gray-500/30"
           type="submit"
           value="Add entry"
         />
