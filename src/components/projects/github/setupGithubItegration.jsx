@@ -1,20 +1,20 @@
 import { useParams } from "next/navigation";
 
-async function sendGithubURL(pid) {
+function sendGithubURL(pid, setChangeIssues) {
   const data = new URLSearchParams(
     new FormData(document.querySelector("#githubUrlForm"))
   );
 
-  await fetch(`/api/github/setRepo?projectId=${pid}`, {
+  fetch(`/api/github/setRepo?projectId=${pid}`, {
     method: "PATCH",
     body: data,
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
-  });
+  }).then(setChangeIssues(true));
 }
 
-export const SetupGithubItegration = () => {
+export const SetupGithubItegration = ({ setChangeIssues }) => {
   const { pid } = useParams();
 
   return (
@@ -22,7 +22,7 @@ export const SetupGithubItegration = () => {
       className="mx-auto mt-5 flex flex-col"
       id="githubUrlForm"
       action={() => {
-        sendGithubURL(pid).then(location.reload());
+        sendGithubURL(pid, setChangeIssues);
       }}
     >
       <input
