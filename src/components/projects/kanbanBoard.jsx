@@ -112,7 +112,7 @@ export const KanbanBoard = () => {
       </div>
       <div className="flex mt-2 w-full">
         <div className="relative flex flex-row w-fit m-auto">
-          <h2 className="text-lg m-auto">Add your first Kanban entry:</h2>
+          <h2 className="text-lg m-auto">Add a new Kanban entry:</h2>
           <div
             className="h-12 w-12 flex"
             onMouseEnter={() => setAddEntryHover(true)}
