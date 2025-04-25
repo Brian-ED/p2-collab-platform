@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useDroppable, useDraggable, DndContext } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import { mockData } from "./kanbanMockData";
 import { useParams } from "next/navigation";
 import { Loading } from "@/components/loading";
 
@@ -109,7 +108,7 @@ const AddKanbanEntry = ({ submitFunction }) => {
 export const KanbanBoard = () => {
   const { pid } = useParams();
   const [isLoading, setIsLoading] = useState(true);
-  const [entries, setEntries] = useState(mockData);
+  const [entries, setEntries] = useState();
   const [changeEntry, setChangeEntry] = useState(false);
   const [addEntryHover, setAddEntryHover] = useState(false);
   const [addEntryClicked, setAddEntryClicked] = useState(false);
