@@ -49,7 +49,7 @@ const AddKanbanEntry = ({ submitFunction }) => {
       }
     >
       <form action={() => submitFunction()} id="addEntry">
-        <h3 className="text-center font-bold text-lg mb-2">
+        <h3 className="text-center font-bold text-lg mb-2 text-nowrap">
           Add new Kanban entry
         </h3>
         <label className="font-semibold" htmlFor="title">
@@ -121,7 +121,7 @@ export const KanbanBoard = () => {
         "Content-Type": "application/x-www-form-urlencoded",
       },
     }).then(() => {
-      setChangeEntry(!changeTask);
+      setChangeEntry(!changeEntry);
       setAddEntryClicked(false);
     });
   };
@@ -139,7 +139,7 @@ export const KanbanBoard = () => {
               className="m-2 w-full border-3 rounded-3xl h-fit"
             >
               <Droppable id={section}>
-                <h1 className="text-xl text-center my-2">
+                <h1 className="text-2xl text-center my-2">
                   {section === "backlog"
                     ? "Backlog"
                     : section === "progress"
