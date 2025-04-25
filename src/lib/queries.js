@@ -201,10 +201,10 @@ export async function removeGanttTask(taskId) {
   });
 }
 
-export async function getGroupContract(project_id) {
+export async function getGroupContract(projectId) {
   const result = await prisma.group_contracts.findMany({
     where: {
-      project_id: project_id,
+      project_id: projectId,
     },
     select: {
       id: true,
@@ -415,6 +415,7 @@ export async function grantAccessToUser(projectId, email) {
   }
 }
 
+
 export async function getGithubUrl(pid) {
   return (
     await prisma.projects.findFirst({
@@ -435,6 +436,28 @@ export async function setProjectGithub(pid, github_url) {
     },
     data: {
       github_url: github_url,
+    },
+  });
+}
+
+export async function getKanbanEntries(projectId) {
+  const result = await prisma.kanban.findMany({
+    where: {
+      projects: {
+        id: projectId,
+      },
+    },
+  });
+  return result;
+}
+
+export async function addKanbanEntry(projectId, name, description, status) {
+  await prisma.kanban.create({
+    data: {
+      project_id: projectId,
+      name: name,
+      description: description,
+      status: status,
     },
   });
 }
