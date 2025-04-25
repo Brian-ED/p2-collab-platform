@@ -424,12 +424,13 @@ export async function getKanbanEntries(projectId) {
   return result;
 }
 
-export async function addKanbanEntry(projectId, name, description) {
+export async function addKanbanEntry(projectId, name, description, status) {
   await prisma.kanban.create({
     data: {
       project_id: projectId,
       name: name,
       description: description,
+      status: status,
     },
   });
 }

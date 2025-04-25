@@ -73,17 +73,28 @@ const AddKanbanEntry = ({ submitFunction }) => {
           Status:
         </label>
         <br />
-        <label for="backlog">Backlog </label>
-        <input type="radio" id="backlog" name="status" value="Backlog" />
+        <label htmlFor="backlog">Backlog </label>
+        <input
+          type="radio"
+          id="backlog"
+          name="kanban-status"
+          value="backlog"
+          defaultChecked
+        />
         <br />
-        <label for="progress">In progress </label>
-        <input type="radio" id="progress" name="status" value="In progress" />
+        <label htmlFor="progress">In progress </label>
+        <input
+          type="radio"
+          id="progress"
+          name="kanban-status"
+          value="progress"
+        />
         <br />
-        <label for="review">In review </label>
-        <input type="radio" id="review" name="status" value="In review" />
+        <label htmlFor="review">In review </label>
+        <input type="radio" id="review" name="kanban-status" value="review" />
         <br />
-        <label for="done">Done </label>
-        <input type="radio" id="done" name="status" value="Done" />
+        <label htmlFor="done">Done </label>
+        <input type="radio" id="done" name="kanban-status" value="done" />
         <br />
         <input
           className="border-2 px-2 rounded-full mt-2 hover:bg-gray-500/30"

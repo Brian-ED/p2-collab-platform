@@ -20,6 +20,7 @@ export async function POST(req) {
 
   if (userHasAccess && !!session) {
     const formData = await req.formData();
+    console.log(formData);
     const entryName = formData.get("kanban-name");
     if (entryName.length > 50 || entryName.length < 1)
       return Response.json({ data: null, error: "Name not valid" });
@@ -28,7 +29,18 @@ export async function POST(req) {
     if (entryDescription.length > 255 || entryDescription.length < 0)
       return Response.json({ data: null, error: "Description not valid" });
 
-    await addKanbanEntry(projectId, entryName, entryDescription);
+    const entryStatus = formData.get("kanban-status");
+    if (
+      !(
+        entryStatus === "backlog" ||
+        entryStatus === "progress" ||
+        entryStatus === "review" ||
+        entryStatus === "done"
+      )
+    )
+      return Response.json({ data: null, error: "Status not valid" });
+
+    await addKanbanEntry(projectId, entryName, entryDescription, entryStatus);
 
     return Response.json({ data: "ok", error: null });
   } else {
