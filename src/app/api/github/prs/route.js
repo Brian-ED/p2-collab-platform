@@ -51,11 +51,13 @@ export async function GET(req) {
         },
       });
 
-      const comments = await octokit.request(
-        `GET /repos/${owner}/${repo}/pulls/comments`,
+      let comments = await octokit.request(
+        `GET /repos/${owner}/${repo}/issues/comments`,
         {
           owner: owner,
           repo: repo,
+          direction: "desc",
+          per_page: 100,
           headers: {
             "X-GitHub-Api-Version": "2022-11-28",
           },

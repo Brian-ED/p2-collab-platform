@@ -59,6 +59,8 @@ export async function GET(req) {
         {
           owner: owner,
           repo: repo,
+          direction: "desc",
+          per_page: 100,
           headers: {
             "X-GitHub-Api-Version": "2022-11-28",
           },
@@ -67,7 +69,7 @@ export async function GET(req) {
 
       return Response.json({
         data: {
-          issues: issues.data,
+          issues: issues.data.filter((issue) => issue.pull_request == null),
           comments: comments.data,
         },
         error: null,
