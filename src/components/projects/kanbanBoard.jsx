@@ -47,7 +47,9 @@ export const KanbanBoard = () => {
     if (!over) return;
     setEntries((prev) =>
       prev.map((entry) =>
-        entry.name === active.id ? { ...entry, status: over.id } : entry
+        entry.id.toString() === active.id
+          ? { ...entry, status: over.id }
+          : entry
       )
     );
   }
@@ -61,6 +63,7 @@ export const KanbanBoard = () => {
       });
   }, [changeEntry]);
 
+  // dnd-kit requires the draggable ids to be strings x.x
   return (
     <div className="flex flex-row">
       <DndContext onDragEnd={handleDragEnd}>
@@ -71,7 +74,7 @@ export const KanbanBoard = () => {
               {entries.map(
                 (entry) =>
                   entry.status === "backlog" && (
-                    <Draggable key={entry.id} id={entry.id}>
+                    <Draggable key={entry.id} id={entry.id.toString()}>
                       <KanbanEntry {...entry} />
                     </Draggable>
                   )
@@ -86,7 +89,7 @@ export const KanbanBoard = () => {
               {entries.map(
                 (entry) =>
                   entry.status === "progress" && (
-                    <Draggable key={entry.id} id={entry.id}>
+                    <Draggable key={entry.id} id={entry.id.toString()}>
                       <KanbanEntry {...entry} />
                     </Draggable>
                   )
@@ -101,7 +104,7 @@ export const KanbanBoard = () => {
               {entries.map(
                 (entry) =>
                   entry.status === "review" && (
-                    <Draggable key={entry.id} id={entry.id}>
+                    <Draggable key={entry.id} id={entry.id.toString()}>
                       <KanbanEntry {...entry} />
                     </Draggable>
                   )
@@ -116,7 +119,7 @@ export const KanbanBoard = () => {
               {entries.map(
                 (entry) =>
                   entry.status === "done" && (
-                    <Draggable key={entry.id} id={entry.id}>
+                    <Draggable key={entry.id} id={entry.id.toString()}>
                       <KanbanEntry {...entry} />
                     </Draggable>
                   )
