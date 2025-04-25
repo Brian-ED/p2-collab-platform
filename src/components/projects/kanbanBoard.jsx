@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDroppable, useDraggable, DndContext } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { mockData } from "./kanbanMockData";
+import { useParams } from "next/navigation";
 
 const KanbanEntry = ({ name }) => {
   return (
@@ -38,16 +39,27 @@ function Draggable({ id, children }) {
 }
 
 export const KanbanBoard = () => {
+  const { pid } = useParams();
   const [entries, setEntries] = useState(mockData);
+  const [changeEntry, setChangeEntry] = useState(false);
 
   function handleDragEnd({ active, over }) {
     if (!over) return;
     setEntries((prev) =>
       prev.map((entry) =>
-        entry.name === active.id ? { ...entry, section: over.id } : entry
+        entry.name === active.id ? { ...entry, status: over.id } : entry
       )
     );
   }
+
+  useEffect(() => {
+    fetch(`/api/db/getKanban?projectId=${pid}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setEntries(data.data);
+        //setIsLoading(false);
+      });
+  }, [changeEntry]);
 
   return (
     <div className="flex flex-row">
@@ -58,8 +70,8 @@ export const KanbanBoard = () => {
             <Droppable id="backlog">
               {entries.map(
                 (entry) =>
-                  entry.section === "backlog" && (
-                    <Draggable key={entry.name} id={entry.name}>
+                  entry.status === "backlog" && (
+                    <Draggable key={entry.id} id={entry.id}>
                       <KanbanEntry {...entry} />
                     </Draggable>
                   )
@@ -73,8 +85,8 @@ export const KanbanBoard = () => {
             <Droppable id="progress">
               {entries.map(
                 (entry) =>
-                  entry.section === "progress" && (
-                    <Draggable key={entry.name} id={entry.name}>
+                  entry.status === "progress" && (
+                    <Draggable key={entry.id} id={entry.id}>
                       <KanbanEntry {...entry} />
                     </Draggable>
                   )
@@ -88,8 +100,8 @@ export const KanbanBoard = () => {
             <Droppable id="review">
               {entries.map(
                 (entry) =>
-                  entry.section === "review" && (
-                    <Draggable key={entry.name} id={entry.name}>
+                  entry.status === "review" && (
+                    <Draggable key={entry.id} id={entry.id}>
                       <KanbanEntry {...entry} />
                     </Draggable>
                   )
@@ -103,8 +115,8 @@ export const KanbanBoard = () => {
             <Droppable id="done">
               {entries.map(
                 (entry) =>
-                  entry.section === "done" && (
-                    <Draggable key={entry.name} id={entry.name}>
+                  entry.status === "done" && (
+                    <Draggable key={entry.id} id={entry.id}>
                       <KanbanEntry {...entry} />
                     </Draggable>
                   )
