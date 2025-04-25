@@ -415,7 +415,6 @@ export async function grantAccessToUser(projectId, email) {
   }
 }
 
-
 export async function getGithubUrl(pid) {
   return (
     await prisma.projects.findFirst({
@@ -457,6 +456,17 @@ export async function addKanbanEntry(projectId, name, description, status) {
       project_id: projectId,
       name: name,
       description: description,
+      status: status,
+    },
+  });
+}
+
+export async function editKanbanStatus(entryId, status) {
+  await prisma.kanban.update({
+    where: {
+      id: entryId,
+    },
+    data: {
       status: status,
     },
   });
