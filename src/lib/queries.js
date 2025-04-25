@@ -414,3 +414,16 @@ export async function grantAccessToUser(projectId, email) {
     return { data: null, error: "Not authorized" };
   }
 }
+
+export async function getGithubUrl(pid) {
+  return (
+    await prisma.projects.findFirst({
+      where: {
+        id: pid,
+      },
+      select: {
+        github_url: true,
+      },
+    })
+  ).github_url;
+}
