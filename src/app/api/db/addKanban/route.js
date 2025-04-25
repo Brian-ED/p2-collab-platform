@@ -20,7 +20,6 @@ export async function POST(req) {
 
   if (userHasAccess && !!session) {
     const formData = await req.formData();
-    console.log(formData);
     const entryName = formData.get("kanban-name");
     if (entryName.length > 50 || entryName.length < 1)
       return Response.json({ data: null, error: "Name not valid" });
