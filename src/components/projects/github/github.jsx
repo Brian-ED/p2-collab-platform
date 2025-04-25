@@ -16,15 +16,17 @@ export const Github = () => {
   const { pid } = useParams();
 
   useEffect(() => {
+    setPrsLoading(true);
     fetch(`/api/github/prs?projectId=${pid}`)
       .then((res) => res.json())
       .then((data) => {
         setPrs(data);
         setPrsLoading(false);
       });
-  }, []);
+  }, [changeIssues]);
 
   useEffect(() => {
+    setIssuesLoading(true);
     fetch(`/api/github/issues?projectId=${pid}`)
       .then((res) => res.json())
       .then((data) => {
@@ -47,7 +49,7 @@ export const Github = () => {
         <h1 className="mx-auto mt-10 text-xl">
           Enable GitHub Integration here:
         </h1>
-        <SetupGithubItegration />
+        <SetupGithubItegration setChangeIssues={setChangeIssues} />
       </div>
     );
 
