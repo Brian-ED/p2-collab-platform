@@ -3,14 +3,15 @@
 import { LoginButton } from "@/components/loginButton";
 import Link from "next/link";
 
-import { useState } from "react";
 import { useAppContext } from "@/context/AppContext";
 
 import { FaBars, FaX } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
 
 export default function ProjectsLayout({ children }) {
-  const [sidebar, setSidebar] = useState(false);
-  const { setSection } = useAppContext();
+  const router = useRouter();
+
+  const { setSection, sidebar, setSidebar } = useAppContext();
 
   return (
     <div className="min-h-screen bg-backdrop">
@@ -43,39 +44,66 @@ export default function ProjectsLayout({ children }) {
           <nav className="p-4 overflow-hidden">
             <button
               className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
-              onClick={() => setSection("overview")}
+              onClick={() => {
+                setSection("overview");
+                router.push("");
+              }}
             >
               Overview
             </button>
             <button
               className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
-              onClick={() => setSection("group contract")}
+              onClick={() => {
+                setSection("group contract");
+                router.push("#group-contract");
+              }}
             >
-              Group Contract
+              Group contract
             </button>
             <button
               className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
-              onClick={() => setSection("calendar")}
-            >
-              Calender
-            </button>
-            <button
-              className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
-              onClick={() => setSection("gantt")}
+              onClick={() => {
+                setSection("gantt");
+                router.push("#gantt");
+              }}
             >
               Gantt
             </button>
             <button
               className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
-              onClick={() => setSection("trello")}
+              onClick={() => {
+                setSection("kanban");
+                router.push("#kanban");
+              }}
             >
-              Trello
+              Kanban board
             </button>
             <button
               className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
-              onClick={() => setSection("github")}
+              onClick={() => {
+                setSection("github");
+                router.push("#github");
+              }}
             >
               GitHub
+            </button>
+            <button
+              className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
+              onClick={() => {
+                setSection("messaging");
+                router.push("#messaging");
+              }}
+            >
+              Messages
+            </button>
+            <button
+              className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
+              onClick={() => {
+                setSection("permissions");
+                router.push("#permissions");
+              }}
+            >
+              Permissions
             </button>
           </nav>
         )}

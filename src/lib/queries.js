@@ -4,10 +4,9 @@ import prisma from "@/lib/prisma";
 
 import dayjs from "dayjs";
 
-export async function addUser(name, userId) {
+export async function addUser(name, userId, email) {
   const count = await prisma.users.count({
     where: {
-      name: name,
       user_id: userId,
     },
   });
@@ -17,12 +16,14 @@ export async function addUser(name, userId) {
       data: {
         name: name,
         user_id: userId,
+        email: email,
       },
     });
   }
 }
 
 export async function checkIfUserOwnsProject(session, projectId) {
+  if (!!session === false) return false;
   let userId = session.user.image.split("/")[4].split("?")[0];
 
   const count = await prisma.projects.count({
@@ -37,6 +38,7 @@ export async function checkIfUserOwnsProject(session, projectId) {
 }
 
 export async function checkIfUserHasAccessToProject(session, projectId) {
+  if (!!session === false) return false;
   const userId = session.user.image.split("/")[4].split("?")[0];
 
   const count = await prisma.access.count({
@@ -50,7 +52,7 @@ export async function checkIfUserHasAccessToProject(session, projectId) {
     },
   });
 
-  return count;
+  return !!count;
 }
 
 export async function checkIfTaskBelongsToProject(projectId, taskId) {
@@ -195,6 +197,277 @@ export async function removeGanttTask(taskId) {
   await prisma.gantt_charts.delete({
     where: {
       id: taskId,
+    },
+  });
+}
+
+export async function getGroupContract(projectId) {
+  const result = await prisma.group_contracts.findMany({
+    where: {
+      project_id: projectId,
+    },
+    select: {
+      id: true,
+      category_title: true,
+      group_contract_rules: {
+        select: {
+          id: true,
+          rule_description: true,
+        },
+      },
+    },
+    orderBy: {
+      id: "asc",
+    },
+  });
+  return result;
+}
+
+export async function addGroupContractCategory(projectId, category_title) {
+  const result = await prisma.group_contracts.create({
+    data: {
+      category_title,
+      project_id: parseInt(projectId),
+    },
+  });
+  return result;
+}
+
+export async function addGroupContractRule(groupContractId, ruleDescription) {
+  return await prisma.group_contract_rules.create({
+    data: {
+      group_contract_id: groupContractId,
+      rule_description: ruleDescription,
+    },
+  });
+}
+
+export async function updateGroupContractRule(ruleId, newDescription) {
+  return await prisma.group_contract_rules.update({
+    where: { id: ruleId },
+    data: { rule_description: newDescription },
+  });
+}
+
+export const deleteCategory = async (categoryId) => {
+  // Delete associated rules first
+  await prisma.group_contract_rules.deleteMany({
+    where: {
+      group_contract_id: categoryId,
+    },
+  });
+
+  // Delete the category
+  return await prisma.group_contracts.delete({
+    where: { id: categoryId },
+  });
+};
+
+export const deleteRule = async (ruleId) => {
+  return await prisma.group_contract_rules.delete({
+    where: { id: ruleId },
+  });
+};
+
+export async function getMessages(projectId) {
+  const messages = await prisma.messages.findMany({
+    where: {
+      projects: {
+        id: projectId,
+      },
+    },
+    orderBy: {
+      time_sent: "asc",
+    },
+    select: {
+      id: true,
+      users: {
+        select: {
+          name: true,
+        },
+      },
+      message: true,
+      time_sent: true,
+    },
+  });
+
+  return messages;
+}
+
+export async function addMessage(projectId, session, message) {
+  const userId = session.user.image.split("/")[4].split("?")[0];
+  const id = (
+    await prisma.users.findFirst({
+      where: {
+        user_id: userId,
+      },
+      select: {
+        id: true,
+      },
+    })
+  ).id;
+
+  return await prisma.messages.create({
+    data: {
+      project_id: projectId,
+      sender_id: id,
+      message: message,
+    },
+    select: {
+      id: true,
+      users: {
+        select: {
+          name: true,
+        },
+      },
+      message: true,
+      time_sent: true,
+    },
+  });
+}
+
+export async function getUsersWithAccess(projectId) {
+  const owner = await prisma.projects.findFirst({
+    where: {
+      id: projectId,
+    },
+    select: {
+      users: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  const users = await prisma.access.findMany({
+    where: {
+      project_id: projectId,
+    },
+    select: {
+      id: true,
+      permissions: {
+        select: {
+          name: true,
+        },
+      },
+      users: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+  return { owner: owner, users: users };
+}
+
+export async function removeAccessFromUser(projectId, accessId) {
+  try {
+    await prisma.access.delete({
+      where: {
+        id: accessId,
+        project_id: projectId,
+      },
+    });
+    return { data: "Access deleted", error: null };
+  } catch {
+    return { data: null, error: "Not authorized" };
+  }
+}
+
+export async function grantAccessToUser(projectId, email) {
+  try {
+    const id = (
+      await prisma.users.findFirst({
+        where: {
+          email: email,
+        },
+        select: {
+          id: true,
+        },
+      })
+    ).id;
+
+    const userOwnsProject = await prisma.projects.count({
+      where: {
+        users: {
+          email: email,
+        },
+        id: projectId,
+      },
+    });
+
+    if (!!userOwnsProject) return { data: null, error: "User owns project" };
+
+    const data = await prisma.access.create({
+      data: {
+        permission: 1,
+        project_id: projectId,
+        user_id: id,
+      },
+    });
+
+    return { data: data, error: null };
+  } catch {
+    return { data: null, error: "Not authorized" };
+  }
+}
+
+export async function getGithubUrl(pid) {
+  return (
+    await prisma.projects.findFirst({
+      where: {
+        id: pid,
+      },
+      select: {
+        github_url: true,
+      },
+    })
+  ).github_url;
+}
+
+export async function setProjectGithub(pid, github_url) {
+  await prisma.projects.update({
+    where: {
+      id: pid,
+    },
+    data: {
+      github_url: github_url,
+    },
+  });
+}
+
+export async function getKanbanEntries(projectId) {
+  const result = await prisma.kanban.findMany({
+    where: {
+      projects: {
+        id: projectId,
+      },
+    },
+  });
+  return result;
+}
+
+export async function addKanbanEntry(projectId, name, description, status) {
+  await prisma.kanban.create({
+    data: {
+      project_id: projectId,
+      name: name,
+      description: description,
+      status: status,
+    },
+  });
+}
+
+export async function editKanbanStatus(entryId, status) {
+  await prisma.kanban.update({
+    where: {
+      id: entryId,
+    },
+    data: {
+      status: status,
     },
   });
 }
