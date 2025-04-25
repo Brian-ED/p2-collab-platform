@@ -41,6 +41,44 @@ function Draggable({ id, children }) {
   );
 }
 
+const AddKanbanEntry = ({ submitFunction }) => {
+  return (
+    <div
+      className={
+        "absolute w-fit h-fit bg-white top-2 left-12 border-2 border-black text-black flex flex-col text-center p-2 transition-all duration-150"
+      }
+    >
+      <form action={() => submitFunction()} id="addEntry">
+        <h3 className="text-center font-bold text-lg mb-2">
+          Add new Kanban entry
+        </h3>
+        <label className="font-semibold" htmlFor="title">
+          Name:
+        </label>
+        <br />
+        <input className="border-1 mb-2 " type="text" name="kanban-name" />
+        <br />
+        <label className="font-semibold" htmlFor="description">
+          Description:
+        </label>
+        <br />
+        <textarea
+          className="border-1 mb-2 text-sm resize-none"
+          rows="3"
+          cols="21"
+          name="kanban-description"
+        />
+        <br />
+        <input
+          className="border-2 px-2 rounded-full hover:bg-gray-500/30"
+          type="submit"
+          value="Add entry"
+        />
+      </form>
+    </div>
+  );
+};
+
 export const KanbanBoard = () => {
   const { pid } = useParams();
   const [isLoading, setIsLoading] = useState(true);
@@ -70,6 +108,23 @@ export const KanbanBoard = () => {
   }, [changeEntry]);
 
   const kanbanSections = ["backlog", "progress", "review", "done"];
+
+  const addNewKanbanEntry = () => {
+    setIsLoading(true);
+    const data = new URLSearchParams(
+      new FormData(document.querySelector("#addEntry"))
+    );
+    fetch(`/api/db/addKanban?projectId=${pid}`, {
+      method: "POST",
+      body: data,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    }).then(() => {
+      setChangeEntry(!changeTask);
+      setAddEntryClicked(false);
+    });
+  };
 
   if (isLoading) return <Loading />;
 
@@ -128,6 +183,13 @@ export const KanbanBoard = () => {
             >
               <span>Add entry...</span>
             </div>
+          </div>
+          <div
+            className={`relative z-100 transition-all duration-150 w-fit h-fit ${
+              addEntryClicked ? "scale-100" : "scale-0"
+            }`}
+          >
+            <AddKanbanEntry submitFunction={addNewKanbanEntry} />
           </div>
         </div>
       </div>
