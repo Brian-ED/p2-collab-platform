@@ -65,72 +65,34 @@ export const KanbanBoard = () => {
       });
   }, [changeEntry]);
 
+  const kanbanSections = ["backlog", "progress", "review", "done"];
+
   if (isLoading) return <Loading />;
 
   // dnd-kit requires the draggable ids to be strings x.x
   return (
     <div className="flex flex-row">
       <DndContext onDragEnd={handleDragEnd}>
-        <section className="m-2 w-full border-3 rounded-3xl h-fit">
-          <Droppable id="backlog">
-            <h1 className="text-xl text-center my-2">Backlog</h1>
-            <div className="flex flex-col p-2">
-              {entries.map(
-                (entry) =>
-                  entry.status === "backlog" && (
-                    <Draggable key={entry.id} id={entry.id.toString()}>
-                      <KanbanEntry {...entry} />
-                    </Draggable>
-                  )
-              )}
-            </div>
-          </Droppable>
-        </section>
-        <section className="m-2 w-full border-3 rounded-3xl h-fit">
-          <Droppable id="progress">
-            <h1 className="text-xl text-center my-2">In progress</h1>
-            <div className="flex flex-col p-2">
-              {entries.map(
-                (entry) =>
-                  entry.status === "progress" && (
-                    <Draggable key={entry.id} id={entry.id.toString()}>
-                      <KanbanEntry {...entry} />
-                    </Draggable>
-                  )
-              )}
-            </div>
-          </Droppable>
-        </section>
-        <section className="m-2 w-full border-3 rounded-3xl h-fit">
-          <Droppable id="review">
-            <h1 className="text-xl text-center my-2">In review</h1>
-            <div className="flex flex-col p-2">
-              {entries.map(
-                (entry) =>
-                  entry.status === "review" && (
-                    <Draggable key={entry.id} id={entry.id.toString()}>
-                      <KanbanEntry {...entry} />
-                    </Draggable>
-                  )
-              )}
-            </div>
-          </Droppable>
-        </section>
-        <section className="m-2 w-full border-3 rounded-3xl h-fit">
-          <Droppable id="done">
-            <h1 className="text-xl text-center my-2">Done</h1>
-            <div className="flex flex-col p-2">
-              {entries.map(
-                (entry) =>
-                  entry.status === "done" && (
-                    <Draggable key={entry.id} id={entry.id.toString()}>
-                      <KanbanEntry {...entry} />
-                    </Draggable>
-                  )
-              )}
-            </div>
-          </Droppable>
-        </section>
+        {kanbanSections.map((section) => (
+          <section
+            key={section}
+            className="m-2 w-full border-3 rounded-3xl h-fit"
+          >
+            <Droppable id={section}>
+              <h1 className="text-xl text-center my-2">Backlog</h1>
+              <div className="flex flex-col p-2">
+                {entries.map(
+                  (entry) =>
+                    entry.status === section && (
+                      <Draggable key={entry.id} id={entry.id.toString()}>
+                        <KanbanEntry {...entry} />
+                      </Draggable>
+                    )
+                )}
+              </div>
+            </Droppable>
+          </section>
+        ))}
       </DndContext>
     </div>
   );
