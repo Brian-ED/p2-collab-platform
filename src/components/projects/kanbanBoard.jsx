@@ -68,9 +68,9 @@ export const KanbanBoard = () => {
     <div className="flex flex-row">
       <DndContext onDragEnd={handleDragEnd}>
         <section className="m-2 w-full border-3 rounded-3xl h-fit">
-          <h1 className="text-xl text-center my-2">Backlog</h1>
-          <div className="flex flex-col p-2">
-            <Droppable id="backlog">
+          <Droppable id="backlog">
+            <h1 className="text-xl text-center my-2">Backlog</h1>
+            <div className="flex flex-col p-2">
               {entries.map(
                 (entry) =>
                   entry.status === "backlog" && (
@@ -79,13 +79,13 @@ export const KanbanBoard = () => {
                     </Draggable>
                   )
               )}
-            </Droppable>
-          </div>
+            </div>
+          </Droppable>
         </section>
         <section className="m-2 w-full border-3 rounded-3xl h-fit">
-          <h1 className="text-xl text-center my-2">In progress</h1>
-          <div className="flex flex-col p-2">
-            <Droppable id="progress">
+          <Droppable id="progress">
+            <h1 className="text-xl text-center my-2">In progress</h1>
+            <div className="flex flex-col p-2">
               {entries.map(
                 (entry) =>
                   entry.status === "progress" && (
@@ -94,13 +94,13 @@ export const KanbanBoard = () => {
                     </Draggable>
                   )
               )}
-            </Droppable>
-          </div>
+            </div>
+          </Droppable>
         </section>
         <section className="m-2 w-full border-3 rounded-3xl h-fit">
-          <h1 className="text-xl text-center my-2">In review</h1>
-          <div className="flex flex-col p-2">
-            <Droppable id="review">
+          <Droppable id="review">
+            <h1 className="text-xl text-center my-2">In review</h1>
+            <div className="flex flex-col p-2">
               {entries.map(
                 (entry) =>
                   entry.status === "review" && (
@@ -109,13 +109,13 @@ export const KanbanBoard = () => {
                     </Draggable>
                   )
               )}
-            </Droppable>
-          </div>
+            </div>
+          </Droppable>
         </section>
         <section className="m-2 w-full border-3 rounded-3xl h-fit">
-          <h1 className="text-xl text-center my-2">Done</h1>
-          <div className="flex flex-col p-2">
-            <Droppable id="done">
+          <Droppable id="done">
+            <h1 className="text-xl text-center my-2">Done</h1>
+            <div className="flex flex-col p-2">
               {entries.map(
                 (entry) =>
                   entry.status === "done" && (
@@ -124,8 +124,8 @@ export const KanbanBoard = () => {
                     </Draggable>
                   )
               )}
-            </Droppable>
-          </div>
+            </div>
+          </Droppable>
         </section>
       </DndContext>
     </div>
