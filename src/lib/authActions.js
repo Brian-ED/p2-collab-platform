@@ -17,9 +17,9 @@ export const getSessionAndUpdateUser = async () => {
 };
 
 export const handleSignIn = async () => {
-  await signIn("github");
+  await signIn("github", { redirectTo: "/projects" });
 };
 
 export const handleSignOut = async () => {
-  await signOut();
+  await signOut({ redirectTo: "/" });
 };

@@ -12,7 +12,6 @@ export default function FrontpageLayout({ children }) {
             </h1>
           </div>
           <nav>{/* NAVBAR BUTTONS */}</nav>
-          <LoginButton />
         </div>
       </header>
       <main className="pt-16 ml-0">

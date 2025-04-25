@@ -27,7 +27,9 @@ export const PullRequest = (prs) => {
                   pr.title
                 }`}
               </a>
-              <div className="text-black mb-5">{parse(md.render(pr.body))}</div>
+              <div className="text-black mb-5">
+                {pr.body == null ? "" : parse(md.render(pr.body))}
+              </div>
             </div>
           </div>
           <div className="mt-2 flex flex-col gap-2">
@@ -49,7 +51,9 @@ export const PullRequest = (prs) => {
                   />
                   <div className="flex flex-col">
                     <div className="my-auto text-black">
-                      {parse(md.render(comment.body))}
+                      {comment.body == null
+                        ? ""
+                        : parse(md.render(comment.body))}
                     </div>
                     <p className="text-black mt-1 text-sm">
                       {dayjs(comment.updated_at).format("HH:mm DD/MM/YYYY")}

@@ -28,7 +28,7 @@ export const Issue = (issues, setChangeIssues) => {
                 } ${issue.title}`}
               </a>
               <div className="text-black mb-5">
-                {parse(md.render(issue.body))}
+                {issue.body == null ? "" : parse(md.render(issue.body))}
               </div>
             </div>
           </div>
@@ -51,7 +51,9 @@ export const Issue = (issues, setChangeIssues) => {
                   />
                   <div className="flex flex-col">
                     <div className="my-auto text-black">
-                      {parse(md.render(comment.body))}
+                      {comment.body == null
+                        ? ""
+                        : parse(md.render(comment.body))}
                     </div>
                     <p className="text-black mt-1 text-sm">
                       {dayjs(comment.updated_at).format("HH:mm DD/MM/YYYY")}

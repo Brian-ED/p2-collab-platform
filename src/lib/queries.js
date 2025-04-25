@@ -427,3 +427,14 @@ export async function getGithubUrl(pid) {
     })
   ).github_url;
 }
+
+export async function setProjectGithub(pid, github_url) {
+  await prisma.projects.update({
+    where: {
+      id: pid,
+    },
+    data: {
+      github_url: github_url,
+    },
+  });
+}

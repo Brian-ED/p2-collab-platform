@@ -1,14 +1,12 @@
-import Link from "next/link";
+import { LoginButton } from "@/components/loginButton";
 
 export default function Home() {
   return (
     <main>
-      <div className="m-2">
-        <Link href={{ pathname: "/projects" }}>
-          <button className="text-2xl border-3 p-1 rounded-2xl">
-            projects
-          </button>
-        </Link>
+      <div className="w-full h-[calc(100vh-40*var(--spacing))] flex">
+        <div className="m-auto scale-200">
+          <LoginButton />
+        </div>
       </div>
     </main>
   );

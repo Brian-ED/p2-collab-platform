@@ -20,9 +20,8 @@ export default function Projects() {
   const [isLoading, setIsLoading] = useState(true);
 
   const setHashSection = (hash) => {
-    if (hash === "#overview") setSection("overview");
+    if (hash === "") setSection("overview");
     else if (hash === "#group-contract") setSection("group contract");
-    else if (hash === "#calender") setSection("calender");
     else if (hash === "#gantt") setSection("gantt");
     else if (hash === "#kanban") setSection("kanban");
     else if (hash === "#github") setSection("github");
