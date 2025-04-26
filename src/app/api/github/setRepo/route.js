@@ -26,7 +26,10 @@ export async function PATCH(req) {
 
     await setProjectGithub(projectId, githubUrl);
 
-    return Response.json({ data: "GitHub project updated", error: null });
+    return Response.json({
+      data: "GitHub repo set.",
+      error: null,
+    });
   } else {
     return Response.json({ data: null, error: "Not authorized" });
   }
