@@ -88,7 +88,7 @@ export async function POST(req) {
   let projectId = searchparams.get("projectId");
   let githuburl;
   try {
-    githuburl = new URL(searchparams.get("githuburl"));
+    githuburl = new URL(await getGithubUrl(projectId));
   } catch {
     return Response.json({ data: null, error: "No GitHub URL is set." });
   }

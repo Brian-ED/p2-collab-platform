@@ -11,7 +11,12 @@ function sendGithubURL(pid, setChangeIssues) {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
-  }).then(setChangeIssues(true));
+  })
+    .then((data) => data.json())
+    .then((data) => {
+      console.log(data);
+      setChangeIssues(true);
+    });
 }
 
 export const SetupGithubItegration = ({ setChangeIssues }) => {
