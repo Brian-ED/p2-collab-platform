@@ -22,11 +22,11 @@ export async function POST(req) {
   if (userHasAccess && !!session) {
     const formData = await req.formData();
     const entryName = formData.get("kanban-name");
-    if (entryName.length > 50 || entryName.length < 1)
+    if (entryName.length > 30 || entryName.length < 1)
       return Response.json({ data: null, error: "Name not valid" });
 
     const entryDescription = formData.get("kanban-description");
-    if (entryDescription.length > 255 || entryDescription.length < 0)
+    if (entryDescription.length > 150 || entryDescription.length < 0)
       return Response.json({ data: null, error: "Description not valid" });
 
     const entryStatus = formData.get("kanban-status");
