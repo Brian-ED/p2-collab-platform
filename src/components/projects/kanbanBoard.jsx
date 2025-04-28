@@ -8,9 +8,8 @@ import { Loading } from "@/components/loading";
 
 import { FaPlus, FaX } from "react-icons/fa6";
 
-const KanbanEntry = ({ name }) => {
+const KanbanEntry = ({ name, setRemoveEntryClicked }) => {
   const [entryHover, setEntryHover] = useState(false);
-  const [entryRemoveClicked, setEntryRemoveClicked] = useState(false);
   return (
     <>
       <div
@@ -19,10 +18,7 @@ const KanbanEntry = ({ name }) => {
         onMouseLeave={() => setEntryHover(false)}
       >
         <h3 className="text-lg">{name}</h3>
-        <div
-          className="flex"
-          onMouseDown={() => setEntryRemoveClicked(!entryRemoveClicked)}
-        >
+        <div className="flex" onMouseDown={() => setRemoveEntryClicked(true)}>
           {entryHover && <FaX size={20} className="m-auto text-red-600" />}
         </div>
       </div>
@@ -262,7 +258,10 @@ export const KanbanBoard = () => {
                     (entry) =>
                       entry.status === section && (
                         <Draggable key={entry.id} id={entry.id.toString()}>
-                          <KanbanEntry {...entry} />
+                          <KanbanEntry
+                            {...entry}
+                            setRemoveEntryClicked={setRemoveEntryClicked}
+                          />
                         </Draggable>
                       )
                   )}
