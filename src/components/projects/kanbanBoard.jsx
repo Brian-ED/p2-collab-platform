@@ -6,13 +6,25 @@ import { CSS } from "@dnd-kit/utilities";
 import { useParams } from "next/navigation";
 import { Loading } from "@/components/loading";
 
-import { FaPlus } from "react-icons/fa6";
+import { FaPlus, FaX } from "react-icons/fa6";
 
 const KanbanEntry = ({ name }) => {
+  const [entryHover, setEntryHover] = useState(false);
   return (
-    <div className="h-fit w-full p-2 cursor-grab hover:bg-white/20">
-      <h3 className="text-lg">{name}</h3>
-    </div>
+    <>
+      <div
+        className="h-fit w-full p-2 cursor-grab hover:bg-white/20 flex flex-row justify-between"
+        onMouseEnter={() => setEntryHover(true)}
+        onMouseLeave={() => setEntryHover(false)}
+      >
+        <h3 className="text-lg">{name}</h3>
+        {entryHover && (
+          <div className="flex">
+            <FaX size={20} className="m-auto text-red-600" />
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 
