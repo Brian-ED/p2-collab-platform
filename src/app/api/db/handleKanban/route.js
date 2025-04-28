@@ -74,10 +74,11 @@ export async function PATCH(req) {
 }
 
 export async function DELETE(req) {
+  console.log(req);
   let projectId = new URL(req.url).searchParams.get("projectId");
   projectId = parseInt(projectId);
   let entryId = new URL(req.url).searchParams.get("entryId");
-  entryId = parseInt(taskId);
+  entryId = parseInt(entryId);
 
   const session = await auth();
   let userHasAccess = false;

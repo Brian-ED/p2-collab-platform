@@ -8,8 +8,15 @@ import { Loading } from "@/components/loading";
 
 import { FaPlus, FaX } from "react-icons/fa6";
 
-const KanbanEntry = ({ name, setRemoveEntryClicked }) => {
+const KanbanEntry = ({
+  name,
+  description,
+  id,
+  setTargetEntry,
+  setRemoveEntryClicked,
+}) => {
   const [entryHover, setEntryHover] = useState(false);
+
   return (
     <>
       <div
@@ -18,7 +25,13 @@ const KanbanEntry = ({ name, setRemoveEntryClicked }) => {
         onMouseLeave={() => setEntryHover(false)}
       >
         <h3 className="text-lg">{name}</h3>
-        <div className="flex" onMouseDown={() => setRemoveEntryClicked(true)}>
+        <div
+          className="flex"
+          onMouseDown={() => {
+            setTargetEntry(id);
+            setRemoveEntryClicked(true);
+          }}
+        >
           {entryHover && <FaX size={20} className="m-auto text-red-600" />}
         </div>
       </div>
@@ -122,7 +135,8 @@ export const KanbanBoard = () => {
   const [changeEntry, setChangeEntry] = useState(false);
   const [addEntryHover, setAddEntryHover] = useState(false);
   const [addEntryClicked, setAddEntryClicked] = useState(false);
-  const [removeEntryClicked, setRemoveEntryClicked] = useState(true);
+  const [removeEntryClicked, setRemoveEntryClicked] = useState(false);
+  const [targetEntry, setTargetEntry] = useState();
 
   function handleDragEnd({ active, over }) {
     if (!over) return;
@@ -177,7 +191,7 @@ export const KanbanBoard = () => {
   function removeKanbanEntry(entryId) {
     setIsLoading(true);
 
-    fetch(`/api/db/handleKanban?projectId=${pid}&taskId=${entryId}`, {
+    fetch(`/api/db/handleKanban?projectId=${pid}&entryId=${entryId}`, {
       method: "DELETE",
     }).then(() => {
       setChangeEntry(!changeEntry);
@@ -190,34 +204,41 @@ export const KanbanBoard = () => {
   // dnd-kit requires the draggable ids to be strings x.x
   return (
     <>
-      {removeEntryClicked && (
-        <div className="fixed top-0 left-0 w-screen h-screen flex">
-          <div className="m-auto bg-white border-2 border-black h-fit w-fit relative p-2 flex flex-col">
-            <h1 className="text-black text-center">
-              Are you sure you want to remove this Kanban entry?
-            </h1>
-            <h2 className="text-black text-center mt-4">
-              TEST KANBAN ISSUE TITLE
-            </h2>
-            <h3 className="text-center text-black mt-2">Backlog</h3>
-            <div className="flex flex-row justify-between w-[30%] mx-auto mt-4">
-              <button
-                className="border-2 border-black text-black px-2 rounded-full mt-2 hover:bg-gray-500/30"
-                onClick={() => console.log("yes")}
-              >
-                Yes
-              </button>
-              <button
-                className="border-2 border-black text-black px-2 rounded-full mt-2 hover:bg-gray-500/30"
-                onClick={() => setRemoveEntryClicked(false)}
-              >
-                No
-              </button>
-            </div>
+      <div
+        className={`fixed top-70 left-150 flex ${
+          removeEntryClicked ? "scale-100" : "scale-0"
+        }`}
+      >
+        <div className="m-auto bg-white border-2 border-black h-fit w-fit relative p-2 flex flex-col z-100">
+          <h1 className="text-black text-center">
+            Are you sure you want to remove this Kanban entry?
+          </h1>
+          <h2 className="text-black text-center mt-4">
+            TEST KANBAN ISSUE TITLE
+          </h2>
+          <h3 className="text-center text-black mt-2">Backlog</h3>
+          <div className="flex flex-row justify-between w-[30%] mx-auto mt-4">
+            <button
+              className="border-2 border-black text-black px-2 rounded-full mt-2 hover:bg-gray-500/30"
+              onClick={() => {
+                removeKanbanEntry(targetEntry);
+                setRemoveEntryClicked(false);
+              }}
+            >
+              Yes
+            </button>
+            <button
+              className="border-2 border-black text-black px-2 rounded-full mt-2 hover:bg-gray-500/30"
+              onClick={() => {
+                console.log(targetEntry);
+                setRemoveEntryClicked(false);
+              }}
+            >
+              No
+            </button>
           </div>
         </div>
-      )}
-
+      </div>
       <div className="relative flex flex-row w-fit m-2">
         <h2 className="text-lg m-auto">Add a new Kanban entry:</h2>
         <div
@@ -271,6 +292,7 @@ export const KanbanBoard = () => {
                         <Draggable key={entry.id} id={entry.id.toString()}>
                           <KanbanEntry
                             {...entry}
+                            setTargetEntry={setTargetEntry}
                             setRemoveEntryClicked={setRemoveEntryClicked}
                           />
                         </Draggable>
