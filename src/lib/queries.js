@@ -471,3 +471,23 @@ export async function editKanbanStatus(entryId, status) {
     },
   });
 }
+
+export async function checkIfEntryBelongsToProject(projectId, entryId) {
+  const count = await prisma.kanban.count({
+    where: {
+      projects: {
+        id: projectId,
+      },
+      id: entryId,
+    },
+  });
+  return !!count;
+}
+
+export async function removeKanbanEntry(entryId) {
+  await prisma.kanban.delete({
+    where: {
+      id: entryId,
+    },
+  });
+}
