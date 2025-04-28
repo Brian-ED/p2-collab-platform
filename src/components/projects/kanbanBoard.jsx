@@ -185,12 +185,7 @@ export const KanbanBoard = () => {
     <>
       {removeEntryClicked && (
         <div className="fixed top-0 left-0 w-screen h-screen flex">
-          <div className="m-auto bg-white border-2 border-black h-fit w-115 relative p-2 flex flex-col">
-            <FaX
-              size={15}
-              className="text-black absolute top-2 right-2"
-              onClick={() => setRemoveEntryClicked(false)}
-            />
+          <div className="m-auto bg-white border-2 border-black h-fit w-fit relative p-2 flex flex-col">
             <h1 className="text-black text-center">
               Are you sure you want to remove this Kanban entry?
             </h1>
@@ -199,10 +194,16 @@ export const KanbanBoard = () => {
             </h2>
             <h3 className="text-center text-black mt-2">Backlog</h3>
             <div className="flex flex-row justify-between w-[30%] mx-auto mt-4">
-              <button className="border-2 border-black text-black px-2 rounded-full mt-2 hover:bg-gray-500/30">
+              <button
+                className="border-2 border-black text-black px-2 rounded-full mt-2 hover:bg-gray-500/30"
+                onClick={() => console.log("yes")}
+              >
                 Yes
               </button>
-              <button className="border-2 border-black text-black px-2 rounded-full mt-2 hover:bg-gray-500/30">
+              <button
+                className="border-2 border-black text-black px-2 rounded-full mt-2 hover:bg-gray-500/30"
+                onClick={() => setRemoveEntryClicked(false)}
+              >
                 No
               </button>
             </div>
