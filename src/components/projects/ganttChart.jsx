@@ -185,7 +185,7 @@ export const GanttChart = () => {
     });
   };
 
-  const removeGanttTask = (taskId) => {
+  function removeGanttTask(taskId) {
     setIsLoading(true);
 
     fetch(`/api/db/removeGantt?projectId=${pid}&taskId=${taskId}`, {
@@ -194,7 +194,7 @@ export const GanttChart = () => {
       setChangeTask(!changeTask);
       setIsLoading(false);
     });
-  };
+  }
 
   if (isLoading) return <Loading />;
   if (tasks.error != null) return <p>{tasks.error}</p>;
