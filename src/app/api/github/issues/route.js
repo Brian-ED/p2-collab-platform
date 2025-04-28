@@ -86,13 +86,6 @@ export async function GET(req) {
 export async function POST(req) {
   const searchparams = new URL(req.url).searchParams;
   let projectId = searchparams.get("projectId");
-  let githuburl;
-  try {
-    githuburl = new URL(await getGithubUrl(projectId));
-  } catch {
-    return Response.json({ data: null, error: "No GitHub URL is set." });
-  }
-  const [owner, repo] = githuburl.pathname.split("/").slice(1);
 
   projectId = parseInt(projectId);
 
@@ -105,13 +98,21 @@ export async function POST(req) {
   }
 
   if (!!session && userHasAccess) {
+    let githuburl;
+    try {
+      githuburl = new URL(await getGithubUrl(projectId));
+    } catch {
+      return Response.json({ data: null, error: "No GitHub URL is set." });
+    }
+    const [owner, repo] = githuburl.pathname.split("/").slice(1);
+
     const formData = await req.formData();
     const title = formData.get("title");
     const body = formData.get("body");
 
     if (title.length > 50 || title.length < 1)
       return Response.json({ data: null, error: "Title not allowed." });
-    if (body.length > 250 || body.length < 1)
+    if (body.length > 250 || body.length < 0)
       return Response.json({ data: null, error: "Body not allowed." });
 
     try {
