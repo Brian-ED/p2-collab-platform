@@ -10,6 +10,7 @@ import { FaPlus, FaX } from "react-icons/fa6";
 
 const KanbanEntry = ({ name }) => {
   const [entryHover, setEntryHover] = useState(false);
+  const [entryRemoveClicked, setEntryRemoveClicked] = useState(false);
   return (
     <>
       <div
@@ -18,12 +19,14 @@ const KanbanEntry = ({ name }) => {
         onMouseLeave={() => setEntryHover(false)}
       >
         <h3 className="text-lg">{name}</h3>
-        {entryHover && (
-          <div className="flex">
-            <FaX size={20} className="m-auto text-red-600" />
-          </div>
-        )}
+        <div
+          className="flex"
+          onMouseDown={() => setEntryRemoveClicked(!entryRemoveClicked)}
+        >
+          {entryHover && <FaX size={20} className="m-auto text-red-600" />}
+        </div>
       </div>
+      {entryRemoveClicked && <h1>test</h1>}
     </>
   );
 };
