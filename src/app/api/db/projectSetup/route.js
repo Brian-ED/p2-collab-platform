@@ -1,7 +1,7 @@
 import { auth } from "@/auth/authSetup";
 
 import {
-  getGroupContractInfo,
+  getProjectInfo,
   checkIfUserOwnsProject,
   checkIfUserHasAccessToProject,
 } from "@/lib/queries";
@@ -20,7 +20,7 @@ export async function GET(req) {
   }
 
   if (!!session && userHasAccess) {
-    const data = await getGroupContractInfo(projectId);
+    const data = await getProjectInfo(projectId);
     console.log(data);
     return Response.json(data);
   } else {
