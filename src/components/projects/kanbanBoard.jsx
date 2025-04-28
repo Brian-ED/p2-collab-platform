@@ -195,7 +195,6 @@ export const KanbanBoard = () => {
       method: "DELETE",
     }).then(() => {
       setChangeEntry(!changeEntry);
-      setIsLoading(false);
     });
   }
 
