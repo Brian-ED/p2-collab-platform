@@ -73,7 +73,6 @@ const GanttTask = ({
             <button
               className="mx-2 border-2 px-2 rounded-full hover:bg-gray-500/30"
               onClick={() => {
-                console.log(id);
                 removeGanttTask(id);
                 setRemoveTaskClicked(false);
               }}
