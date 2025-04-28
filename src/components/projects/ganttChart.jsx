@@ -192,7 +192,6 @@ export const GanttChart = () => {
       method: "DELETE",
     }).then(() => {
       setChangeTask(!changeTask);
-      setIsLoading(false);
     });
   }
 
