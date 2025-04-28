@@ -174,6 +174,17 @@ export const KanbanBoard = () => {
     });
   };
 
+  function removeKanbanEntry(entryId) {
+    setIsLoading(true);
+
+    fetch(`/api/db/handleKanban?projectId=${pid}&taskId=${entryId}`, {
+      method: "DELETE",
+    }).then(() => {
+      setChangeEntry(!changeEntry);
+      setIsLoading(false);
+    });
+  }
+
   if (isLoading) return <Loading />;
 
   // dnd-kit requires the draggable ids to be strings x.x
