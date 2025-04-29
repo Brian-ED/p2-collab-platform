@@ -58,7 +58,11 @@ export const Github = () => {
 
   return (
     <div className="flex flex-row w-full gap-8">
-      <Issue issues={issues} setChangeIssues={setChangeIssues} />
+      <Issue
+        issues={issues}
+        setChangeIssues={setChangeIssues}
+        changeIssues={changeIssues}
+      />
       <PullRequest prs={prs} />
     </div>
   );
