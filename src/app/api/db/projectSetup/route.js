@@ -21,7 +21,6 @@ export async function GET(req) {
 
   if (!!session && userHasAccess) {
     const data = await getProjectInfo(projectId);
-    console.log(data);
     return Response.json(data);
   } else {
     return Response.json({ data: null, error: "Not authorized" });
