@@ -415,6 +415,43 @@ export async function grantAccessToUser(projectId, email) {
   }
 }
 
+
+export async function getProjectInfo(projectId) {
+  try {
+    const [contractCategories, ganttTaskCount] = await Promise.all([
+      prisma.group_contracts.findMany({
+        where: { project_id: projectId },
+        select: {
+          id: true,
+          category_title: true,
+          _count: {
+            select: {
+              group_contract_rules: true,
+            },
+          },
+        },
+      }),
+      prisma.gantt_charts.count({
+        where: { project_id: projectId },
+      }),
+    ]);
+
+    const data = {
+      totalCategories: contractCategories.length,
+      categories: contractCategories.map((category) => ({
+        id: category.id,
+        title: category.category_title,
+        ruleCount: category._count.group_contract_rules,
+      })),
+      totalGanttTasks: ganttTaskCount,
+    };
+
+    return { data: data, error: null };
+  } catch (err) {
+    console.log(err);
+    return { data: null, error: "Not authorized" };
+  }
+=======
 export async function getGithubUrl(pid) {
   return (
     await prisma.projects.findFirst({
@@ -490,4 +527,5 @@ export async function removeKanbanEntry(entryId) {
       id: entryId,
     },
   });
+
 }

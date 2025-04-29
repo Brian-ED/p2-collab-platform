@@ -1,6 +1,6 @@
 "use client";
 
-import { Overview } from "@/components/projects/overview";
+import { Overview } from "@/components/projects/overview/overview";
 import { GroupContract } from "@/components/projects/groupContract";
 import { GanttChart } from "@/components/projects/ganttChart";
 import { KanbanBoard } from "@/components/projects/kanbanBoard";

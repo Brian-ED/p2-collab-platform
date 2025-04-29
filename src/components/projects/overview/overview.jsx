@@ -1,3 +1,5 @@
+import { ProjectSetup } from "@/components/projects/overview/projectSetup";
+
 export const Overview = () => {
   return (
     <div>
@@ -17,6 +19,15 @@ export const Overview = () => {
           <li>a way to get back to the main page, to select other projects</li>
           <li>a list of the users with access to the project</li>
         </ul>
+      </div>
+      <div className="mx-auto w-[50%] py-26">
+        <div className="mb-6">
+          <h3 className="text-2xl text-center">
+            Get started with your project!
+          </h3>
+          <p className="text-center">Complete the tasks below to lay a strong foundation for your project.</p>
+        </div>
+        <ProjectSetup />
       </div>
     </div>
   );
