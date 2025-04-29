@@ -99,7 +99,7 @@ export const Issue = ({ issues, setChangeIssues, changeIssues }) => {
           name="issue-title"
           id="issue-title"
           placeholder="Issue title"
-          className="text-black border-2 border-black w-110 ml-auto rounded-xl mr-2"
+          className="text-black border-2 border-black w-110 ml-auto rounded-xl mr-2 text-center"
         />
         <button
           type="button"
