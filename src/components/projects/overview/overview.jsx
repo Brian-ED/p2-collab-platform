@@ -21,7 +21,12 @@ export const Overview = () => {
         </ul>
       </div>
       <div className="mx-auto w-[50%] py-26">
-        <h3 className="text-2xl text-center">Get started with your project!</h3>
+        <div className="mb-6">
+          <h3 className="text-2xl text-center">
+            Get started with your project!
+          </h3>
+          <p className="text-center">Complete the tasks below to lay a strong foundation for your project.</p>
+        </div>
         <ProjectSetup />
       </div>
     </div>

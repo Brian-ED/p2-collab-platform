@@ -33,7 +33,7 @@ export const ProjectSetup = () => {
   return (
     <div>
       <SetupTask
-        task="Create three contract categories, each containing at least three rules."
+        task="Create three group contract categories, each containing at least three rules."
         requiredAmount="3"
         progress={setupProgress.groupContractCount}
       />
