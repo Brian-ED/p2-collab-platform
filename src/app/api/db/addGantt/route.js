@@ -1,5 +1,7 @@
 import { auth } from "@/auth/authSetup";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 
 import {
   addGanttTask,
@@ -32,9 +34,9 @@ export async function POST(req) {
     const taskStartDate = formData.get("gantt-startdate");
     const taskEndDate = formData.get("gantt-enddate");
     if (
-      !dayjs(taskStartDate).isValid() ||
-      !dayjs(taskEndDate).isValid() ||
-      dayjs(taskEndDate).diff(dayjs(taskStartDate), "day") < 1
+      !dayjs.utc(taskStartDate).isValid() ||
+      !dayjs.utc(taskEndDate).isValid() ||
+      dayjs.utc(taskEndDate).diff(dayjs.utc(taskStartDate), "day") < 1
     )
       return Response.json({ data: null, error: "Dates not valid" });
 
@@ -42,8 +44,8 @@ export async function POST(req) {
       projectId,
       taskTitle,
       taskDescription,
-      taskStartDate,
-      taskEndDate
+      dayjs.utc(taskStartDate),
+      dayjs.utc(taskEndDate)
     );
 
     return Response.json({ data: "ok", error: null });

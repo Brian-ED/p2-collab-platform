@@ -2,8 +2,6 @@
 
 import prisma from "@/lib/prisma";
 
-import dayjs from "dayjs";
-
 export async function addUser(name, userId, email) {
   const count = await prisma.users.count({
     where: {
@@ -187,8 +185,8 @@ export async function addGanttTask(
       project_id: projectId,
       title: title,
       description: description,
-      start_date: dayjs(startDate),
-      end_date: dayjs(endDate),
+      start_date: startDate,
+      end_date: endDate,
     },
   });
 }
@@ -415,7 +413,6 @@ export async function grantAccessToUser(projectId, email) {
   }
 }
 
-
 export async function getProjectInfo(projectId) {
   try {
     const [contractCategories, ganttTaskCount] = await Promise.all([
@@ -528,5 +525,4 @@ export async function removeKanbanEntry(entryId) {
       id: entryId,
     },
   });
-
 }
