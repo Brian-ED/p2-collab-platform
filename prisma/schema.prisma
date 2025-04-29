@@ -58,6 +58,7 @@ model projects {
   id              Int               @id @default(autoincrement())
   user_id         Int
   project_name    String            @default("") @db.Char(50)
+  github_url      String            @default("")
   access          access[]
   gantt_charts    gantt_charts[]
   group_contracts group_contracts[]

@@ -23,6 +23,7 @@ export async function addUser(name, userId, email) {
 }
 
 export async function checkIfUserOwnsProject(session, projectId) {
+  if (!!session === false) return false;
   let userId = session.user.image.split("/")[4].split("?")[0];
 
   const count = await prisma.projects.count({
@@ -37,6 +38,7 @@ export async function checkIfUserOwnsProject(session, projectId) {
 }
 
 export async function checkIfUserHasAccessToProject(session, projectId) {
+  if (!!session === false) return false;
   const userId = session.user.image.split("/")[4].split("?")[0];
 
   const count = await prisma.access.count({
@@ -199,10 +201,10 @@ export async function removeGanttTask(taskId) {
   });
 }
 
-export async function getGroupContract(project_id) {
+export async function getGroupContract(projectId) {
   const result = await prisma.group_contracts.findMany({
     where: {
-      project_id: project_id,
+      project_id: projectId,
     },
     select: {
       id: true,
@@ -413,6 +415,7 @@ export async function grantAccessToUser(projectId, email) {
   }
 }
 
+
 export async function getProjectInfo(projectId) {
   try {
     const [contractCategories, ganttTaskCount] = await Promise.all([
@@ -448,4 +451,81 @@ export async function getProjectInfo(projectId) {
     console.log(err);
     return { data: null, error: "Not authorized" };
   }
+=======
+export async function getGithubUrl(pid) {
+  return (
+    await prisma.projects.findFirst({
+      where: {
+        id: pid,
+      },
+      select: {
+        github_url: true,
+      },
+    })
+  ).github_url;
+}
+
+export async function setProjectGithub(pid, github_url) {
+  return await prisma.projects.update({
+    where: {
+      id: pid,
+    },
+    data: {
+      github_url: github_url,
+    },
+  });
+}
+
+export async function getKanbanEntries(projectId) {
+  const result = await prisma.kanban.findMany({
+    where: {
+      projects: {
+        id: projectId,
+      },
+    },
+  });
+  return result;
+}
+
+export async function addKanbanEntry(projectId, name, description, status) {
+  await prisma.kanban.create({
+    data: {
+      project_id: projectId,
+      name: name,
+      description: description,
+      status: status,
+    },
+  });
+}
+
+export async function editKanbanStatus(entryId, status) {
+  await prisma.kanban.update({
+    where: {
+      id: entryId,
+    },
+    data: {
+      status: status,
+    },
+  });
+}
+
+export async function checkIfEntryBelongsToProject(projectId, entryId) {
+  const count = await prisma.kanban.count({
+    where: {
+      projects: {
+        id: projectId,
+      },
+      id: entryId,
+    },
+  });
+  return !!count;
+}
+
+export async function removeKanbanEntry(entryId) {
+  await prisma.kanban.delete({
+    where: {
+      id: entryId,
+    },
+  });
+
 }

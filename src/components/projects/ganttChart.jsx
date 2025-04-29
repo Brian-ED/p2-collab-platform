@@ -73,7 +73,6 @@ const GanttTask = ({
             <button
               className="mx-2 border-2 px-2 rounded-full hover:bg-gray-500/30"
               onClick={() => {
-                console.log(id);
                 removeGanttTask(id);
                 setRemoveTaskClicked(false);
               }}
@@ -186,16 +185,15 @@ export const GanttChart = () => {
     });
   };
 
-  const removeGanttTask = (taskId) => {
+  function removeGanttTask(taskId) {
     setIsLoading(true);
 
     fetch(`/api/db/removeGantt?projectId=${pid}&taskId=${taskId}`, {
       method: "DELETE",
     }).then(() => {
       setChangeTask(!changeTask);
-      setIsLoading(false);
     });
-  };
+  }
 
   if (isLoading) return <Loading />;
   if (tasks.error != null) return <p>{tasks.error}</p>;
