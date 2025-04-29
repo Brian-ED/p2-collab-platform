@@ -451,7 +451,8 @@ export async function getProjectInfo(projectId) {
     console.log(err);
     return { data: null, error: "Not authorized" };
   }
-=======
+}
+
 export async function getGithubUrl(pid) {
   return (
     await prisma.projects.findFirst({
