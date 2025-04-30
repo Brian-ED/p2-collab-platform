@@ -1,11 +1,12 @@
 "use client";
 
-import { SetupTask } from "@/components/projects/overview/setupTask";
-
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import { SetupTask } from "@/components/projects/overview/setupTask";
+import { Loading } from "@/components/loading";
 
 export const ProjectSetup = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const { pid } = useParams();
 
   const [setupProgress, setSetupProgress] = useState({});
@@ -19,16 +20,20 @@ export const ProjectSetup = () => {
           (category) => category.ruleCount >= 3
         );
 
-        // Get the gantt tasks count from the response
+        // Get the gantt tasks count and the gitHubUrl value from the response
         const ganttChartCount = response.data.totalGanttTasks;
+        const gitHubUrl = !!response.data.gitHubUrl; // Either empty or contains a GitHub URL | true if not empty false if empty
 
         setSetupProgress({
           groupContractCount: validGroupContractCategories.length,
           ganttChartCount: ganttChartCount,
+          gitHubUrl: gitHubUrl ? 1 : 0,
         });
+        setIsLoading(false);
       });
   }, []);
-  console.log("HERE");
+
+  if (isLoading) return <Loading />;
 
   return (
     <div>
@@ -41,6 +46,11 @@ export const ProjectSetup = () => {
         task="Plan out your project by creating at least five Gantt tasks."
         requiredAmount="5"
         progress={setupProgress.ganttChartCount}
+      />
+      <SetupTask
+        task="Integrate a GitHub repositroy."
+        requiredAmount="1"
+        progress={setupProgress.gitHubUrl}
       />
     </div>
   );

@@ -4,6 +4,7 @@ import {
   getProjectInfo,
   checkIfUserOwnsProject,
   checkIfUserHasAccessToProject,
+  getGithubUrl,
 } from "@/lib/queries";
 
 export async function GET(req) {
@@ -20,9 +21,14 @@ export async function GET(req) {
   }
 
   if (!!session && userHasAccess) {
-    const data = await getProjectInfo(projectId);
-    return Response.json(data);
+    const response = await getProjectInfo(projectId);
+    const gitHubUrl = await getGithubUrl(projectId);
+    
+    // Append the GitHub URL to the response object
+    response.data.gitHubUrl = gitHubUrl;
+
+    return Response.json(response);
   } else {
-    return Response.json({ data: null, error: "Not authorized" });
+    return Response.json({ response: null, error: "Not authorized" });
   }
 }

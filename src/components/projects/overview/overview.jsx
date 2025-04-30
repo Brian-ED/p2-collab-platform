@@ -1,4 +1,6 @@
 import { ProjectSetup } from "@/components/projects/overview/projectSetup";
+import { Loading } from "@/components/loading";
+import { useState } from "react";
 
 export const Overview = () => {
   return (
@@ -25,7 +27,10 @@ export const Overview = () => {
           <h3 className="text-2xl text-center">
             Get started with your project!
           </h3>
-          <p className="text-center">Complete the tasks below to lay a strong foundation for your project.</p>
+          <p className="text-center">
+            Complete the tasks below to lay a strong foundation for your
+            project.
+          </p>
         </div>
         <ProjectSetup />
       </div>
