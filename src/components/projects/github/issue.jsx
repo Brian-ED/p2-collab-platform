@@ -68,50 +68,9 @@ export const Issue = ({ issues, setChangeIssues, changeIssues }) => {
     return result.error === null;
   }
 
-  async function addIssue(title) {
-    let data = new FormData();
-    data.append("title", title);
-    data.append("body", "");
-
-    data = new URLSearchParams(data);
-
-    let response = await fetch(`/api/github/issues?projectId=${pid}`, {
-      method: "POST",
-      body: data,
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-    });
-
-    response = await response.json();
-
-    if (response.error === null) {
-      setChangeIssues(!changeIssues);
-    }
-  }
-
   return (
     <div className="w-[50%] flex flex-col *:nth-of-type-[n+2]:mt-10 mb-5">
       <h1 className="text-4xl text-center mb-5">Issues</h1>
-      <div className="flex flex-row bg-white rounded-md min-h-15 py-2 w-full px-5">
-        <input
-          type="text"
-          name="issue-title"
-          id="issue-title"
-          placeholder="Issue title"
-          className="text-black border-2 border-black w-110 ml-auto rounded-xl mr-2 text-center"
-        />
-        <button
-          type="button"
-          className="text-black rounded-md hover:cursor-pointer mr-auto bg-blue-400 p-2"
-          onClick={async () => {
-            let title = document.querySelector("#issue-title");
-            await addIssue(title.value);
-          }}
-        >
-          Add issue
-        </button>
-      </div>
       {issuesState.data.issues.map((issue, index) => (
         <div key={issue.id} className="relative">
           <div className="flex flex-row bg-white rounded-md min-h-15 py-2">
