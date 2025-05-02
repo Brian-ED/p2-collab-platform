@@ -6,6 +6,7 @@ import { useState, useRef, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useOutsideClick } from "@/hooks/useOutsideClick"; // Custom hook
 import { Loading } from "@/components/loading";
+import { InfoModalButton } from "@/components/projects/infoModalButton";
 
 export const GroupContract = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -309,15 +310,12 @@ export const GroupContract = () => {
 
   return (
     <div className="p-4">
-      <h2 className="text-5xl font-bold mb-4">Group Contract</h2>
-      <div className="flex mb-6">
-        <p className="text-lg">
-          Welcome to your group contract! This is where you and your team set
-          clear expectations and create guidelines for collaboration throughout
-          your project. To add a category - like meetings, communication, or any
-          other area where your group wants to define rules - simply type it
-          into the input field below.
-        </p>
+      <div className="flex justify-between">
+        <InfoModalButton
+          heading="Group Contract"
+          description="This is a description for the group contract"
+        />
+        <h2 className="text-5xl font-bold mb-4">Group Contract</h2>
       </div>
       <input
         type="text"

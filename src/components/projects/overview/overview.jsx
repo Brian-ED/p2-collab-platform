@@ -1,6 +1,37 @@
+"use client";
+
 import { ProjectSetup } from "@/components/projects/overview/projectSetup";
+import { Loading } from "@/components/loading";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 
 export const Overview = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [setupProgress, setSetupProgress] = useState(null);
+  const { pid } = useParams();
+
+  useEffect(() => {
+    fetch(`/api/db/projectSetup?projectId=${pid}`)
+      .then((res) => res.json())
+      .then((response) => {
+        const validGroupContractCategories = response.data.categories.filter(
+          (category) => category.ruleCount >= 3
+        );
+
+        const ganttChartCount = response.data.totalGanttTasks;
+        const gitHubUrl = !!response.data.gitHubUrl;
+
+        setSetupProgress({
+          groupContractCount: validGroupContractCategories.length,
+          ganttChartCount,
+          gitHubUrl: gitHubUrl ? 1 : 0,
+        });
+        setIsLoading(false);
+      });
+  }, []);
+
+  if (isLoading) return <Loading />;
+
   return (
     <div>
       <h1 className="text-2xl">overview</h1>
@@ -25,9 +56,12 @@ export const Overview = () => {
           <h3 className="text-2xl text-center">
             Get started with your project!
           </h3>
-          <p className="text-center">Complete the tasks below to lay a strong foundation for your project.</p>
+          <p className="text-center">
+            Complete the tasks below to lay a strong foundation for your
+            project.
+          </p>
         </div>
-        <ProjectSetup />
+        <ProjectSetup setupProgress={setupProgress} />
       </div>
     </div>
   );
