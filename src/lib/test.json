@@ -1,4 +1,12 @@
 {
-  "groupContract": { "heading": "Group contract", "description": "Test" },
-  "kanbanBoard": {"heading": "Kanban board", "description": "Test1"}
+  "groupContract": {
+    "heading": "Group contract",
+    "description": "A group contract is a written agreement, typically in the form of a document or a single page, created by the group to formalize and establish shared expectations among its members. Therefore, it is important to define a set of rules that applies to all group members.",
+    "guidance": "To create a set of rules, you begin by writing the name of a category and then clicking the plus symbol. This will allow you to add specific rules under that category. For example, a category in a group contract could be ‘Temporal’. Under this category, a rule might be: ‘All group members will be punctual. Meetings will start five minutes after the agreed start time, and everyone should be present and ready by then’."
+  },
+  "kanbanBoard": {
+    "heading": "Kanban board",
+    "description": "The Kanban board is a tool used to organize tasks. The board is ordered by columns, each representing a category of tasks. The categories can be rearranged across these different sections: ‘waiting’, ‘in progress’, ‘doing’, and ‘completed’.",
+    "guidance": "To create a task, you start by giving it a name and adding a short description. After filling the information, you can select the current stage of the task: for example, ‘Waiting’. As the work progresses, you can move the task to reflect its current stage. Once the task reaches the final stage, it can be moved and marked as completed."
+  }
 }

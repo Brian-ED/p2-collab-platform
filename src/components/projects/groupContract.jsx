@@ -8,7 +8,6 @@ import { useOutsideClick } from "@/hooks/useOutsideClick"; // Custom hook
 import { Loading } from "@/components/loading";
 import { InfoModalButton } from "@/components/projects/infoModalButton";
 import { groupContract } from "@/lib/test.json";
-import { kanbanBoard } from "@/lib/test.json";
 
 export const GroupContract = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -316,6 +315,7 @@ export const GroupContract = () => {
         <InfoModalButton
           heading={groupContract.heading}
           description={groupContract.description}
+          guidance={groupContract.guidance}
         />
         <h2 className="text-5xl font-bold mb-4">Group Contract</h2>
       </div>
