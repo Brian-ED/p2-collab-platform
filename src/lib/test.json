@@ -8,5 +8,10 @@
     "heading": "Kanban board",
     "description": "The Kanban board is a tool used to organize tasks. The board is ordered by columns, each representing a category of tasks. The categories can be rearranged across these different sections: ‘waiting’, ‘in progress’, ‘doing’, and ‘completed’.",
     "guidance": "To create a task, you start by giving it a name and adding a short description. After filling the information, you can select the current stage of the task: for example, ‘Waiting’. As the work progresses, you can move the task to reflect its current stage. Once the task reaches the final stage, it can be moved and marked as completed."
+  },
+  "ganttChart": {
+    "heading": "Gantt chart",
+    "description": "A Gantt chart is a visual tool used in project management to show a project's timeline. It displays tasks on the vertical axis and time on the horizontal axis, with each task represented by a bar that shows its start date, duration, and end date. This makes it easy to see which tasks run when, how long they take, and where they overlap. Gantt charts help group plans, coordinate, and track progress, ensuring projects stay on schedule and goals are met.",
+    "guidance": "To create a task, start by giving it a title. If needed, you can also add a short description. After entering this information, select the timeline by choosing a start date and an end date by which the task should be completed."
   }
 }
