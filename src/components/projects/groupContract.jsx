@@ -7,6 +7,8 @@ import { useParams } from "next/navigation";
 import { useOutsideClick } from "@/hooks/useOutsideClick"; // Custom hook
 import { Loading } from "@/components/loading";
 import { InfoModalButton } from "@/components/projects/infoModalButton";
+import { groupContract } from "@/lib/test.json";
+import { kanbanBoard } from "@/lib/test.json";
 
 export const GroupContract = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -312,8 +314,8 @@ export const GroupContract = () => {
     <div className="p-4">
       <div className="flex justify-between">
         <InfoModalButton
-          heading="Group Contract"
-          description="This is a description for the group contract"
+          heading={groupContract.heading}
+          description={groupContract.description}
         />
         <h2 className="text-5xl font-bold mb-4">Group Contract</h2>
       </div>
