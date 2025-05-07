@@ -46,4 +46,6 @@ module.exports = {
     "/node_modules/",
     "^.+\\.module\\.(css|sass|scss)$",
   ],
+  setupFilesAfterEnv: ["<rootDir>/src/singleton.js"],
+  clearMocks: true,
 };
