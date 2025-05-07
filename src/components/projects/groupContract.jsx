@@ -315,7 +315,6 @@ export const GroupContract = () => {
         <InfoModalButton
           heading={groupContract.heading}
           description={groupContract.description}
-          guidance={groupContract.guidance}
         />
         <h2 className="text-5xl font-bold mb-4">Group Contract</h2>
       </div>
