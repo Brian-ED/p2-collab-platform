@@ -10,7 +10,7 @@ export async function addUser(name, userId, email) {
   });
 
   if (count === 0) {
-    await prisma.users.create({
+    return await prisma.users.create({
       data: {
         name: name,
         user_id: userId,
