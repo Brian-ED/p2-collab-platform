@@ -4,6 +4,9 @@ import { Loading } from "@/components/loading";
 import { FaX } from "react-icons/fa6";
 import { IoIosAddCircle } from "react-icons/io";
 
+import { InfoModalButton } from "@/components/projects/infoModalButton";
+import { permissionsIntegration } from "@/lib/test.json";
+
 export const Permissions = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [usersWithAccess, setUsersWithAccess] = useState([]);
@@ -54,59 +57,67 @@ export const Permissions = () => {
     return <p>Error: {usersWithAccess.error}</p>;
 
   return (
-    <div className="flex flex-col gap-2">
-      <h1 className="text-3xl">Add user</h1>
-      <form id="email-form" className="flex flex-row gap-5">
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          className="border-amber-50 border-2 rounded-sm"
+    <>
+      <div className="flex justify-between">
+        <InfoModalButton
+          heading={permissionsIntegration.heading}
+          description={permissionsIntegration.description}
         />
-        <button className="hover:cursor-pointer">
-          <IoIosAddCircle
-            className="text-green-600 scale-200"
-            onClick={() => {
-              givePermission();
-            }}
+      </div>
+      <div className="flex flex-col gap-2">
+        <h1 className="text-3xl">Add user</h1>
+        <form id="email-form" className="flex flex-row gap-5">
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            className="border-amber-50 border-2 rounded-sm"
           />
-        </button>
-      </form>
-      <table className="text-center w-[70%] table-fixed mt-10">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Permissions</th>
-            <th>Remove</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{usersWithAccess.data.owner.users.name}</td>
-            <td>{usersWithAccess.data.owner.users.email}</td>
-            <td>Project owner</td>
-            <td></td>
-          </tr>
-          {usersWithAccess.data.users.map((access) => (
-            <tr key={access.id}>
-              <td>{access.users.name}</td>
-              <td>{access.users.email}</td>
-              <td>{access.permissions.name}</td>
-              <td>
-                <button className="hover:cursor-pointer">
-                  <FaX
-                    className="text-red-600"
-                    onClick={() => {
-                      removePermission(access.id);
-                    }}
-                  />
-                </button>
-              </td>
+          <button className="hover:cursor-pointer">
+            <IoIosAddCircle
+              className="text-green-600 scale-200"
+              onClick={() => {
+                givePermission();
+              }}
+            />
+          </button>
+        </form>
+        <table className="text-center w-[70%] table-fixed mt-10">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Permissions</th>
+              <th>Remove</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{usersWithAccess.data.owner.users.name}</td>
+              <td>{usersWithAccess.data.owner.users.email}</td>
+              <td>Project owner</td>
+              <td></td>
+            </tr>
+            {usersWithAccess.data.users.map((access) => (
+              <tr key={access.id}>
+                <td>{access.users.name}</td>
+                <td>{access.users.email}</td>
+                <td>{access.permissions.name}</td>
+                <td>
+                  <button className="hover:cursor-pointer">
+                    <FaX
+                      className="text-red-600"
+                      onClick={() => {
+                        removePermission(access.id);
+                      }}
+                    />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 };
