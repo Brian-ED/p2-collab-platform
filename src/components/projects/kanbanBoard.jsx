@@ -5,6 +5,8 @@ import { useDroppable, useDraggable, DndContext } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { useParams } from "next/navigation";
 import { Loading } from "@/components/loading";
+import { InfoModalButton } from "@/components/projects/infoModalButton";
+import { kanbanBoard } from "@/lib/test.json";
 
 import { FaPlus, FaX } from "react-icons/fa6";
 
@@ -203,6 +205,12 @@ export const KanbanBoard = () => {
   // dnd-kit requires the draggable ids to be strings x.x
   return (
     <>
+      <div className="flex justify-between">
+        <InfoModalButton
+          heading={kanbanBoard.heading}
+          description={kanbanBoard.description}
+        />
+      </div>
       <div
         className={`fixed top-70 left-150 flex ${
           removeEntryClicked ? "scale-100" : "scale-0"

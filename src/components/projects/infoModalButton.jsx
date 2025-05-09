@@ -36,7 +36,7 @@ export const InfoModalButton = ({ heading, description }) => {
       {open && (
         <div
           onClick={() => setOpen(false)}
-          className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300"
+          className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-100 transition-opacity duration-300"
         >
           {/* The contenct of the modal */}
           <div
@@ -51,7 +51,7 @@ export const InfoModalButton = ({ heading, description }) => {
               <IoClose className="text-black w-10 h-10 cursor-pointer" />
             </button>
             <h2 className="text-5xl text-black font-bold mb-4">{heading}</h2>
-            <p className="text-gray-700">{description}</p>
+            <p className="text-gray-700 whitespace-pre-wrap">{description}</p>
             <button
               onClick={() => setOpen(false)}
               className="mt-4 text-sm text-blue-600 cursor-pointer hover:underline"
