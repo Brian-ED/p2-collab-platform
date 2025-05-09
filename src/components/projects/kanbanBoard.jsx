@@ -20,7 +20,7 @@ const KanbanEntry = ({
   return (
     <>
       <div
-        className="h-fit w-full p-2 cursor-grab hover:bg-white/20 flex flex-row justify-between"
+        className="relative h-fit w-full p-2 cursor-grab hover:bg-white/20 flex flex-row justify-between"
         onMouseEnter={() => setEntryHover(true)}
         onMouseLeave={() => setEntryHover(false)}
       >
@@ -33,6 +33,13 @@ const KanbanEntry = ({
           }}
         >
           {entryHover && <FaX size={20} className="m-auto text-red-600" />}
+        </div>
+        <div
+          className={`absolute w-fit h-fit p-2 bg-white border-2 border-black text-black z-100 top-10 left-5 transition-all duration-150 ${
+            entryHover ? "scale-100" : "scale-0"
+          }`}
+        >
+          {description}
         </div>
       </div>
     </>
