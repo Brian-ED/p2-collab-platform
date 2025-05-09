@@ -35,7 +35,7 @@ const KanbanEntry = ({
           {entryHover && <FaX size={20} className="m-auto text-red-600" />}
         </div>
         <div
-          className={`absolute w-fit h-fit p-2 bg-white border-2 border-black text-black z-100 top-10 left-5 transition-all duration-150 ${
+          className={`absolute w-fit h-fit px-2 py-1 bg-white border-2 border-black text-black z-100 top-10 left-5 transition-all duration-150 ${
             entryHover ? "scale-100" : "scale-0"
           }`}
         >
