@@ -6,6 +6,9 @@ import { Loading } from "@/components/loading";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 
+import { InfoModalButton } from "@/components/projects/infoModalButton";
+import { githubIntegration } from "@/lib/test.json";
+
 export const Github = () => {
   const [issues, setIssues] = useState(null);
   const [prs, setPrs] = useState(null);
@@ -42,28 +45,44 @@ export const Github = () => {
     prs.error === "No GitHub URL is set."
   )
     return (
-      <div className="flex flex-col h-[80%]">
-        <h1 className="mx-auto mt-20 text-2xl font-semibold">
-          Looks like you haven&apos;t turned on GitHub Integration yet...
-        </h1>
-        <h1 className="mx-auto mt-10 text-xl">
-          Enable GitHub Integration here:
-        </h1>
-        <SetupGithubItegration setChangeIssues={setChangeIssues} />
-      </div>
+      <>
+        <div className="flex justify-between">
+          <InfoModalButton
+            heading={githubIntegration.heading}
+            description={githubIntegration.description}
+          />
+        </div>
+        <div className="flex flex-col h-[80%]">
+          <h1 className="mx-auto mt-20 text-2xl font-semibold">
+            Looks like you haven&apos;t turned on GitHub Integration yet...
+          </h1>
+          <h1 className="mx-auto mt-10 text-xl">
+            Enable GitHub Integration here:
+          </h1>
+          <SetupGithubItegration setChangeIssues={setChangeIssues} />
+        </div>
+      </>
     );
 
   if (issues.error != null) return <h1>Error: {issues.error}</h1>;
   if (prs.error != null) return <h1>Error: {prs.error}</h1>;
 
   return (
-    <div className="flex flex-row w-full gap-8">
-      <Issue
-        issues={issues}
-        setChangeIssues={setChangeIssues}
-        changeIssues={changeIssues}
-      />
-      <PullRequest prs={prs} />
-    </div>
+    <>
+      <div className="flex justify-between">
+        <InfoModalButton
+          heading={githubIntegration.heading}
+          description={githubIntegration.description}
+        />
+      </div>
+      <div className="flex flex-row w-full gap-8">
+        <Issue
+          issues={issues}
+          setChangeIssues={setChangeIssues}
+          changeIssues={changeIssues}
+        />
+        <PullRequest prs={prs} />
+      </div>
+    </>
   );
 };

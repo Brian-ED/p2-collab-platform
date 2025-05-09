@@ -36,7 +36,7 @@ export const InfoModalButton = ({ heading, description }) => {
       {open && (
         <div
           onClick={() => setOpen(false)}
-          className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300"
+          className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-100 transition-opacity duration-300"
         >
           {/* The contenct of the modal */}
           <div
