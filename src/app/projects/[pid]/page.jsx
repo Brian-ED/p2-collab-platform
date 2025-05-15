@@ -21,7 +21,7 @@ export default function Projects() {
 
   const setHashSection = (hash) => {
     if (hash === "") setSection("overview");
-    else if (hash === "#group-contract") setSection("group contract");
+    else if (hash === "#group-contract") setSection("group-contract");
     else if (hash === "#gantt") setSection("gantt");
     else if (hash === "#kanban") setSection("kanban");
     else if (hash === "#github") setSection("github");
@@ -48,7 +48,7 @@ export default function Projects() {
   return (
     <>
       {section === "overview" && <Overview />}
-      {section === "group contract" && <GroupContract />}
+      {section === "group-contract" && <GroupContract />}
       {section === "calendar" && <h1 className="text-2xl">calendar</h1>}
       {section === "gantt" && <GanttChart />}
       {section === "kanban" && <KanbanBoard />}

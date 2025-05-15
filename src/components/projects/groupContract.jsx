@@ -152,6 +152,7 @@ export const GroupContract = () => {
   const handleEdit = (rule) => {
     setEditingRuleId(rule.id);
     setEditedRuleText(rule.rule_description);
+    console.log(rule);
   };
 
   const cancelEdit = () => {
@@ -343,17 +344,35 @@ export const GroupContract = () => {
               <h3 className="text-xl font-bold my-2">
                 {category.category_title}
               </h3>
-              <div className="relative group flex pl-2">
-                <button
-                  onClick={() => deleteCategory(category.id)}
-                  className="text-white hover:text-white/75"
-                  aria-label="Delete Category"
-                >
-                  <FaRegTrashCan />
-                </button>
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 hidden w-max rounded bg-gray-800 px-2 py-1 group-hover:block">
-                  Delete
-                  <div className="absolute left-1/2 top-full -translate-x-1/2 w-3 h-2 bg-gray-800 rotate-180 [clip-path:polygon(50%_0%,_0%_100%,_100%_100%)]"></div>
+              <div className="flex gap-2 items-center pl-2">
+                <div className="relative group">
+                  <button
+                    onClick={() => handleEdit(category)}
+                    className="text-white hover:text-white/75 flex items-center"
+                    aria-label="Edit"
+                  >
+                    <FaRegEdit />
+                  </button>
+
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 hidden w-max rounded bg-gray-800 px-2 py-1 group-hover:block">
+                    Edit
+                    <div className="absolute left-1/2 top-full -translate-x-1/2 w-3 h-2 bg-gray-800 rotate-180 [clip-path:polygon(50%_0%,_0%_100%,_100%_100%)]"></div>
+                  </div>
+                </div>
+
+                <div className="relative group">
+                  <button
+                    onClick={() => deleteCategory(category.id)}
+                    className="white hover:text-white/75 flex items-center"
+                    aria-label="Delete"
+                  >
+                    <FaRegTrashCan />
+                  </button>
+
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 hidden w-max rounded bg-gray-800 px-2 py-1 text-sm group-hover:block">
+                    Delete
+                    <div className="absolute left-1/2 top-full -translate-x-1/2 w-3 h-2 bg-gray-800 rotate-180 [clip-path:polygon(50%_0%,_0%_100%,_100%_100%)]"></div>
+                  </div>
                 </div>
               </div>
             </div>
