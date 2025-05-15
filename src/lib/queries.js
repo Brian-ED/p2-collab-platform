@@ -2,8 +2,6 @@
 
 import prisma from "@/lib/prisma";
 
-import dayjs from "dayjs";
-
 export async function addUser(name, userId, email) {
   const count = await prisma.users.count({
     where: {
@@ -12,7 +10,7 @@ export async function addUser(name, userId, email) {
   });
 
   if (count === 0) {
-    await prisma.users.create({
+    return await prisma.users.create({
       data: {
         name: name,
         user_id: userId,
@@ -187,8 +185,8 @@ export async function addGanttTask(
       project_id: projectId,
       title: title,
       description: description,
-      start_date: dayjs(startDate),
-      end_date: dayjs(endDate),
+      start_date: startDate,
+      end_date: endDate,
     },
   });
 }
@@ -415,6 +413,43 @@ export async function grantAccessToUser(projectId, email) {
   }
 }
 
+export async function getProjectInfo(projectId) {
+  try {
+    const [contractCategories, ganttTaskCount] = await Promise.all([
+      prisma.group_contracts.findMany({
+        where: { project_id: projectId },
+        select: {
+          id: true,
+          category_title: true,
+          _count: {
+            select: {
+              group_contract_rules: true,
+            },
+          },
+        },
+      }),
+      prisma.gantt_charts.count({
+        where: { project_id: projectId },
+      }),
+    ]);
+
+    const data = {
+      totalCategories: contractCategories.length,
+      categories: contractCategories.map((category) => ({
+        id: category.id,
+        title: category.category_title,
+        ruleCount: category._count.group_contract_rules,
+      })),
+      totalGanttTasks: ganttTaskCount,
+    };
+
+    return { data: data, error: null };
+  } catch (err) {
+    console.log(err);
+    return { data: null, error: "Not authorized" };
+  }
+}
+
 export async function getGithubUrl(pid) {
   return (
     await prisma.projects.findFirst({
@@ -468,6 +503,26 @@ export async function editKanbanStatus(entryId, status) {
     },
     data: {
       status: status,
+    },
+  });
+}
+
+export async function checkIfEntryBelongsToProject(projectId, entryId) {
+  const count = await prisma.kanban.count({
+    where: {
+      projects: {
+        id: projectId,
+      },
+      id: entryId,
+    },
+  });
+  return !!count;
+}
+
+export async function removeKanbanEntry(entryId) {
+  await prisma.kanban.delete({
+    where: {
+      id: entryId,
     },
   });
 }

@@ -1,18 +1,53 @@
-import { FaPlus } from "react-icons/fa6";
+import { FaCheck, FaPlus, FaX } from "react-icons/fa6";
 
 import dayjs from "dayjs";
 import markdownit from "markdown-it";
 import parse from "html-react-parser";
 import { useParams } from "next/navigation";
+import { useEffect, useReducer } from "react";
 
 const md = markdownit();
 
-export const Issue = (issues, setChangeIssues) => {
-  issues = issues.issues;
+function reducer(state, action) {
+  switch (action.type) {
+    case "SET_ISSUES":
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          issues: state.data.issues.map((issue) => {
+            return { ...issue, isAdded: null };
+          }),
+        },
+      };
+    case "UPDATE_ISSUE_STATUS":
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          issues: state.data.issues.map((issue, index) => {
+            if (index === action.payload.index) {
+              return { ...issue, isAdded: action.payload.success };
+            }
+            return issue;
+          }),
+        },
+      };
+    default:
+      return state;
+  }
+}
+
+export const Issue = ({ issues, setChangeIssues, changeIssues }) => {
+  const [issuesState, dispatch] = useReducer(reducer, issues);
+
+  useEffect(() => {
+    dispatch({ type: "SET_ISSUES" });
+  }, [changeIssues]);
 
   const { pid } = useParams();
 
-  function addToKanban(title) {
+  async function addToKanban(title) {
     let data = new FormData();
     data.append("kanban-name", title);
     data.append("kanban-description", "");
@@ -20,19 +55,23 @@ export const Issue = (issues, setChangeIssues) => {
 
     data = new URLSearchParams(data);
 
-    fetch(`/api/db/handleKanban?projectId=${pid}`, {
+    let result = await fetch(`/api/db/handleKanban?projectId=${pid}`, {
       method: "POST",
       body: data,
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
     });
+
+    result = await result.json();
+
+    return result.error === null;
   }
 
   return (
     <div className="w-[50%] flex flex-col *:nth-of-type-[n+2]:mt-10 mb-5">
       <h1 className="text-4xl text-center mb-5">Issues</h1>
-      {issues.data.issues.map((issue) => (
+      {issuesState.data.issues.map((issue, index) => (
         <div key={issue.id} className="relative">
           <div className="flex flex-row bg-white rounded-md min-h-15 py-2">
             <img
@@ -54,20 +93,37 @@ export const Issue = (issues, setChangeIssues) => {
               </div>
             </div>
             <button
-              className="text-black scale-150 bg-blue-400 w-fit h-fit rounded-sm absolute left-3 top-3 hover:cursor-pointer"
-              onClick={() => {
-                addToKanban(
+              className={`text-black scale-150 ${
+                issue.isAdded === null
+                  ? "bg-blue-400"
+                  : issue.isAdded
+                  ? "bg-green-400"
+                  : "bg-red-400"
+              } w-fit h-fit rounded-sm absolute left-3 top-3 hover:cursor-pointer`}
+              onClick={async () => {
+                const success = await addToKanban(
                   `#${
                     new URL(issue.html_url).pathname.split("/").reverse()[0]
                   } ${issue.title}`
                 );
+
+                dispatch({
+                  type: "UPDATE_ISSUE_STATUS",
+                  payload: { index, success },
+                });
               }}
             >
-              <FaPlus />
+              {issue.isAdded === null ? (
+                <FaPlus />
+              ) : issue.isAdded ? (
+                <FaCheck />
+              ) : (
+                <FaX />
+              )}
             </button>
           </div>
           <div className="mt-2 flex flex-col gap-2">
-            {issues.data.comments
+            {issuesState.data.comments
               .filter(
                 (comment) =>
                   new URL(comment.html_url).pathname ==

@@ -26,6 +26,15 @@ module.exports = {
     // Handle module aliases
     "^@/components/(.*)$": "<rootDir>/src/components/$1",
 
+    // Handle @/lib
+    "^@/lib/(.*)$": "<rootDir>/src/lib/$1",
+
+    // Handle @/api/db
+    "^@/app/api/db/(.*)$": "<rootDir>/src/app/api/db/$1",
+
+    // Handle @/auth
+    "^@/auth/(.*)": "<rootDir>/src/auth/authSetup.js",
+
     // Handle @next/font
     "@next/font/(.*)": `<rootDir>/__mocks__/nextFontMock.js`,
     // Handle next/font
@@ -46,4 +55,6 @@ module.exports = {
     "/node_modules/",
     "^.+\\.module\\.(css|sass|scss)$",
   ],
+  setupFilesAfterEnv: ["<rootDir>/src/singleton.js"],
+  clearMocks: true,
 };

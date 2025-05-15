@@ -8,6 +8,9 @@ import { Loading } from "@/components/loading";
 
 import { FaPlus, FaX } from "react-icons/fa6";
 
+import { InfoModalButton } from "@/components/projects/infoModalButton";
+import { ganttChart } from "@/lib/test.json";
+
 const GanttTask = ({
   id,
   title,
@@ -73,7 +76,6 @@ const GanttTask = ({
             <button
               className="mx-2 border-2 px-2 rounded-full hover:bg-gray-500/30"
               onClick={() => {
-                console.log(id);
                 removeGanttTask(id);
                 setRemoveTaskClicked(false);
               }}
@@ -186,22 +188,27 @@ export const GanttChart = () => {
     });
   };
 
-  const removeGanttTask = (taskId) => {
+  function removeGanttTask(taskId) {
     setIsLoading(true);
 
     fetch(`/api/db/removeGantt?projectId=${pid}&taskId=${taskId}`, {
       method: "DELETE",
     }).then(() => {
       setChangeTask(!changeTask);
-      setIsLoading(false);
     });
-  };
+  }
 
   if (isLoading) return <Loading />;
   if (tasks.error != null) return <p>{tasks.error}</p>;
   if (tasks.data.length === 0) {
     return (
       <>
+        <div className="flex justify-between">
+          <InfoModalButton
+            heading={ganttChart.heading}
+            description={ganttChart.description}
+          />
+        </div>
         <h1 className="text-xl">No tasks...</h1>
         <div className="relative flex flex-row w-fit">
           <h2 className="text-lg m-auto">Add your first task:</h2>
@@ -274,89 +281,97 @@ export const GanttChart = () => {
   let inChart = isCurrentDateInChart(currentDate, dates);
 
   return (
-    <div
-      className="overflow-auto relative"
-      style={{ height: "calc(100vh - 5rem)" }}
-    >
-      {inChart && (
-        <div
-          className="w-0.5 bg-currentdatecolor absolute z-10"
-          style={{
-            height: "calc(var(--spacing) * " + (data.length + 1) * 12 + ")",
-            marginLeft:
-              "calc(var(--spacing) * " +
-              (dayjs(currentDate).diff(dayjs(dates[0]), "day") * 20 + 10) +
-              ")",
-          }}
-        ></div>
-      )}
-
-      <div className="[&>*:nth-child(odd)]:bg-trackcolorodd [&>*:nth-child(even)]:bg-trackcolor relative">
-        {data.map((task) => (
+    <>
+      <div className="flex justify-between">
+        <InfoModalButton
+          heading={ganttChart.heading}
+          description={ganttChart.description}
+        />
+      </div>
+      <div
+        className="overflow-auto relative"
+        style={{ height: "calc(100vh - 5rem)" }}
+      >
+        {inChart && (
           <div
+            className="w-0.5 bg-currentdatecolor absolute z-10"
+            style={{
+              height: "calc(var(--spacing) * " + (data.length + 1) * 12 + ")",
+              marginLeft:
+                "calc(var(--spacing) * " +
+                (dayjs(currentDate).diff(dayjs(dates[0]), "day") * 20 + 10) +
+                ")",
+            }}
+          ></div>
+        )}
+
+        <div className="[&>*:nth-child(odd)]:bg-trackcolorodd [&>*:nth-child(even)]:bg-trackcolor relative">
+          {data.map((task) => (
+            <div
+              style={{
+                width: "calc(var(--spacing) * " + (bgLength + 20) + ")",
+              }}
+              className="flex flex-row"
+              key={task.id}
+            >
+              <div
+                style={{
+                  width:
+                    "calc(var(--spacing) * " +
+                    dayjs(task.start_date).diff(dates[0], "day") * 20 +
+                    ")",
+                }}
+              ></div>
+              <GanttTask {...task} removeGanttTask={removeGanttTask} />
+            </div>
+          ))}
+          <div
+            className="h-12 flex flex-row"
             style={{
               width: "calc(var(--spacing) * " + (bgLength + 20) + ")",
             }}
-            className="flex flex-row"
-            key={task.id}
           >
             <div
-              style={{
-                width:
-                  "calc(var(--spacing) * " +
-                  dayjs(task.start_date).diff(dates[0], "day") * 20 +
-                  ")",
-              }}
-            ></div>
-            <GanttTask {...task} removeGanttTask={removeGanttTask} />
-          </div>
-        ))}
-        <div
-          className="h-12 flex flex-row"
-          style={{
-            width: "calc(var(--spacing) * " + (bgLength + 20) + ")",
-          }}
-        >
-          <div
-            className="h-12 w-12 flex"
-            onMouseEnter={() => setAddTaskHover(true)}
-            onMouseLeave={() => setAddTaskHover(false)}
-            onClick={() => setAddTaskClicked(!addTaskClicked)}
-          >
-            <FaPlus className="text-green-500 m-auto z-20" size={30} />
-
-            <div
-              className={`absolute bg-white mt-7 ml-9 z-60 text-black text-sm whitespace-nowrap transition-all duration-150 border-1 px-1 ${
-                addTaskHover ? "scale-100" : "scale-0"
-              }`}
+              className="h-12 w-12 flex"
+              onMouseEnter={() => setAddTaskHover(true)}
+              onMouseLeave={() => setAddTaskHover(false)}
+              onClick={() => setAddTaskClicked(!addTaskClicked)}
             >
-              <span>Add task...</span>
+              <FaPlus className="text-green-500 m-auto z-20" size={30} />
+
+              <div
+                className={`absolute bg-white mt-7 ml-9 z-60 text-black text-sm whitespace-nowrap transition-all duration-150 border-1 px-1 ${
+                  addTaskHover ? "scale-100" : "scale-0"
+                }`}
+              >
+                <span>Add task...</span>
+              </div>
             </div>
           </div>
         </div>
+        <div className="bg-ganttbottom h-6 w-fit flex sticky bottom-0 z-60">
+          {dates.map((date) => (
+            <div key={date.format("DD/MM/YYYY")} className="w-20">
+              <p
+                className={`${
+                  dayjs(currentDate).isSame(date, "day")
+                    ? "text-currentdatecolor"
+                    : "text-black"
+                } m-auto text-center`}
+              >
+                {date.format("DD/MM")}
+              </p>
+            </div>
+          ))}
+        </div>
+        <div
+          className={`fixed z-100 top-[35%] transition-all duration-150 w-fit h-fit ${
+            addTaskClicked ? "scale-100" : "scale-0"
+          }`}
+        >
+          <AddGanttTask submitFunction={addNewGanttTask} />
+        </div>
       </div>
-      <div className="bg-ganttbottom h-6 w-fit flex sticky bottom-0 z-60">
-        {dates.map((date) => (
-          <div key={date.format("DD/MM/YYYY")} className="w-20">
-            <p
-              className={`${
-                dayjs(currentDate).isSame(date, "day")
-                  ? "text-currentdatecolor"
-                  : "text-black"
-              } m-auto text-center`}
-            >
-              {date.format("DD/MM")}
-            </p>
-          </div>
-        ))}
-      </div>
-      <div
-        className={`fixed z-100 top-[35%] transition-all duration-150 w-fit h-fit ${
-          addTaskClicked ? "scale-100" : "scale-0"
-        }`}
-      >
-        <AddGanttTask submitFunction={addNewGanttTask} />
-      </div>
-    </div>
+    </>
   );
 };
