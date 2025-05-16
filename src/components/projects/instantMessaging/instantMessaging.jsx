@@ -7,7 +7,7 @@ import { IoSend } from "react-icons/io5";
 import { useAppContext } from "@/context/AppContext";
 
 import { InfoModalButton } from "@/components/projects/infoModalButton";
-import { messageIntegration } from "@/lib/test.json";
+import { messageIntegration } from "@/lib/tutorial.json";
 
 export const InstantMessaging = () => {
   const { pid } = useParams();

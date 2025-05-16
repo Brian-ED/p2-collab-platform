@@ -3,13 +3,17 @@ import { useParams } from "next/navigation";
 import { Loading } from "@/components/loading";
 import { FaX } from "react-icons/fa6";
 import { IoIosAddCircle } from "react-icons/io";
+import { FaRegEdit } from "react-icons/fa";
 
 import { InfoModalButton } from "@/components/projects/infoModalButton";
-import { permissionsIntegration } from "@/lib/test.json";
+import { Error } from "@/components/error";
+import { settingsIntegration } from "@/lib/tutorial.json";
 
-export const Permissions = () => {
-  const [isLoading, setIsLoading] = useState(true);
+export const Settings = () => {
+  const [permissionLoading, setPermissionLoading] = useState(true);
+  const [githubLoading, setGithubLoading] = useState(true);
   const [usersWithAccess, setUsersWithAccess] = useState([]);
+  const [githubUrl, setGithubUrl] = useState("");
   const [changePermissions, setChangePermissions] = useState(true);
   const { pid } = useParams();
 
@@ -18,23 +22,36 @@ export const Permissions = () => {
       .then((res) => res.json())
       .then((data) => {
         setUsersWithAccess(data);
-        setIsLoading(false);
+        setPermissionLoading(false);
+      });
+
+    fetch(`/api/github/setRepo?projectId=${pid}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setGithubUrl(data.data);
+        setGithubLoading(false);
       });
   }, [changePermissions]);
 
   const removePermission = (accessId) => {
-    setIsLoading(true);
+    setPermissionLoading(true);
 
     fetch(`/api/db/handleAccess?projectId=${pid}&accessId=${accessId}`, {
       method: "DELETE",
-    }).then(() => {
-      setChangePermissions(!changePermissions);
-      setIsLoading(false);
-    });
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error !== null) {
+          setUsersWithAccess({ error: data.error });
+        } else {
+          setChangePermissions(!changePermissions);
+        }
+        setPermissionLoading(false);
+      });
   };
 
   const givePermission = () => {
-    setIsLoading(true);
+    setPermissionLoading(true);
 
     const form = new FormData(document.querySelector("#email-form"));
 
@@ -46,22 +63,50 @@ export const Permissions = () => {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-    }).then(() => {
-      setChangePermissions(!changePermissions);
-      setIsLoading(false);
-    });
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error !== null) {
+          setUsersWithAccess({ error: data.error });
+        } else {
+          setChangePermissions(!changePermissions);
+        }
+        setPermissionLoading(false);
+      });
   };
 
-  if (isLoading) return <Loading />;
-  if (usersWithAccess.error !== null)
-    return <p>Error: {usersWithAccess.error}</p>;
+  const sendGithubURL = () => {
+    setGithubLoading(true);
+
+    const data = new URLSearchParams(
+      new FormData(document.querySelector("#githubUrlForm"))
+    );
+
+    fetch(`/api/github/setRepo?projectId=${pid}`, {
+      method: "PATCH",
+      body: data,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    })
+      .then((data) => data.json())
+      .then((data) => {
+        setGithubUrl(data.data[1]);
+        setGithubLoading(false);
+      });
+  };
+
+  if (githubLoading || permissionLoading) return <Loading />;
+  if (usersWithAccess.error !== null) {
+    return <Error error={usersWithAccess.error} />;
+  }
 
   return (
     <>
       <div className="flex justify-between">
         <InfoModalButton
-          heading={permissionsIntegration.heading}
-          description={permissionsIntegration.description}
+          heading={settingsIntegration.heading}
+          description={settingsIntegration.description}
         />
       </div>
       <div className="flex flex-col gap-2">
@@ -71,7 +116,7 @@ export const Permissions = () => {
             type="email"
             name="email"
             placeholder="Email"
-            className="border-amber-50 border-2 rounded-sm"
+            className="border-amber-50 border-2 rounded-sm w-100 text-center"
           />
           <button className="hover:cursor-pointer">
             <IoIosAddCircle
@@ -117,6 +162,25 @@ export const Permissions = () => {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="flex flex-col gap-2 mt-5">
+        <h1 className="text-3xl">Change GitHub integration URL</h1>
+        <form id="githubUrlForm" className="flex flex-row gap-5">
+          <input
+            type="url"
+            name="github-repo"
+            placeholder={`${githubUrl}`}
+            className="border-amber-50 border-2 rounded-sm w-100 text-center"
+          />
+          <button className="hover:cursor-pointer">
+            <FaRegEdit
+              className="scale-150"
+              onClick={() => {
+                sendGithubURL();
+              }}
+            />
+          </button>
+        </form>
       </div>
     </>
   );

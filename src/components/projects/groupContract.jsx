@@ -7,7 +7,8 @@ import { useParams } from "next/navigation";
 import { useOutsideClick } from "@/hooks/useOutsideClick"; // Custom hook
 import { Loading } from "@/components/loading";
 import { InfoModalButton } from "@/components/projects/infoModalButton";
-import { groupContract } from "@/lib/test.json";
+import { groupContract } from "@/lib/tutorial.json";
+import { Error } from "@/components/error";
 
 export const GroupContract = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -82,7 +83,7 @@ export const GroupContract = () => {
       setContractRules((prevRules) => [...prevRules, newCategory]);
       setNewCategoryInputs("");
     } catch (error) {
-      console.error("Failed to add category:", error);
+      return <Error error={error} />;
     }
   };
 
@@ -144,7 +145,7 @@ export const GroupContract = () => {
       // Clear the input field after submitting
       setNewRuleInputs((prevInputs) => ({ ...prevInputs, [categoryId]: "" }));
     } catch (error) {
-      console.error("Failed to add rule:", error);
+      return <Error error={error} />;
     }
   };
 
@@ -178,8 +179,7 @@ export const GroupContract = () => {
       const { data, error } = await res.json();
 
       if (error) {
-        console.error("Failed to update rule:", error);
-        return;
+        return <Error error={error} />;
       }
 
       // Update the local state with the new rule description
@@ -200,7 +200,7 @@ export const GroupContract = () => {
       );
       cancelEdit();
     } catch (error) {
-      console.log("Error saving edited rule", error);
+      return <Error error={error} />;
     }
   };
 
@@ -254,8 +254,7 @@ export const GroupContract = () => {
       const { error } = await res.json();
 
       if (error) {
-        console.error("Failed to delete category: ", error);
-        return;
+        return <Error error={error} />;
       }
 
       // Remove category from local state
@@ -263,7 +262,7 @@ export const GroupContract = () => {
         prevRules.filter((category) => category.id !== categoryId)
       );
     } catch (error) {
-      console.error("Error deleting category:", error);
+      return <Error error={error} />;
     }
   };
 
@@ -283,11 +282,9 @@ export const GroupContract = () => {
       );
 
       const { error } = await res.json();
-      console.log(error);
 
       if (error) {
-        console.error("Failed to delete rule:", error);
-        return;
+        return <Error error={error} />;
       }
 
       setContractRules((prevRules) =>
@@ -303,7 +300,7 @@ export const GroupContract = () => {
         )
       );
     } catch (error) {
-      console.log("Error deleting rule", error);
+      return <Error error={error} />;
     }
   };
 

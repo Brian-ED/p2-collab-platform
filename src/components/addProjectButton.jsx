@@ -3,10 +3,28 @@
 import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
 
-export const AddProjectButton = () => {
+export const AddProjectButton = ({ setProjects }) => {
   const [click, setClick] = useState(false);
 
   const ellipses = "whitespace-nowrap overflow-hidden overflow-ellipsis";
+
+  const sendProject = () => {
+    const data = new URLSearchParams(
+      new FormData(document.querySelector("#addProjectForm"))
+    );
+
+    fetch(`/api/db/addProject`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: data,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error !== null) setProjects({ error: data.error });
+      });
+  };
 
   return (
     <>
@@ -20,8 +38,10 @@ export const AddProjectButton = () => {
           onClick={() => setClick(false)}
         />
         <form
-          action="/api/db/addProject"
-          method="post"
+          id="addProjectForm"
+          action={() => {
+            sendProject();
+          }}
           className="flex flex-col gap-5 items-center"
         >
           <input

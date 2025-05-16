@@ -474,6 +474,19 @@ export async function setProjectGithub(pid, github_url) {
   });
 }
 
+export async function getProjectGithub(pid) {
+  return (
+    await prisma.projects.findFirst({
+      where: {
+        id: pid,
+      },
+      select: {
+        github_url: true,
+      },
+    })
+  ).github_url;
+}
+
 export async function getKanbanEntries(projectId) {
   const result = await prisma.kanban.findMany({
     where: {
