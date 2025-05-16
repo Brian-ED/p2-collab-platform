@@ -9,7 +9,8 @@ import { Loading } from "@/components/loading";
 import { FaPlus, FaX } from "react-icons/fa6";
 
 import { InfoModalButton } from "@/components/projects/infoModalButton";
-import { ganttChart } from "@/lib/test.json";
+import { Error } from "@/components/error";
+import { ganttChart } from "@/lib/tutorial.json";
 
 const GanttTask = ({
   id,
@@ -199,7 +200,7 @@ export const GanttChart = () => {
   }
 
   if (isLoading) return <Loading />;
-  if (tasks.error != null) return <p>{tasks.error}</p>;
+  if (tasks.error != null) return <Error error={tasks.error} />;
   if (tasks.data.length === 0) {
     return (
       <>

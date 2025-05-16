@@ -34,7 +34,7 @@ export const SetupGithubItegration = ({ setChangeIssues }) => {
         type="url"
         name="github-repo"
         className="border-2 rounded-md w-100 text-center"
-        placeholder="GitHub Repository URL"
+        placeholder="https://github.com/Brian-ED/p2-collab-platform"
       />
       <input
         type="submit"

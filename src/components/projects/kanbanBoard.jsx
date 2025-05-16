@@ -6,7 +6,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { useParams } from "next/navigation";
 import { Loading } from "@/components/loading";
 import { InfoModalButton } from "@/components/projects/infoModalButton";
-import { kanbanBoard } from "@/lib/test.json";
+import { kanbanBoard } from "@/lib/tutorial.json";
 
 import { FaPlus, FaX } from "react-icons/fa6";
 
