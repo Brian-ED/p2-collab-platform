@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 
 import { Loading } from "@/components/loading";
 
-import { FaPlus, FaX } from "react-icons/fa6";
+import { FaPlus, FaX, FaAngleDown } from "react-icons/fa6";
 
 import { InfoModalButton } from "@/components/projects/infoModalButton";
 import { Error } from "@/components/error";
@@ -105,7 +105,9 @@ const isCurrentDateInChart = (day, dates) => {
   return false;
 };
 
-const AddGanttTask = ({ submitFunction }) => {
+const AddGanttTask = ({ submitFunction, selectableUsers }) => {
+  const [usersClicked, setUsersClicked] = useState(false);
+  const users = selectableUsers.data;
   return (
     <div
       className={
@@ -145,6 +147,24 @@ const AddGanttTask = ({ submitFunction }) => {
         <br />
         <input className="mb-4" type="date" name="gantt-enddate" />
         <br />
+        <div className="flex justify-center">
+          <div
+            className="mb-2 border-1 border-black px-2 rounded-full flex flex-row hover:bg-gray-500/20"
+            onClick={() => setUsersClicked(!usersClicked)}
+          >
+            Users <FaAngleDown className="my-auto ml-2" />
+          </div>
+        </div>
+        <div
+          className={`bg-white text-black ${
+            usersClicked ? "scale-100" : "scale-0 absolute"
+          }`}
+        >
+          {users.map((user) => (
+            <div key={user.id}>{user.name}</div>
+          ))}
+        </div>
+        <br />
         <input
           className="border-2 px-2 rounded-full hover:bg-gray-500/30"
           type="submit"
@@ -157,7 +177,9 @@ const AddGanttTask = ({ submitFunction }) => {
 
 export const GanttChart = () => {
   const [tasks, setTasks] = useState(null);
+  const [users, setUsers] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [usersLoading, setUsersLoading] = useState(true);
   const { pid } = useParams();
   const [addTaskHover, setAddTaskHover] = useState(false);
   const [addTaskClicked, setAddTaskClicked] = useState(false);
@@ -171,6 +193,15 @@ export const GanttChart = () => {
         setIsLoading(false);
       });
   }, [changeTask]);
+
+  useEffect(() => {
+    fetch(`/api/db/getProjectMembers?projectId=${pid}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setUsers(data);
+        setUsersLoading(false);
+      });
+  }, []);
 
   const addNewGanttTask = () => {
     setIsLoading(true);
@@ -199,8 +230,10 @@ export const GanttChart = () => {
     });
   }
 
-  if (isLoading) return <Loading />;
+  if (isLoading || usersLoading) return <Loading />;
   if (tasks.error != null) return <Error error={tasks.error} />;
+  if (users.error != null) return <Error error={users.error} />;
+
   if (tasks.data.length === 0) {
     return (
       <>
@@ -236,7 +269,10 @@ export const GanttChart = () => {
             addTaskClicked ? "scale-100" : "scale-0"
           }`}
         >
-          <AddGanttTask submitFunction={addNewGanttTask} />
+          <AddGanttTask
+            submitFunction={addNewGanttTask}
+            selectableUsers={users}
+          />
         </div>
       </>
     );
