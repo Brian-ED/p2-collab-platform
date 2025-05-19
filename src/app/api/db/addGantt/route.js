@@ -7,6 +7,7 @@ import {
   addGanttTask,
   checkIfUserHasAccessToProject,
   checkIfUserOwnsProject,
+  getProjectMembers,
 } from "@/lib/queries";
 
 export async function POST(req) {
@@ -40,13 +41,15 @@ export async function POST(req) {
     )
       return Response.json({ data: null, error: "Dates not valid" });
 
-    await addGanttTask(
+    console.log(formData.get("gantt-users"));
+
+    /* await addGanttTask(
       projectId,
       taskTitle,
       taskDescription,
       dayjs.utc(taskStartDate),
       dayjs.utc(taskEndDate)
-    );
+    ); */
 
     return Response.json({ data: "ok", error: null });
   } else {

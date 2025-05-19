@@ -165,10 +165,10 @@ const AddGanttTask = ({ submitFunction, selectableUsers }) => {
               <input
                 type="checkbox"
                 id={`user${user.id}`}
-                name={`user${user.id}`}
+                name="gantt-users"
                 value={user.id}
               ></input>
-              <label htmlFor={`user${user.id}`}> {user.name}</label>
+              <label htmlFor="users"> {user.name}</label>
               <br />
             </div>
           ))}
