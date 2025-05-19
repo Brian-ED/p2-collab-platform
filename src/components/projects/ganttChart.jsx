@@ -156,12 +156,21 @@ const AddGanttTask = ({ submitFunction, selectableUsers }) => {
           </div>
         </div>
         <div
-          className={`bg-white text-black ${
+          className={`bg-white text-black flex flex-col items-start mx-2 ${
             usersClicked ? "scale-100" : "scale-0 absolute"
           }`}
         >
           {users.map((user) => (
-            <div key={user.id}>{user.name}</div>
+            <div key={user.id}>
+              <input
+                type="checkbox"
+                id={`user${user.id}`}
+                name={`user${user.id}`}
+                value={user.id}
+              ></input>
+              <label htmlFor={`user${user.id}`}> {user.name}</label>
+              <br />
+            </div>
           ))}
         </div>
         <br />

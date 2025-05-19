@@ -22,7 +22,7 @@ export async function GET(req) {
   if (!!session && userHasAccess) {
     const data = await getProjectMembers(projectId);
 
-    return Response.json({ data: data, error: "null" });
+    return Response.json({ data: data, error: null });
   } else {
     return Response.json({ data: null, error: "Not authorized" });
   }
