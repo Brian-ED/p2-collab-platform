@@ -26,9 +26,9 @@ model gantt_charts {
   end_date       DateTime @db.Date
   title          String   @db.Char(50)
   description    String   @default("") @db.Char(255)
-  completed      Boolean  @default(false)
-  assigned_users users[]  @relation(name: "gantt_chartsTousers")
+  hours_needed   Int      @default(0)
   projects       projects @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  assigned_users users[]  @relation("gantt_chartsTousers")
 }
 
 model group_contracts {
@@ -77,7 +77,7 @@ model users {
   access       access[]
   messages     messages[]
   projects     projects[]
-  gantt_charts gantt_charts[] @relation(name: "gantt_chartsTousers")
+  gantt_charts gantt_charts[] @relation("gantt_chartsTousers")
 }
 
 model group_contract_rules {

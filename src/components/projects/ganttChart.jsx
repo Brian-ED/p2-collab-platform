@@ -18,7 +18,7 @@ const GanttTask = ({
   description,
   start_date,
   end_date,
-  percentComplete, //TODO: Should just be "complete" as we won't have percentages.
+  hours_needed, //TODO: Should just be "complete" as we won't have percentages.
   removeGanttTask,
 }) => {
   const [hover, setHover] = useState(false);
@@ -65,6 +65,9 @@ const GanttTask = ({
           <p className="text-black p-2 m-auto pb-1">{`${dayjs(
             start_date
           ).format("DD/MM")} - ${dayjs(end_date).format("DD/MM")}`}</p>
+          <p className="text-black p-2 m-auto pt-0 text-sm">
+            Hours needed - {hours_needed}
+          </p>
           <p className="text-black p-2 m-auto pt-0">{description}</p>
         </div>
         <div
@@ -145,11 +148,22 @@ const AddGanttTask = ({ submitFunction, selectableUsers }) => {
           End date:
         </label>
         <br />
-        <input className="mb-4" type="date" name="gantt-enddate" />
+        <input className="mb-2" type="date" name="gantt-enddate" />
+        <br />
+        <label className="font-semibold" htmlFor="hours">
+          Hours needed:
+        </label>
+        <br />
+        <input
+          className="mb-4 border-black border-1"
+          type="number"
+          name="gantt-hours"
+          min="0"
+        />
         <br />
         <div className="flex justify-center">
           <div
-            className="mb-2 border-1 border-black px-2 rounded-full flex flex-row hover:bg-gray-500/20"
+            className="mb-1 border-1 border-black px-2 rounded-full flex flex-row hover:bg-gray-500/20"
             onClick={() => setUsersClicked(!usersClicked)}
           >
             Users <FaAngleDown className="my-auto ml-2" />

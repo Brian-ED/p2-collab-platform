@@ -41,6 +41,10 @@ export async function POST(req) {
     )
       return Response.json({ data: null, error: "Dates not valid" });
 
+    const hoursNeeded = parseInt(formData.get("gantt-hours"));
+    if (hoursNeeded < 0 && Number.isInteger(hoursNeeded))
+      return Response.json({ data: null, error: "Hours needed not valid" });
+
     const projectMembers = await getProjectMembers(projectId);
     let users = [];
     for (let i = 0; i < projectMembers.length; i++) {
@@ -60,6 +64,7 @@ export async function POST(req) {
       taskDescription,
       dayjs.utc(taskStartDate),
       dayjs.utc(taskEndDate),
+      hoursNeeded,
       users
     );
 
