@@ -30,7 +30,7 @@ const GanttTask = ({
   return (
     <div className="h-12 w-fit flex">
       <div
-        className={`rounded-lg bg-taskcolor h-8 m-auto ml-10 flex flex-row justify-start group/task overflow-hidden`}
+        className={`rounded-lg bg-taskcolor h-8 m-auto ml-10 flex flex-row justify-start group/task overfloA-hidden`}
         style={{ width: "calc(var(--spacing) * " + taskDuration * 20 + ")" }}
         onMouseEnter={async () => {
           setHover(true);
@@ -165,7 +165,7 @@ const AddGanttTask = ({ submitFunction, selectableUsers }) => {
               <input
                 type="checkbox"
                 id={`user${user.id}`}
-                name="gantt-users"
+                name={`user${user.id}`}
                 value={user.id}
               ></input>
               <label htmlFor="users"> {user.name}</label>
@@ -415,7 +415,10 @@ export const GanttChart = () => {
             addTaskClicked ? "scale-100" : "scale-0"
           }`}
         >
-          <AddGanttTask submitFunction={addNewGanttTask} />
+          <AddGanttTask
+            submitFunction={addNewGanttTask}
+            selectableUsers={users}
+          />
         </div>
       </div>
     </>

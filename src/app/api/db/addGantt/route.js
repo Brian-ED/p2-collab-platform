@@ -41,15 +41,27 @@ export async function POST(req) {
     )
       return Response.json({ data: null, error: "Dates not valid" });
 
-    console.log(formData.get("gantt-users"));
+    const projectMembers = await getProjectMembers(projectId);
+    let users = [];
+    for (let i = 0; i < projectMembers.length; i++) {
+      const user = formData.get(`user${projectMembers[i].id}`);
+      if (user != null) users.push({ id: parseInt(user) });
+    }
 
-    /* await addGanttTask(
+    if (users.length == 0) {
+      for (let i = 0; i < projectMembers.length; i++) {
+        users.push({ id: projectMembers[i].id });
+      }
+    }
+
+    await addGanttTask(
       projectId,
       taskTitle,
       taskDescription,
       dayjs.utc(taskStartDate),
-      dayjs.utc(taskEndDate)
-    ); */
+      dayjs.utc(taskEndDate),
+      users
+    );
 
     return Response.json({ data: "ok", error: null });
   } else {

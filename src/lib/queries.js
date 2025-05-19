@@ -178,7 +178,8 @@ export async function addGanttTask(
   title,
   description,
   startDate,
-  endDate
+  endDate,
+  assignedUsers
 ) {
   await prisma.gantt_charts.create({
     data: {
@@ -187,6 +188,9 @@ export async function addGanttTask(
       description: description,
       start_date: startDate,
       end_date: endDate,
+      assigned_users: {
+        connect: assignedUsers,
+      },
     },
   });
 }
