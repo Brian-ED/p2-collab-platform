@@ -163,7 +163,7 @@ const AddGanttTask = ({ submitFunction, selectableUsers }) => {
         <br />
         <div className="flex justify-center">
           <div
-            className="mb-1 border-1 border-black px-2 rounded-full flex flex-row hover:bg-gray-500/20"
+            className="mb-1 border-1 border-black px-2 rounded-full flex flex-row hover:bg-gray-500/20 select-none"
             onClick={() => setUsersClicked(!usersClicked)}
           >
             Users <FaAngleDown className="my-auto ml-2" />
