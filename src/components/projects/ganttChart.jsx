@@ -12,6 +12,8 @@ import { InfoModalButton } from "@/components/projects/infoModalButton";
 import { Error } from "@/components/error";
 import { ganttChart } from "@/lib/tutorial.json";
 
+import { solveLinearSystem } from "@/lib/slial";
+
 const GanttTask = ({
   id,
   title,
@@ -271,9 +273,9 @@ export const GanttChart = () => {
         }
       }
     }
-
     console.log(taskMatrix);
     console.log(taskHourVector);
+    console.log(solveLinearSystem(taskMatrix, taskHourVector));
   }
 
   if (isLoading || usersLoading) return <Loading />;
