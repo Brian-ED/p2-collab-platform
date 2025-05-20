@@ -372,7 +372,7 @@ export const GroupContract = () => {
       </div>
       <input
         type="text"
-        placeholder={`Enter new category`}
+        placeholder={`Enter category`}
         onChange={(e) => handleCategoryInputChange(e.target.value)}
         value={newCategoryInputs}
         onKeyDown={(e) => {
@@ -520,7 +520,7 @@ export const GroupContract = () => {
             <div className="mt-2 flex items-start">
               <textarea
                 type="text"
-                placeholder={`Enter new rule for ${category.category_title.toLowerCase()}`}
+                placeholder={`Set a rule for ${category.category_title.toLowerCase()}`}
                 value={newRuleInputs[category.id] || ""}
                 onChange={(e) =>
                   handleRuleInputChange(category.id, e.target.value)
