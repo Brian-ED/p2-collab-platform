@@ -209,6 +209,7 @@ export const GanttChart = () => {
   const [addTaskHover, setAddTaskHover] = useState(false);
   const [addTaskClicked, setAddTaskClicked] = useState(false);
   const [changeTask, setChangeTask] = useState(false);
+  const [userHours, setUserHours] = useState(null);
 
   useEffect(() => {
     fetch(`/api/db/getGantt?projectId=${pid}`)
@@ -257,6 +258,7 @@ export const GanttChart = () => {
 
   const taskMatrix = [];
   const taskHourVector = [];
+  const hoursPerUser = {};
 
   if (tasks != null && users != null) {
     for (let i = 0; i < tasks.data.length; i++) {
@@ -275,7 +277,15 @@ export const GanttChart = () => {
     }
     console.log(taskMatrix);
     console.log(taskHourVector);
-    console.log(solveLinearSystem(taskMatrix, taskHourVector));
+    const solvedHours = solveLinearSystem(taskMatrix, taskHourVector);
+    console.log(solvedHours);
+
+    for (let i = 0; i < users.data.length; i++) {
+      hoursPerUser[users.data[i].id] = {
+        name: users.data[i].name,
+        hours: solvedHours[i],
+      };
+    }
   }
 
   if (isLoading || usersLoading) return <Loading />;
@@ -364,6 +374,8 @@ export const GanttChart = () => {
   //currentDate = currentDate.add(1, "month");
 
   let inChart = isCurrentDateInChart(currentDate, dates);
+
+  console.log(hoursPerUser);
 
   return (
     <>
@@ -458,6 +470,14 @@ export const GanttChart = () => {
             submitFunction={addNewGanttTask}
             selectableUsers={users}
           />
+        </div>
+        <div className="mt-2">
+          {Object.keys(hoursPerUser).map((user) => (
+            <p key={user} className="text-xl">
+              {hoursPerUser[user].name} - {hoursPerUser[user].hours.toFixed(1)}{" "}
+              hours
+            </p>
+          ))}
         </div>
       </div>
     </>

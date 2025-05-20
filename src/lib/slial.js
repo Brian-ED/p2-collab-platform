@@ -41,7 +41,7 @@ function inverse(matrix) {
   return M.map((row) => row.slice(n));
 }
 
-export function solveLinearSystem(A, b) {
+function solveLeastSquares(A, b) {
   const At = transpose(A);
   const AtA = matMul(At, A);
   const Atb = matMul(
@@ -53,4 +53,15 @@ export function solveLinearSystem(A, b) {
   const x = matMul(AtA_inv, Atb);
 
   return x.map((row) => row[0]);
+}
+
+export function solveLinearSystem(A, b) {
+  const x = solveLeastSquares(A, b);
+  const sumX = x.reduce((acc, val) => acc + val, 0);
+  const sumB = b.reduce((acc, val) => acc + val, 0);
+  const scale = sumB / sumX;
+
+  const scaledX = x.map((val) => val * scale);
+
+  return scaledX;
 }
