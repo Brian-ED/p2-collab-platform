@@ -275,10 +275,8 @@ export const GanttChart = () => {
         }
       }
     }
-    console.log(taskMatrix);
-    console.log(taskHourVector);
+
     const solvedHours = solveLinearSystem(taskMatrix, taskHourVector);
-    console.log(solvedHours);
 
     for (let i = 0; i < users.data.length; i++) {
       hoursPerUser[users.data[i].id] = {
