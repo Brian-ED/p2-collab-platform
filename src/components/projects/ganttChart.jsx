@@ -254,10 +254,12 @@ export const GanttChart = () => {
   }
 
   const taskMatrix = [];
+  const taskHourVector = [];
 
   if (tasks != null && users != null) {
     for (let i = 0; i < tasks.data.length; i++) {
       taskMatrix.push([]);
+      taskHourVector.push(tasks.data[i].hours_needed);
       for (let j = 0; j < users.data.length; j++) {
         for (let x of tasks.data[i].assigned_users) {
           if (users.data[j].id === x.id) {
@@ -271,6 +273,7 @@ export const GanttChart = () => {
     }
 
     console.log(taskMatrix);
+    console.log(taskHourVector);
   }
 
   if (isLoading || usersLoading) return <Loading />;
@@ -415,10 +418,7 @@ export const GanttChart = () => {
               className="h-12 w-12 flex"
               onMouseEnter={() => setAddTaskHover(true)}
               onMouseLeave={() => setAddTaskHover(false)}
-              onClick={() => {
-                //setAddTaskClicked(!addTaskClicked)
-                console.log(users.data);
-              }}
+              onClick={() => setAddTaskClicked(!addTaskClicked)}
             >
               <FaPlus className="text-green-500 m-auto z-20" size={30} />
 
@@ -448,7 +448,7 @@ export const GanttChart = () => {
           ))}
         </div>
         <div
-          className={`fixed z-100 top-[35%] transition-all duration-150 w-fit h-fit ${
+          className={`fixed z-100 top-[15%] transition-all duration-150 w-fit h-fit ${
             addTaskClicked ? "scale-100" : "scale-0"
           }`}
         >
