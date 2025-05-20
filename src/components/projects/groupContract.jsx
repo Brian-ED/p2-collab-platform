@@ -94,6 +94,15 @@ export const GroupContract = () => {
 
   // Update the category title
   const saveEditedCategory = async (categoryId) => {
+
+    // Make sure the edited category title is not empty
+    const trimmedTitle = editedCategoryTitle.trim();
+
+    if (trimmedTitle === "") {
+      cancelEdit();
+      return;
+    }
+
     try {
       const res = await fetch(
         `/api/db/handleItemInGroupContract?projectId=${pid}`,
@@ -191,7 +200,7 @@ export const GroupContract = () => {
     } else if ("category_title" in item) {
       // It's a category
       setEditingCategoryId(item.id);
-      setEditedCategoryTitle(item.category_title);
+      setEditedCategoryTitle(item.category_title.trim());
     }
   };
 
@@ -301,7 +310,7 @@ export const GroupContract = () => {
         return;
       }
 
-      // Remove category from local state
+      // Remove category in the UI
       setContractRules((prevRules) =>
         prevRules.filter((category) => category.id !== categoryId)
       );
@@ -396,6 +405,10 @@ export const GroupContract = () => {
                     }
                   }}
                   onBlur={() => saveEditedCategory(category.id)}
+                  onFocus={(e) => {
+                    const value = e.target.value;
+                    e.target.setSelectionRange(value.length, value.length);
+                  }}
                   className="border p-1 rounded font-bold text-xl"
                   autoFocus
                 />
@@ -519,6 +532,12 @@ export const GroupContract = () => {
                   }
                 }}
                 className="border p-2 rounded w-[25%] mr-2 transition-all h-10 duration-300 focus:h-25 resize-none"
+                
+                // Hide the scrollbar on Windows
+                style={{
+                  scrollbarWidth: "none",        
+                  msOverflowStyle: "none",        
+                }}
               />
               <button
                 onClick={() => {

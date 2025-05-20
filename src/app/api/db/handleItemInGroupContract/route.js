@@ -3,6 +3,7 @@ import {
   getGroupContract,
   addGroupContractCategory,
   addGroupContractRule,
+  updateGroupContractCategory,
   updateGroupContractRule,
   deleteCategory,
   deleteRule,
