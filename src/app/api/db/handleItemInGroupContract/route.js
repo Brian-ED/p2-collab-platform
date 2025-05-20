@@ -89,16 +89,33 @@ export async function PATCH(req) {
 
   if (!!session && userHasAccess) {
     try {
-      const { ruleId, rule_description } = await req.json();
+      const body = await req.json();
 
-      const updated = await updateGroupContractRule(ruleId, rule_description);
+      // Update rule
+      if (body.ruleId && body.rule_description) {
+        const updatedRule = await updateGroupContractRule(
+          body.ruleId,
+          body.rule_description
+        );
+        return Response.json({ data: updatedRule, error: null });
+      }
 
-      return Response.json({ data: updated, error: null });
+      // Update category title
+      if (body.categoryId && body.category_title) {
+        const updatedCategory = await updateGroupContractCategory(
+          body.categoryId,
+          body.category_title
+        );
+        return Response.json({ data: updatedCategory, error: null });
+      }
+
+      return Response.json({ data: null, error: "Invalid payload" });
     } catch (error) {
       console.error("PATCH error:", error);
-      return Response.json({ data: null, error: "Failed to update rule" });
+      return Response.json({ data: null, error: "Failed to update item" });
     }
   }
+
   return Response.json({ data: null, error: "Not authorized" });
 }
 

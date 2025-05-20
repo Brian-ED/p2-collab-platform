@@ -39,6 +39,12 @@ export const GroupContract = () => {
   // State for creating new rules inside categories
   const [newRuleInputs, setNewRuleInputs] = useState({});
 
+  // State for selecting a category to edit
+  const [editingCategoryId, setEditingCategoryId] = useState(null);
+
+  // State for the title to edit in a category
+  const [editedCategoryTitle, setEditedCategoryTitle] = useState("");
+
   // State for selecting a rule to edit
   const [editingRuleId, setEditingRuleId] = useState(null);
 
@@ -87,12 +93,40 @@ export const GroupContract = () => {
   };
 
   // Update the category title
-  const updateCategoryTitle = (id, newTitle) => {
-    setContractRules((prevRules) =>
-      prevRules.map((category) =>
-        category.id === id ? { ...category, title: newTitle } : category
-      )
-    );
+  const saveEditedCategory = async (categoryId) => {
+    try {
+      const res = await fetch(
+        `/api/db/handleItemInGroupContract?projectId=${pid}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            categoryId: categoryId,
+            category_title: editedCategoryTitle,
+          }),
+        }
+      );
+
+      const { data, error } = await res.json();
+      if (error) {
+        console.error("Failed to update category title:", error);
+        return;
+      }
+
+      setContractRules((prevRules) =>
+        prevRules.map((category) =>
+          category.id === categoryId
+            ? { ...category, category_title: data.category_title }
+            : category
+        )
+      );
+
+      cancelEdit();
+    } catch (error) {
+      console.error("Error updating category title:", error);
+    }
   };
 
   // Handle input changes for a new rule
@@ -148,16 +182,24 @@ export const GroupContract = () => {
     }
   };
 
-  // Edit a rule
-  const handleEdit = (rule) => {
-    setEditingRuleId(rule.id);
-    setEditedRuleText(rule.rule_description);
-    console.log(rule);
+  // Edit either the category title or a rule
+  const handleEdit = (item) => {
+    if ("rule_description" in item) {
+      // It's a rule
+      setEditingRuleId(item.id);
+      setEditedRuleText(item.rule_description);
+    } else if ("category_title" in item) {
+      // It's a category
+      setEditingCategoryId(item.id);
+      setEditedCategoryTitle(item.category_title);
+    }
   };
 
   const cancelEdit = () => {
     setEditingRuleId(null);
     setEditedRuleText("");
+    setEditingCategoryId(null);
+    setEditedCategoryTitle("");
   };
 
   const savedEditedRule = async (categoryId, ruleId) => {
@@ -341,9 +383,27 @@ export const GroupContract = () => {
         <div key={index} className="">
           <div className="py-4">
             <div className="flex">
-              <h3 className="text-xl font-bold my-2">
-                {category.category_title}
-              </h3>
+              {editingCategoryId === category.id ? (
+                <input
+                  type="text"
+                  value={editedCategoryTitle}
+                  onChange={(e) => setEditedCategoryTitle(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      saveEditedCategory(category.id);
+                    } else if (e.key === "Escape") {
+                      cancelEdit();
+                    }
+                  }}
+                  onBlur={() => saveEditedCategory(category.id)}
+                  className="border p-1 rounded font-bold text-xl"
+                  autoFocus
+                />
+              ) : (
+                <h3 className="text-xl font-bold my-2">
+                  {category.category_title}
+                </h3>
+              )}
               <div className="flex gap-2 items-center pl-2">
                 <div className="relative group">
                   <button
