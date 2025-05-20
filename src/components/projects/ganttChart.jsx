@@ -253,6 +253,22 @@ export const GanttChart = () => {
     });
   }
 
+  const taskMatrix = [];
+
+  if (tasks != null && users != null) {
+    for (let i = 0; i < tasks.data.length; i++) {
+      taskMatrix.push([]);
+      console.log(tasks.data[i]);
+    }
+
+    /* for (let i = 0; i < tasks.data.length; i++) {
+      for (let j = 0; j < users.data.length; j++) {
+        if (users.data[j].id in tasks.data[i]) console.log(users.data[j]);
+      }
+    } */
+    //console.log(taskMatrix);
+  }
+
   if (isLoading || usersLoading) return <Loading />;
   if (tasks.error != null) return <Error error={tasks.error} />;
   if (users.error != null) return <Error error={users.error} />;
@@ -395,7 +411,10 @@ export const GanttChart = () => {
               className="h-12 w-12 flex"
               onMouseEnter={() => setAddTaskHover(true)}
               onMouseLeave={() => setAddTaskHover(false)}
-              onClick={() => setAddTaskClicked(!addTaskClicked)}
+              onClick={() => {
+                //setAddTaskClicked(!addTaskClicked)
+                console.log(users.data);
+              }}
             >
               <FaPlus className="text-green-500 m-auto z-20" size={30} />
 
