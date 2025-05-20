@@ -258,15 +258,19 @@ export const GanttChart = () => {
   if (tasks != null && users != null) {
     for (let i = 0; i < tasks.data.length; i++) {
       taskMatrix.push([]);
-      console.log(tasks.data[i]);
+      for (let j = 0; j < users.data.length; j++) {
+        for (let x of tasks.data[i].assigned_users) {
+          if (users.data[j].id === x.id) {
+            taskMatrix[i][j] = 1;
+            break;
+          } else {
+            taskMatrix[i][j] = 0;
+          }
+        }
+      }
     }
 
-    /* for (let i = 0; i < tasks.data.length; i++) {
-      for (let j = 0; j < users.data.length; j++) {
-        if (users.data[j].id in tasks.data[i]) console.log(users.data[j]);
-      }
-    } */
-    //console.log(taskMatrix);
+    console.log(taskMatrix);
   }
 
   if (isLoading || usersLoading) return <Loading />;

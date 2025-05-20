@@ -72,6 +72,9 @@ export async function getGanttTasks(projectId) {
         id: projectId,
       },
     },
+    include: {
+      assigned_users: true,
+    },
   });
   return result;
 }
