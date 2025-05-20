@@ -6,11 +6,13 @@ import { useParams } from "next/navigation";
 
 import { Loading } from "@/components/loading";
 
-import { FaPlus, FaX } from "react-icons/fa6";
+import { FaPlus, FaX, FaAngleDown } from "react-icons/fa6";
 
 import { InfoModalButton } from "@/components/projects/infoModalButton";
 import { Error } from "@/components/error";
 import { ganttChart } from "@/lib/tutorial.json";
+
+import { solveLinearSystem } from "@/lib/slial";
 
 const GanttTask = ({
   id,
@@ -18,7 +20,7 @@ const GanttTask = ({
   description,
   start_date,
   end_date,
-  percentComplete, //TODO: Should just be "complete" as we won't have percentages.
+  hours_needed, //TODO: Should just be "complete" as we won't have percentages.
   removeGanttTask,
 }) => {
   const [hover, setHover] = useState(false);
@@ -30,7 +32,7 @@ const GanttTask = ({
   return (
     <div className="h-12 w-fit flex">
       <div
-        className={`rounded-lg bg-taskcolor h-8 m-auto ml-10 flex flex-row justify-start group/task overflow-hidden`}
+        className={`rounded-lg bg-taskcolor h-8 m-auto ml-10 flex flex-row justify-start group/task overfloA-hidden`}
         style={{ width: "calc(var(--spacing) * " + taskDuration * 20 + ")" }}
         onMouseEnter={async () => {
           setHover(true);
@@ -65,6 +67,9 @@ const GanttTask = ({
           <p className="text-black p-2 m-auto pb-1">{`${dayjs(
             start_date
           ).format("DD/MM")} - ${dayjs(end_date).format("DD/MM")}`}</p>
+          <p className="text-black p-2 m-auto pt-0 text-sm">
+            Hours needed - {hours_needed}
+          </p>
           <p className="text-black p-2 m-auto pt-0">{description}</p>
         </div>
         <div
@@ -105,7 +110,9 @@ const isCurrentDateInChart = (day, dates) => {
   return false;
 };
 
-const AddGanttTask = ({ submitFunction }) => {
+const AddGanttTask = ({ submitFunction, selectableUsers }) => {
+  const [usersClicked, setUsersClicked] = useState(false);
+  const users = selectableUsers.data;
   return (
     <div
       className={
@@ -143,7 +150,45 @@ const AddGanttTask = ({ submitFunction }) => {
           End date:
         </label>
         <br />
-        <input className="mb-4" type="date" name="gantt-enddate" />
+        <input className="mb-2" type="date" name="gantt-enddate" />
+        <br />
+        <label className="font-semibold" htmlFor="hours">
+          Hours needed:
+        </label>
+        <br />
+        <input
+          className="mb-4 border-black border-1"
+          type="number"
+          name="gantt-hours"
+          min="0"
+        />
+        <br />
+        <div className="flex justify-center">
+          <div
+            className="mb-1 border-1 border-black px-2 rounded-full flex flex-row hover:bg-gray-500/20 select-none"
+            onClick={() => setUsersClicked(!usersClicked)}
+          >
+            Users <FaAngleDown className="my-auto ml-2" />
+          </div>
+        </div>
+        <div
+          className={`bg-white text-black flex flex-col items-start mx-2 ${
+            usersClicked ? "scale-100" : "scale-0 absolute"
+          }`}
+        >
+          {users.map((user) => (
+            <div key={user.id}>
+              <input
+                type="checkbox"
+                id={`user${user.id}`}
+                name={`user${user.id}`}
+                value={user.id}
+              ></input>
+              <label htmlFor="users"> {user.name}</label>
+              <br />
+            </div>
+          ))}
+        </div>
         <br />
         <input
           className="border-2 px-2 rounded-full hover:bg-gray-500/30"
@@ -157,11 +202,14 @@ const AddGanttTask = ({ submitFunction }) => {
 
 export const GanttChart = () => {
   const [tasks, setTasks] = useState(null);
+  const [users, setUsers] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [usersLoading, setUsersLoading] = useState(true);
   const { pid } = useParams();
   const [addTaskHover, setAddTaskHover] = useState(false);
   const [addTaskClicked, setAddTaskClicked] = useState(false);
   const [changeTask, setChangeTask] = useState(false);
+  const [userHours, setUserHours] = useState(null);
 
   useEffect(() => {
     fetch(`/api/db/getGantt?projectId=${pid}`)
@@ -171,6 +219,15 @@ export const GanttChart = () => {
         setIsLoading(false);
       });
   }, [changeTask]);
+
+  useEffect(() => {
+    fetch(`/api/db/getProjectMembers?projectId=${pid}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setUsers(data);
+        setUsersLoading(false);
+      });
+  }, []);
 
   const addNewGanttTask = () => {
     setIsLoading(true);
@@ -199,8 +256,40 @@ export const GanttChart = () => {
     });
   }
 
-  if (isLoading) return <Loading />;
+  const taskMatrix = [];
+  const taskHourVector = [];
+  const hoursPerUser = {};
+
+  if (tasks != null && users != null) {
+    for (let i = 0; i < tasks.data.length; i++) {
+      taskMatrix.push([]);
+      taskHourVector.push(tasks.data[i].hours_needed);
+      for (let j = 0; j < users.data.length; j++) {
+        for (let x of tasks.data[i].assigned_users) {
+          if (users.data[j].id === x.id) {
+            taskMatrix[i][j] = 1;
+            break;
+          } else {
+            taskMatrix[i][j] = 0;
+          }
+        }
+      }
+    }
+
+    const solvedHours = solveLinearSystem(taskMatrix, taskHourVector);
+
+    for (let i = 0; i < users.data.length; i++) {
+      hoursPerUser[users.data[i].id] = {
+        name: users.data[i].name,
+        hours: solvedHours[i],
+      };
+    }
+  }
+
+  if (isLoading || usersLoading) return <Loading />;
   if (tasks.error != null) return <Error error={tasks.error} />;
+  if (users.error != null) return <Error error={users.error} />;
+
   if (tasks.data.length === 0) {
     return (
       <>
@@ -236,7 +325,10 @@ export const GanttChart = () => {
             addTaskClicked ? "scale-100" : "scale-0"
           }`}
         >
-          <AddGanttTask submitFunction={addNewGanttTask} />
+          <AddGanttTask
+            submitFunction={addNewGanttTask}
+            selectableUsers={users}
+          />
         </div>
       </>
     );
@@ -280,6 +372,8 @@ export const GanttChart = () => {
   //currentDate = currentDate.add(1, "month");
 
   let inChart = isCurrentDateInChart(currentDate, dates);
+
+  console.log(hoursPerUser);
 
   return (
     <>
@@ -366,11 +460,22 @@ export const GanttChart = () => {
           ))}
         </div>
         <div
-          className={`fixed z-100 top-[35%] transition-all duration-150 w-fit h-fit ${
+          className={`fixed z-100 top-[15%] transition-all duration-150 w-fit h-fit ${
             addTaskClicked ? "scale-100" : "scale-0"
           }`}
         >
-          <AddGanttTask submitFunction={addNewGanttTask} />
+          <AddGanttTask
+            submitFunction={addNewGanttTask}
+            selectableUsers={users}
+          />
+        </div>
+        <div className="mt-2">
+          {Object.keys(hoursPerUser).map((user) => (
+            <p key={user} className="text-xl">
+              {hoursPerUser[user].name} - {hoursPerUser[user].hours.toFixed(1)}{" "}
+              hours
+            </p>
+          ))}
         </div>
       </div>
     </>
