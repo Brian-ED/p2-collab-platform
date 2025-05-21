@@ -240,6 +240,14 @@ export async function addGroupContractCategory(projectId, category_title) {
   return result;
 }
 
+
+export async function updateGroupContractCategory(categoryId, newTitle) {
+  return await prisma.group_contracts.update({
+    where: { id: categoryId },
+    data: { category_title: newTitle },
+  });
+}
+
 export async function addGroupContractRule(groupContractId, ruleDescription) {
   return await prisma.group_contract_rules.create({
     data: {
