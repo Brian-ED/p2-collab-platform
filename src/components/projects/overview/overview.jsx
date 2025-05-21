@@ -33,8 +33,8 @@ export const Overview = () => {
   if (isLoading) return <Loading />;
 
   return (
-    <div className="px-10 py-10 text-white">
-      <h1 className="text-4xl font-bold mb-2">Project Overview</h1>
+    <div className="px-10 py-4 text-white">
+      <h1 className="text-5xl font-bold mb-2">Project Overview</h1>
       <p className="text-lg text-gray-400 mb-6">
         Welcome! Use this dashboard to set up and manage your project.
       </p>

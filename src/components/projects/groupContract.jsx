@@ -358,13 +358,13 @@ export const GroupContract = () => {
   if (isLoading) return <Loading />;
 
   return (
-    <div className="p-4 bg-backdrop min-h-screen">
+    <div className="p-4 min-h-screen">
       <div className="flex justify-between mb-10">
         <InfoModalButton
           heading={groupContract.heading}
           description={groupContract.description}
         />
-        <h2 className="text-5xl font-bold">Group Contract</h2>
+        <h1 className="text-4xl font-bold">Group Contract</h1>
       </div>
       <div className="flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-md max-w-md mb-6">
         <input

@@ -88,6 +88,7 @@ export default function ProjectsLayout({ children }) {
               />
             </div>
 
+            {/* Setting floating at the bottom - casued by the justify between property on the nav element */}
             <div className="mt-4 pt-4 border-t border-white/10">
               <SidebarButton
                 label="Settings"
