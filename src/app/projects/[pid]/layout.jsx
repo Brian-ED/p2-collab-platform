@@ -54,7 +54,7 @@ export default function ProjectsLayout({ children }) {
             <button
               className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
               onClick={() => {
-                setSection("group contract");
+                setSection("group-contract");
                 router.push("#group-contract");
               }}
             >
@@ -99,11 +99,11 @@ export default function ProjectsLayout({ children }) {
             <button
               className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
               onClick={() => {
-                setSection("permissions");
-                router.push("#permissions");
+                setSection("settings");
+                router.push("#settings");
               }}
             >
-              Permissions
+              Settings
             </button>
           </nav>
         )}

@@ -72,6 +72,9 @@ export async function getGanttTasks(projectId) {
         id: projectId,
       },
     },
+    include: {
+      assigned_users: true,
+    },
   });
   return result;
 }
@@ -178,7 +181,9 @@ export async function addGanttTask(
   title,
   description,
   startDate,
-  endDate
+  endDate,
+  hoursNeeded,
+  assignedUsers
 ) {
   await prisma.gantt_charts.create({
     data: {
@@ -187,6 +192,10 @@ export async function addGanttTask(
       description: description,
       start_date: startDate,
       end_date: endDate,
+      hours_needed: hoursNeeded,
+      assigned_users: {
+        connect: assignedUsers,
+      },
     },
   });
 }
@@ -229,6 +238,14 @@ export async function addGroupContractCategory(projectId, category_title) {
     },
   });
   return result;
+}
+
+
+export async function updateGroupContractCategory(categoryId, newTitle) {
+  return await prisma.group_contracts.update({
+    where: { id: categoryId },
+    data: { category_title: newTitle },
+  });
 }
 
 export async function addGroupContractRule(groupContractId, ruleDescription) {
@@ -472,6 +489,19 @@ export async function setProjectGithub(pid, github_url) {
       github_url: github_url,
     },
   });
+}
+
+export async function getProjectGithub(pid) {
+  return (
+    await prisma.projects.findFirst({
+      where: {
+        id: pid,
+      },
+      select: {
+        github_url: true,
+      },
+    })
+  ).github_url;
 }
 
 export async function getKanbanEntries(projectId) {

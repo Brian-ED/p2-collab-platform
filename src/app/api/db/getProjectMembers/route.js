@@ -1,7 +1,7 @@
 import { auth } from "@/auth/authSetup";
 
 import {
-  getGanttTasks,
+  getProjectMembers,
   checkIfUserOwnsProject,
   checkIfUserHasAccessToProject,
 } from "@/lib/queries";
@@ -11,6 +11,7 @@ export async function GET(req) {
   projectId = parseInt(projectId);
 
   const session = await auth();
+
   let userHasAccess = false;
   if (Number.isInteger(projectId)) {
     userHasAccess =
@@ -19,7 +20,8 @@ export async function GET(req) {
   }
 
   if (!!session && userHasAccess) {
-    const data = await getGanttTasks(projectId);
+    const data = await getProjectMembers(projectId);
+
     return Response.json({ data: data, error: null });
   } else {
     return Response.json({ data: null, error: "Not authorized" });

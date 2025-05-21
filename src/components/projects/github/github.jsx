@@ -7,7 +7,8 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 
 import { InfoModalButton } from "@/components/projects/infoModalButton";
-import { githubIntegration } from "@/lib/test.json";
+import { Error } from "@/components/error";
+import { githubIntegration } from "@/lib/tutorial.json";
 
 export const Github = () => {
   const [issues, setIssues] = useState(null);
@@ -57,15 +58,20 @@ export const Github = () => {
             Looks like you haven&apos;t turned on GitHub Integration yet...
           </h1>
           <h1 className="mx-auto mt-10 text-xl">
-            Enable GitHub Integration here:
+            Enable GitHub Integration by submitting your GitHub repository URL
+            below:
+          </h1>
+          <h1 className="mx-auto mt-1 text-sm">
+            The GitHub repository URL can be changed in the settings tab at any
+            time.
           </h1>
           <SetupGithubItegration setChangeIssues={setChangeIssues} />
         </div>
       </>
     );
 
-  if (issues.error != null) return <h1>Error: {issues.error}</h1>;
-  if (prs.error != null) return <h1>Error: {prs.error}</h1>;
+  if (issues.error != null) return <Error error={issues.error} />;
+  if (prs.error != null) return <Error error={prs.error} />;
 
   return (
     <>

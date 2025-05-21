@@ -1,5 +1,6 @@
 "use client";
 
+import { Error } from "@/components/error";
 import { BoxedProject } from "@/components/boxedProject";
 import { AddProjectButton } from "@/components/addProjectButton";
 import { Loading } from "@/components/loading";
@@ -21,7 +22,7 @@ export default function Page() {
   }, []);
 
   if (isLoading) return <Loading />;
-  if (projects.error != null) return <p>{projects.error}</p>;
+  if (projects.error != null) return <Error error={projects.error} />;
   if (projects.data.length === 0)
     return (
       <div className="flex flex-row">
@@ -34,8 +35,8 @@ export default function Page() {
   return (
     <div className="flex flex-row">
       <div className="m-auto mt-20 grid grid-cols-5 gap-15">
-        <AddProjectButton />
-        {projects.data.map(({id, project_name, members}) => (
+        <AddProjectButton setProjects={setProjects} />
+        {projects.data.map(({ id, project_name, members }) => (
           <BoxedProject
             key={id}
             title={project_name}
