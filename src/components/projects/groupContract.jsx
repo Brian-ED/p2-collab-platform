@@ -1,7 +1,7 @@
 "use client";
 
 import { FaPlus, FaRegEdit } from "react-icons/fa";
-import { FaRegTrashCan } from "react-icons/fa6";
+import { FaRegTrashCan, FaArrowRightLong } from "react-icons/fa6";
 import { useState, useRef, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useOutsideClick } from "@/hooks/useOutsideClick"; // Custom hook
@@ -94,7 +94,6 @@ export const GroupContract = () => {
 
   // Update the category title
   const saveEditedCategory = async (categoryId) => {
-
     // Make sure the edited category title is not empty
     const trimmedTitle = editedCategoryTitle.trim();
 
@@ -363,33 +362,47 @@ export const GroupContract = () => {
 
   return (
     <div className="p-4">
-      <div className="flex justify-between">
+      <div className="flex justify-between mb-10">
         <InfoModalButton
           heading={groupContract.heading}
           description={groupContract.description}
         />
-        <h2 className="text-5xl font-bold mb-4">Group Contract</h2>
+        <h2 className="text-5xl font-bold">Group Contract</h2>
       </div>
-      <input
-        type="text"
-        placeholder={`Enter category`}
-        onChange={(e) => handleCategoryInputChange(e.target.value)}
-        value={newCategoryInputs}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            addCategory();
-          }
-        }}
-        className="border p-2 rounded w-[30%] mr-2"
-      />
-      <button
-        onClick={addCategory}
-        className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none font-medium rounded-full text-sm px-2.5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700"
-      >
-        <FaPlus className="text-sm" />
-      </button>
+      <div className="flex items-center border-2 border-white rounded-full overflow-hidden w-full max-w-md mt-10">
+        <input
+          type="text"
+          placeholder={`Enter category`}
+          onChange={(e) => handleCategoryInputChange(e.target.value)}
+          value={newCategoryInputs}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              addCategory();
+            }
+          }}
+          className="flex-grow p-3 focus:outline-none"
+        />
+        <button
+          onClick={addCategory}
+          className="flex justify-center bg-blue-700 text-white w-20 p-4 rounded-full hover:bg-blue-800 transition"
+        >
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M17 8l4 4m0 0l-4 4m4-4H3"
+            />
+          </svg>
+        </button>
+      </div>
       {contractRules.map((category, index) => (
-        <div key={index} className="">
+        <div key={index} className="mt-5">
           <div className="py-4">
             <div className="flex">
               {editingCategoryId === category.id ? (
@@ -532,11 +545,10 @@ export const GroupContract = () => {
                   }
                 }}
                 className="border p-2 rounded w-[25%] mr-2 transition-all h-10 duration-300 focus:h-25 resize-none"
-                
                 // Hide the scrollbar on Windows
                 style={{
-                  scrollbarWidth: "none",        
-                  msOverflowStyle: "none",        
+                  scrollbarWidth: "none",
+                  msOverflowStyle: "none",
                 }}
               />
               <button
