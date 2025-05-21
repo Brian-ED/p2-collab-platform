@@ -358,7 +358,7 @@ export const GroupContract = () => {
   if (isLoading) return <Loading />;
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-backdrop min-h-screen">
       <div className="flex justify-between mb-10">
         <InfoModalButton
           heading={groupContract.heading}
