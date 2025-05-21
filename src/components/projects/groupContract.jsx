@@ -369,10 +369,10 @@ export const GroupContract = () => {
         />
         <h2 className="text-5xl font-bold">Group Contract</h2>
       </div>
-      <div className="flex items-center border-2 border-white rounded-full overflow-hidden w-full max-w-md mt-10">
+      <div className="flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-md max-w-md mb-6">
         <input
           type="text"
-          placeholder={`Enter category`}
+          placeholder="Enter new category"
           onChange={(e) => handleCategoryInputChange(e.target.value)}
           value={newCategoryInputs}
           onKeyDown={(e) => {
@@ -380,31 +380,20 @@ export const GroupContract = () => {
               addCategory();
             }
           }}
-          className="flex-grow p-3 focus:outline-none"
+          className="flex-grow bg-transparent outline-none text-gray-700 placeholder-gray-400"
         />
         <button
           onClick={addCategory}
-          className="flex justify-center bg-blue-700 text-white w-20 p-4 rounded-full hover:bg-blue-800 transition"
+          className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full transition duration-200"
         >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M17 8l4 4m0 0l-4 4m4-4H3"
-            />
-          </svg>
+          <FaArrowRightLong className="text-lg" />
         </button>
       </div>
+
       {contractRules.map((category, index) => (
         <div key={index} className="mt-5">
           <div className="py-4">
-            <div className="flex">
+            <div className="flex items-center justify-between mb-2 pr-3">
               {editingCategoryId === category.id ? (
                 <input
                   type="text"
@@ -422,15 +411,15 @@ export const GroupContract = () => {
                     const value = e.target.value;
                     e.target.setSelectionRange(value.length, value.length);
                   }}
-                  className="border p-1 rounded font-bold text-xl"
+                  className="border p-1 rounded font-bold text-xl bg-white/20 text-white"
                   autoFocus
                 />
               ) : (
-                <h3 className="text-xl font-bold my-2">
+                <h3 className="text-xl font-bold text-white">
                   {category.category_title}
                 </h3>
               )}
-              <div className="flex gap-2 items-center pl-2">
+              <div className="flex gap-2 text-white text-base pl-2">
                 <div className="relative group">
                   <button
                     onClick={() => handleEdit(category)}
@@ -467,7 +456,7 @@ export const GroupContract = () => {
               {category.group_contract_rules.map((rule) => (
                 <li
                   key={rule.id}
-                  className="py-3 content-center border-b border-gray-400"
+                  className="py-2 px-3 mb-2 bg-white/5 rounded border border-gray-600"
                 >
                   <div className="flex items-center justify-between">
                     {editingRuleId === rule.id ? (
@@ -530,9 +519,8 @@ export const GroupContract = () => {
                 </li>
               ))}
             </ul>
-            <div className="mt-2 flex items-start">
+            <div className="mt-2 flex items-center">
               <textarea
-                type="text"
                 placeholder={`Set a rule for ${category.category_title.toLowerCase()}`}
                 value={newRuleInputs[category.id] || ""}
                 onChange={(e) =>
@@ -540,12 +528,11 @@ export const GroupContract = () => {
                 }
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
-                    e.preventDefault(); // Prevent the deafult feature, e.g. a new line
+                    e.preventDefault(); // Prevent the default feature, e.g. a new line
                     addRule(category.id);
                   }
                 }}
-                className="border p-2 rounded w-[25%] mr-2 transition-all h-10 duration-300 focus:h-25 resize-none"
-                // Hide the scrollbar on Windows
+                className="h-[2.5rem] focus:h-[5.5rem] transition-[height] duration-300 ease-in-out border border-gray-500 text-white placeholder-gray-400 bg-white/10 px-3 py-1.5 rounded-lg w-full mr-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 overflow-hidden"
                 style={{
                   scrollbarWidth: "none",
                   msOverflowStyle: "none",
@@ -555,7 +542,7 @@ export const GroupContract = () => {
                 onClick={() => {
                   addRule(category.id);
                 }}
-                className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 font-medium rounded-full text-sm px-2.5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 flex-shrink-0]>"
+                className="text-white bg-blue-600 hover:bg-blue-700 p-3 rounded-full transition"
               >
                 <FaPlus className="text-sm" />
               </button>
