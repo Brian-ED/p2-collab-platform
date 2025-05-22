@@ -2,6 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { useAppContext } from "@/context/AppContext";
+import { FaGithub, FaChartGantt  } from "react-icons/fa6";
+import { RiContractFill } from "react-icons/ri";
+
 
 export const SetupTask = (props) => {
   const clampedProgress = Math.min(props.progress, props.requiredAmount);
@@ -11,40 +14,66 @@ export const SetupTask = (props) => {
   const { setSection } = useAppContext();
 
   const handleClick = () => {
-    setSection(props.sectionAnchor);
-    router.push(`#${props.sectionAnchor}`);
+    if (!isComplete) {
+      setSection(props.sectionAnchor);
+      router.push(`#${props.sectionAnchor}`);
+    }
   };
 
-  const content = (
+  const getIcon = () => {
+    const baseClass = "text-xl";
+    const colorClass = isComplete ? "text-green-400" : "text-white";
+
+    switch (props.sectionAnchor) {
+      case "group-contract":
+        return <RiContractFill className={`${baseClass} ${colorClass}`} />;
+      case "gantt":
+        return <FaChartGantt className={`${baseClass} ${colorClass}`} />;
+      case "github":
+        return <FaGithub className={`${baseClass} ${colorClass}`} />;
+      default:
+        return null;
+    }
+  };
+
+  return (
     <div
-      className={`group flex justify-between items-center border p-4 my-4 rounded-lg transition-all duration-300 ${
-        isComplete
-          ? "bg-green-100 border-green-400 text-green-800 shadow-md"
-          : "bg-transparent border-gray-400 hover:shadow-lg cursor-pointer hover:border-white"
-      }`}
-      onClick={!isComplete ? handleClick : undefined}
+      className={`p-6 min-h-[180px] flex flex-col justify-between rounded-xl border shadow-md transition-colors ease-in-out duration-300 group cursor-pointer
+        ${isComplete
+          ? "bg-green-900/20 border-green-500 cursor-default"
+          : "bg-[#2e333a] border-[#3d454e] hover:border-white hover:shadow-md"}
+      `}
+      onClick={handleClick}
     >
-      <div className="flex gap-2 items-center">
-        {isComplete && "✅"}
-        <p
-          className={`text-base transition-colors duration-300 ${
-            isComplete
-              ? "text-green-800"
-              : "text-gray-400 group-hover:text-white"
+      <div>
+        <div
+          className={`w-10 h-10 rounded-full flex items-center justify-center mb-3 transition-colors
+            ${isComplete ? "bg-green-900/30" : "bg-[#3b4048]"}
+          `}
+        >
+          {getIcon()}
+        </div>
+
+        <h4
+          className={`text-md font-semibold mb-1 ${
+            isComplete ? "text-green-300" : "text-white"
           }`}
         >
           {props.task}
+        </h4>
+
+        <p className="text-sm text-gray-400 mb-2">
+          {isComplete ? "Completed" : "Click to complete this task"}
         </p>
       </div>
-      <span
-        className={`text-sm font-semibold transition-colors duration-300 ${
-          isComplete ? "text-green-800" : "text-gray-400 group-hover:text-white"
+
+      <p
+        className={`text-sm font-semibold text-right ${
+          isComplete ? "text-green-300" : "text-gray-500 group-hover:text-white"
         }`}
       >
         {clampedProgress}/{props.requiredAmount}
-      </span>
+      </p>
     </div>
   );
-
-  return content;
 };

@@ -1,9 +1,8 @@
 import { useParams } from "next/navigation";
 
 function sendGithubURL(pid, setChangeIssues) {
-  const data = new URLSearchParams(
-    new FormData(document.querySelector("#githubUrlForm"))
-  );
+  const form = document.querySelector("#githubUrlForm");
+  const data = new URLSearchParams(new FormData(form));
 
   fetch(`/api/github/setRepo?projectId=${pid}`, {
     method: "PATCH",
@@ -12,7 +11,7 @@ function sendGithubURL(pid, setChangeIssues) {
       "Content-Type": "application/x-www-form-urlencoded",
     },
   })
-    .then((data) => data.json())
+    .then((res) => res.json())
     .then((data) => {
       console.log(data);
       setChangeIssues(true);
@@ -24,22 +23,24 @@ export const SetupGithubItegration = ({ setChangeIssues }) => {
 
   return (
     <form
-      className="mx-auto mt-5 flex flex-col"
       id="githubUrlForm"
-      action={() => {
+      onSubmit={(e) => {
+        e.preventDefault();
         sendGithubURL(pid, setChangeIssues);
       }}
+      className="w-full flex flex-col sm:flex-row items-center gap-3"
     >
       <input
         type="url"
         name="github-repo"
-        className="border-2 rounded-md w-100 text-center"
-        placeholder="https://github.com/Brian-ED/p2-collab-platform"
+        required
+        placeholder="https://github.com/your/repo"
+        className="w-full flex-1 px-4 py-2 rounded-lg bg-[#1f242d] text-white placeholder-gray-400 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       <input
         type="submit"
-        value="Integrate GitHub"
-        className="bg-white px-2 border-2 border-black text-black rounded-md hover:cursor-pointer mt-2 w-fit mx-auto"
+        value="Integrate"
+        className="px-5 py-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold rounded-lg shadow-md transition-all duration-200 cursor-pointer"
       />
     </form>
   );

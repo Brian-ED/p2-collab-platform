@@ -1,20 +1,26 @@
 "use client";
 
 import { LoginButton } from "@/components/loginButton";
+import { SidebarButton } from "@/components/navigation/sidebarButton";
 import Link from "next/link";
-
 import { useAppContext } from "@/context/AppContext";
-
-import { FaBars, FaX } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
+
+// Icons
+import { FaHome } from "react-icons/fa";
+import { FaBars, FaX, FaChartGantt, FaGithub } from "react-icons/fa6";
+import { RiContractFill } from "react-icons/ri";
+import { BsFillKanbanFill } from "react-icons/bs";
+import { BiSolidMessageSquareDetail } from "react-icons/bi";
+import { IoSettingsSharp } from "react-icons/io5";
 
 export default function ProjectsLayout({ children }) {
   const router = useRouter();
-
   const { setSection, sidebar, setSidebar } = useAppContext();
 
   return (
     <div className="min-h-screen bg-backdrop">
+      {/* Top navbar */}
       <header className="bg-navbar fixed top-0 left-0 right-0 z-50">
         <div className="flex items-center justify-between px-4 h-16">
           <div className="flex items-center">
@@ -29,86 +35,73 @@ export default function ProjectsLayout({ children }) {
               <Link href="/projects">P2 Collab Platform</Link>
             </h1>
           </div>
-
-          <nav>{/* NAVBAR BUTTONS */}</nav>
+          {/* Header links in the navbar */}
+          <nav></nav>
           <LoginButton />
         </div>
       </header>
 
+      {/* Sidebar */}
       <div
         className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-sidebar transition-all duration-250 ${
           sidebar ? "w-64" : "w-0"
         }`}
       >
         {sidebar && (
-          <nav className="p-4 overflow-hidden">
-            <button
-              className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
-              onClick={() => {
-                setSection("overview");
-                router.push("");
-              }}
-            >
-              Overview
-            </button>
-            <button
-              className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
-              onClick={() => {
-                setSection("group-contract");
-                router.push("#group-contract");
-              }}
-            >
-              Group contract
-            </button>
-            <button
-              className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
-              onClick={() => {
-                setSection("gantt");
-                router.push("#gantt");
-              }}
-            >
-              Gantt
-            </button>
-            <button
-              className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
-              onClick={() => {
-                setSection("kanban");
-                router.push("#kanban");
-              }}
-            >
-              Kanban board
-            </button>
-            <button
-              className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
-              onClick={() => {
-                setSection("github");
-                router.push("#github");
-              }}
-            >
-              GitHub
-            </button>
-            <button
-              className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
-              onClick={() => {
-                setSection("messaging");
-                router.push("#messaging");
-              }}
-            >
-              Messages
-            </button>
-            <button
-              className="cursor-pointer hover:bg-gray-100 hover:text-black p-2 w-full rounded-lg px-4 text-left"
-              onClick={() => {
-                setSection("settings");
-                router.push("#settings");
-              }}
-            >
-              Settings
-            </button>
+          <nav className="p-4 flex flex-col h-full justify-between">
+            <div className="space-y-1">
+              <SidebarButton
+                label="Overview"
+                icon={<FaHome />}
+                section="overview"
+                route=""
+              />
+              <SidebarButton
+                label="Group contract"
+                icon={<RiContractFill />}
+                section="group-contract"
+                route="#group-contract"
+              />
+              <SidebarButton
+                label="Gantt"
+                icon={<FaChartGantt />}
+                section="gantt"
+                route="#gantt"
+              />
+              <SidebarButton
+                label="Kanban board"
+                icon={<BsFillKanbanFill />}
+                section="kanban"
+                route="#kanban"
+              />
+              <SidebarButton
+                label="GitHub"
+                icon={<FaGithub />}
+                section="github"
+                route="#github"
+              />
+              <SidebarButton
+                label="Messages"
+                icon={<BiSolidMessageSquareDetail />}
+                section="messaging"
+                route="#messaging"
+              />
+            </div>
+
+            {/* Setting floating at the bottom - casued by the justify between property on the nav element */}
+            <div className="mt-4 pt-4 border-t border-white/10">
+              <SidebarButton
+                label="Settings"
+                icon={<IoSettingsSharp />}
+                section="settings"
+                route="#settings"
+              />
+            </div>
           </nav>
         )}
       </div>
 
+      {/* Main content */}
       <main
         className={`pt-16 transition-all duration-300 ${
           sidebar ? "ml-64" : "ml-0"
