@@ -1,7 +1,7 @@
 import { Issue } from "@/components/projects/github/issue";
 import { PullRequest } from "@/components/projects/github/pullRequest";
-import { SetupGithubItegration } from "@/components/projects/github/setupGithubItegration";
 import { Loading } from "@/components/loading";
+import { SetupGithubItegration } from "@/components/projects/github/setupGithubItegration";
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
@@ -42,46 +42,48 @@ export const Github = () => {
   if (issuesLoading || prsLoading) return <Loading />;
 
   if (
-    issues.error === "No GitHub URL is set." ||
-    prs.error === "No GitHub URL is set."
+    issues?.error === "No GitHub URL is set." ||
+    prs?.error === "No GitHub URL is set."
   )
     return (
-      <>
-        <div className="flex justify-between">
+      <div className="p-4">
+        <div className="flex justify-between items-center mb-10">
+          <h1 className="text-4xl font-bold">GitHub Integration</h1>
           <InfoModalButton
             heading={githubIntegration.heading}
             description={githubIntegration.description}
           />
         </div>
-        <div className="flex flex-col h-[80%]">
-          <h1 className="mx-auto mt-20 text-2xl font-semibold">
-            Looks like you haven&apos;t turned on GitHub Integration yet...
-          </h1>
-          <h1 className="mx-auto mt-10 text-xl">
-            Enable GitHub Integration by submitting your GitHub repository URL
-            below:
-          </h1>
-          <h1 className="mx-auto mt-1 text-sm">
-            The GitHub repository URL can be changed in the settings tab at any
-            time.
-          </h1>
-          <SetupGithubItegration setChangeIssues={setChangeIssues} />
+
+        <div className="w-[50%] flex flex-col gap-4  mx-auto mt-40">
+          <div className="flex flex-col items-center gap-2">
+            <h2 className="text-3xl font-bold text-center">GitHub Integration Missing</h2>
+            <p className="text-gray-300 text-center w-[75%]">
+              Submit your GitHub repository URL below to enable integration. You can change the URL at any time in the Settings tab.
+            </p>
+          </div>
+
+          <div className="bg-[#2b313b] rounded-2xl shadow-xl px-6 py-8">
+            <SetupGithubItegration setChangeIssues={setChangeIssues} />
+          </div>
         </div>
-      </>
+      </div>
     );
 
-  if (issues.error != null) return <Error error={issues.error} />;
-  if (prs.error != null) return <Error error={prs.error} />;
+  if (issues?.error != null) return <Error error={issues.error} />;
+  if (prs?.error != null) return <Error error={prs.error} />;
 
   return (
-    <>
-      <div className="flex justify-between">
+    <div className="p-4 text-white">
+      <div className="flex justify-between items-center mb-10">
+        <h1 className="text-4xl font-bold">GitHub Integration</h1>
         <InfoModalButton
           heading={githubIntegration.heading}
           description={githubIntegration.description}
         />
       </div>
-      <div className="flex flex-row w-full gap-8">
+
+      <div className="flex flex-col xl:flex-row gap-8">
         <Issue
           issues={issues}
           setChangeIssues={setChangeIssues}
@@ -89,6 +91,6 @@ export const Github = () => {
         />
         <PullRequest prs={prs} />
       </div>
-    </>
+    </div>
   );
 };
