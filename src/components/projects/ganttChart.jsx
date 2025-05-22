@@ -20,7 +20,7 @@ const GanttTask = ({
   description,
   start_date,
   end_date,
-  hours_needed, //TODO: Should just be "complete" as we won't have percentages.
+  hours_needed,
   removeGanttTask,
 }) => {
   const [hover, setHover] = useState(false);
@@ -209,7 +209,6 @@ export const GanttChart = () => {
   const [addTaskHover, setAddTaskHover] = useState(false);
   const [addTaskClicked, setAddTaskClicked] = useState(false);
   const [changeTask, setChangeTask] = useState(false);
-  const [userHours, setUserHours] = useState(null);
 
   useEffect(() => {
     fetch(`/api/db/getGantt?projectId=${pid}`)
@@ -256,39 +255,48 @@ export const GanttChart = () => {
     });
   }
 
+  if (isLoading || usersLoading) return <Loading />;
+  if (tasks.error != null) return <Error error={tasks.error} />;
+  if (users.error != null) return <Error error={users.error} />;
+
   const taskMatrix = [];
   const taskHourVector = [];
   const hoursPerUser = {};
 
-  if (tasks != null && users != null) {
-    for (let i = 0; i < tasks.data.length; i++) {
-      taskMatrix.push([]);
-      taskHourVector.push(tasks.data[i].hours_needed);
-      for (let j = 0; j < users.data.length; j++) {
-        for (let x of tasks.data[i].assigned_users) {
-          if (users.data[j].id === x.id) {
-            taskMatrix[i][j] = 1;
-            break;
-          } else {
-            taskMatrix[i][j] = 0;
+  try {
+    if (
+      tasks != null &&
+      tasks.data.length > 0 &&
+      users != null &&
+      users.data != null
+    ) {
+      for (let i = 0; i < tasks.data.length; i++) {
+        taskMatrix.push([]);
+        taskHourVector.push(tasks.data[i].hours_needed);
+        for (let j = 0; j < users.data.length; j++) {
+          for (let x of tasks.data[i].assigned_users) {
+            if (users.data[j].id === x.id) {
+              taskMatrix[i][j] = 1;
+              break;
+            } else {
+              taskMatrix[i][j] = 0;
+            }
           }
         }
       }
-    }
 
-    const solvedHours = solveLinearSystem(taskMatrix, taskHourVector);
+      const solvedHours = solveLinearSystem(taskMatrix, taskHourVector);
 
-    for (let i = 0; i < users.data.length; i++) {
-      hoursPerUser[users.data[i].id] = {
-        name: users.data[i].name,
-        hours: solvedHours[i],
-      };
+      for (let i = 0; i < users.data.length; i++) {
+        hoursPerUser[users.data[i].id] = {
+          name: users.data[i].name,
+          hours: solvedHours[i],
+        };
+      }
     }
+  } catch (err) {
+    console.log(err);
   }
-
-  if (isLoading || usersLoading) return <Loading />;
-  if (tasks.error != null) return <Error error={tasks.error} />;
-  if (users.error != null) return <Error error={users.error} />;
 
   if (tasks.data.length === 0) {
     return (
@@ -369,11 +377,8 @@ export const GanttChart = () => {
   }
 
   let currentDate = dayjs();
-  //currentDate = currentDate.add(1, "month");
 
   let inChart = isCurrentDateInChart(currentDate, dates);
-
-  console.log(hoursPerUser);
 
   return (
     <>
