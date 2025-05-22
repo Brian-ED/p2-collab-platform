@@ -284,17 +284,14 @@ export const GanttChart = () => {
       }
     }
 
-      const solvedHours = solveLinearSystem(taskMatrix, taskHourVector);
+    const solvedHours = solveLinearSystem(taskMatrix, taskHourVector);
 
-      for (let i = 0; i < users.data.length; i++) {
-        hoursPerUser[users.data[i].id] = {
-          name: users.data[i].name,
-          hours: solvedHours[i],
-        };
-      }
+    for (let i = 0; i < users.data.length; i++) {
+      hoursPerUser[users.data[i].id] = {
+        name: users.data[i].name,
+        hours: solvedHours[i],
+      };
     }
-  } catch (err) {
-    console.log(err);
   }
 
   if (tasks.data.length === 0) {
