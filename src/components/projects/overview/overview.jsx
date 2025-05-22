@@ -1,6 +1,7 @@
 "use client";
 
 import { ProjectSetup } from "@/components/projects/overview/projectSetup";
+import { ProjectOverview } from "@/components/projects/overview/projectOverview";
 import { Loading } from "@/components/loading";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
@@ -8,26 +9,47 @@ import { useParams } from "next/navigation";
 export const Overview = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [setupProgress, setSetupProgress] = useState(null);
+  const [setupOverview, setSetupOverview] = useState(null);
   const { pid } = useParams();
 
   useEffect(() => {
-    fetch(`/api/db/projectSetup?projectId=${pid}`)
-      .then((res) => res.json())
-      .then((response) => {
-        const validGroupContractCategories = response.data.categories.filter(
+    async function fetchData() {
+      try {
+        const [setupRes, membersRes] = await Promise.all([
+          fetch(`/api/db/projectSetup?projectId=${pid}`),
+          fetch(`/api/db/getProjectMembers?projectId=${pid}`),
+        ]);
+
+        const setupData = await setupRes.json();
+        const membersData = await membersRes.json();
+
+        // Count of the members belonging to the project
+        const memberCount = membersData.data.length;
+
+        const validGroupContractCategories = setupData.data.categories.filter(
           (category) => category.ruleCount >= 3
         );
 
-        const ganttChartCount = response.data.totalGanttTasks;
-        const gitHubUrl = !!response.data.gitHubUrl;
+        const ganttChartCount = setupData.data.totalGanttTasks;
+        const gitHubUrl = !!setupData.data.gitHubUrl;
 
         setSetupProgress({
           groupContractCount: validGroupContractCategories.length,
           ganttChartCount,
           gitHubUrl: gitHubUrl ? 1 : 0,
         });
+
+        setSetupOverview({
+          groupMembers: memberCount,
+        });
+
         setIsLoading(false);
-      });
+      } catch (err) {
+        console.error("Failed to fetch project data", err);
+      }
+    }
+
+    fetchData();
   }, []);
 
   if (isLoading) return <Loading />;
@@ -36,24 +58,26 @@ export const Overview = () => {
     <div className="px-10 py-4 text-white">
       <h1 className="text-5xl font-bold mb-2">Project Overview</h1>
       <p className="text-lg text-gray-400 mb-6">
-        Welcome! Use this dashboard to set up and manage your project.
+        Welcome! This dashboard helps you set up, track, and manage your project
+        progress
       </p>
 
       <div className="mb-10">
-        <h2 className="text-2xl font-semibold mb-2">Overview Section Includes:</h2>
-        <ul className="list-disc list-inside text-gray-300 space-y-1">
-          <li>Introduction to the project section</li>
-          <li>Explanation of core functionalities</li>
-          <li>Project-specific information</li>
-          <li>Navigation back to project selection</li>
-          <li>Users with access to the project</li>
-        </ul>
+        <h2 className="text-2xl font-semibold mb-2">Project details</h2>
+        <p className="text-gray-400 mb-6">
+          Key metrics and info about your project.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <ProjectOverview overviewInformation={setupOverview} />
+        </div>
       </div>
 
       <div>
-        <h3 className="text-2xl font-semibold mb-2">Get started with your project!</h3>
+        <h2 className="text-2xl font-semibold mb-2">
+          Project setup checklist
+        </h2>
         <p className="text-gray-400 mb-6">
-          Complete the tasks below to lay a strong foundation for your project.
+          Complete these steps to ensure your project is off to a solid start.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           <ProjectSetup setupProgress={setupProgress} />

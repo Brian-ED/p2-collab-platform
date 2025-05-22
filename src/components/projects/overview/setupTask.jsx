@@ -40,7 +40,7 @@ export const SetupTask = (props) => {
     <div
       className={`p-6 min-h-[180px] flex flex-col justify-between rounded-xl border shadow-md transition-colors ease-in-out duration-300 group cursor-pointer
         ${isComplete
-          ? "bg-green-900/20 border-green-500"
+          ? "bg-green-900/20 border-green-500 cursor-default"
           : "bg-[#2e333a] border-[#3d454e] hover:border-white hover:shadow-md"}
       `}
       onClick={handleClick}
