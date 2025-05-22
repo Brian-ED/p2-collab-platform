@@ -42,7 +42,6 @@ function inverse(matrix) {
 }
 
 function regularizedInverse(matrix, lambda = 1e-8) {
-  const n = matrix.length;
   const regularized = matrix.map((row, i) =>
     row.map((val, j) => val + (i === j ? lambda : 0))
   );
