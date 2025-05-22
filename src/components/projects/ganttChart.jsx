@@ -260,7 +260,12 @@ export const GanttChart = () => {
   const taskHourVector = [];
   const hoursPerUser = {};
 
-  if (tasks != null && users != null) {
+  if (
+    tasks != null &&
+    tasks.data.length > 0 &&
+    users != null &&
+    users.data.length > 0
+  ) {
     for (let i = 0; i < tasks.data.length; i++) {
       taskMatrix.push([]);
       taskHourVector.push(tasks.data[i].hours_needed);

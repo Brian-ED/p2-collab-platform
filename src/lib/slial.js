@@ -41,6 +41,14 @@ function inverse(matrix) {
   return M.map((row) => row.slice(n));
 }
 
+function regularizedInverse(matrix, lambda = 1e-8) {
+  const n = matrix.length;
+  const regularized = matrix.map((row, i) =>
+    row.map((val, j) => val + (i === j ? lambda : 0))
+  );
+  return inverse(regularized);
+}
+
 function solveLeastSquares(A, b) {
   const At = transpose(A);
   const AtA = matMul(At, A);
@@ -49,7 +57,7 @@ function solveLeastSquares(A, b) {
     b.map((v) => [v])
   );
 
-  const AtA_inv = inverse(AtA);
+  const AtA_inv = regularizedInverse(AtA);
   const x = matMul(AtA_inv, Atb);
 
   return x.map((row) => row[0]);
