@@ -263,39 +263,35 @@ export const GanttChart = () => {
   const taskHourVector = [];
   const hoursPerUser = {};
 
-  try {
-    if (
-      tasks != null &&
-      tasks.data.length > 0 &&
-      users != null &&
-      users.data != null
-    ) {
-      for (let i = 0; i < tasks.data.length; i++) {
-        taskMatrix.push([]);
-        taskHourVector.push(tasks.data[i].hours_needed);
-        for (let j = 0; j < users.data.length; j++) {
-          for (let x of tasks.data[i].assigned_users) {
-            if (users.data[j].id === x.id) {
-              taskMatrix[i][j] = 1;
-              break;
-            } else {
-              taskMatrix[i][j] = 0;
-            }
+  if (
+    tasks != null &&
+    tasks.data.length > 0 &&
+    users != null &&
+    users.data.length > 0
+  ) {
+    for (let i = 0; i < tasks.data.length; i++) {
+      taskMatrix.push([]);
+      taskHourVector.push(tasks.data[i].hours_needed);
+      for (let j = 0; j < users.data.length; j++) {
+        for (let x of tasks.data[i].assigned_users) {
+          if (users.data[j].id === x.id) {
+            taskMatrix[i][j] = 1;
+            break;
+          } else {
+            taskMatrix[i][j] = 0;
           }
         }
       }
-
-      const solvedHours = solveLinearSystem(taskMatrix, taskHourVector);
-
-      for (let i = 0; i < users.data.length; i++) {
-        hoursPerUser[users.data[i].id] = {
-          name: users.data[i].name,
-          hours: solvedHours[i],
-        };
-      }
     }
-  } catch (err) {
-    console.log(err);
+
+    const solvedHours = solveLinearSystem(taskMatrix, taskHourVector);
+
+    for (let i = 0; i < users.data.length; i++) {
+      hoursPerUser[users.data[i].id] = {
+        name: users.data[i].name,
+        hours: solvedHours[i],
+      };
+    }
   }
 
   if (tasks.data.length === 0) {
