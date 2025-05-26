@@ -30,7 +30,9 @@ export const AddProjectButton = () => {
             onClick={() => setClick(false)}
           />
 
-          <h2 className="text-2xl font-bold mb-6 text-center">Add New Project</h2>
+          <h2 className="text-2xl font-bold mb-6 text-center">
+            Add New Project
+          </h2>
 
           <form
             id="addProjectForm"
@@ -39,23 +41,30 @@ export const AddProjectButton = () => {
             className="flex flex-col gap-4"
           >
             {/* Project name */}
+            <label htmlFor="project-name" className="text-white font-medium">
+              Project Name
+            </label>
             <input
               type="text"
               name="project-name"
-              placeholder="Project name"
+              placeholder="Project Name"
               required
               maxLength={50}
               className="px-4 py-2 rounded-md bg-white/10 text-white placeholder-gray-400 border border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
             {/* Project due date */}
+            <label htmlFor="due-date" className="text-white font-medium">
+              Project Due Date
+            </label>
             <input
+              id="due-date"
               type="date"
               name="due-date"
               required
               className="px-4 py-2 rounded-md bg-white/10 text-white placeholder-gray-400 border border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
             />
-            
+
             {/* Submit - triggers the action attribute on the form and calls the api */}
             <input
               type="submit"

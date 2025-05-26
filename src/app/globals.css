@@ -22,6 +22,16 @@ body {
   
 }
 
+input[type="date"]::placeholder {
+  color: #9ca3af; /* Tailwind's text-gray-400 */
+  opacity: 1; /* ensure it's visible */
+}
+
+/* For WebKit browsers like Chrome/Safari */
+input[type="date"]::-webkit-datetime-edit {
+  color: #9ca3af;
+}
+
 @theme {
   --color-trackcolor: #0f172a;
   --color-trackcolorodd: #334155;
