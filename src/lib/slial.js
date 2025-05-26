@@ -64,11 +64,14 @@ function solveLeastSquares(A, b) {
 
 export function solveLinearSystem(A, b) {
   const x = solveLeastSquares(A, b);
+
   const sumX = x.reduce((acc, val) => acc + val, 0);
   const sumB = b.reduce((acc, val) => acc + val, 0);
-  const scale = sumB / sumX;
+  const scale = sumX === 0 ? 0 : sumB / sumX;
 
   const scaledX = x.map((val) => val * scale);
 
-  return scaledX;
+  const trimmedX = scaledX.map((val) => (val < 0 ? 0 : val));
+
+  return trimmedX;
 }
