@@ -4,6 +4,8 @@ import { Error } from "@/components/error";
 import { BoxedProject } from "@/components/boxedProject";
 import { AddProjectButton } from "@/components/addProjectButton";
 import { Loading } from "@/components/loading";
+import { InfoModalButton  } from "@/components/projects/infoModalButton";
+import { projectsOverview } from "@/lib/tutorial.json";
 
 import { useState, useEffect } from "react";
 import { redirect } from "next/navigation";
@@ -26,6 +28,7 @@ export default function Page() {
   if (projects.data.length === 0)
     return (
       <div className="flex flex-row">
+        <InfoModalButton heading={projectsOverview.heading} description={projectsOverview.description} />
         <div className="m-auto mt-20">
           <AddProjectButton />
         </div>
@@ -34,6 +37,7 @@ export default function Page() {
 
   return (
     <div className="flex flex-row">
+      <InfoModalButton heading={projectsOverview.heading} description={projectsOverview.description} />
       <div className="m-auto mt-20 grid grid-cols-5 gap-15">
         <AddProjectButton setProjects={setProjects} />
         {projects.data.map(({ id, project_name, members }) => (
