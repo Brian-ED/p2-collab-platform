@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { IoMdClose } from "react-icons/io";
+import { useOutsideClick } from "@/hooks/useOutsideClick"; // Adjust path if needed
 
 export const AddProjectButton = ({ setProjects }) => {
   const [click, setClick] = useState(false);
+  const modalRef = useRef(null);
 
-  const ellipses = "whitespace-nowrap overflow-hidden overflow-ellipsis";
+  useOutsideClick(modalRef, () => setClick(false), click);
 
   const sendProject = () => {
     const data = new URLSearchParams(
@@ -22,48 +24,77 @@ export const AddProjectButton = ({ setProjects }) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.error !== null) setProjects({ error: data.error });
+        if (data.error !== null) {
+          setProjects({ error: data.error });
+        }
+        setClick(false); // ✅ Close modal after submit
       });
   };
 
   return (
     <>
+      {/* Modal */}
       <div
-        className={`absolute z-20 bg-white mt-52 rounded-sm max-w-100 max-h-50 overflow-y-hidden h-full w-full ${
+        className={`fixed inset-0 z-50 flex justify-center items-center transition-transform duration-300 ${
           click ? "scale-100" : "scale-0"
         }`}
       >
-        <IoMdClose
-          className="fill-black size-8 absolute hover:cursor-pointer right-1 top-1"
-          onClick={() => setClick(false)}
-        />
-        <form
-          id="addProjectForm"
-          action={() => {
-            sendProject();
-          }}
-          className="flex flex-col gap-5 items-center"
+        <div
+          ref={modalRef}
+          className="relative bg-[#2e333a] border border-gray-600 rounded-xl p-8 w-full max-w-md shadow-lg text-white"
         >
-          <input
-            type="text"
-            name="project-name"
-            placeholder="Project name"
-            defaultValue=""
-            maxLength={50}
-            className="w-[calc(100%-var(--spacing)*20)] text-center mt-15 text-black"
+          {/* Close icon */}
+          <IoMdClose
+            className="absolute top-4 right-4 text-white hover:text-gray-400 cursor-pointer text-2xl"
+            onClick={() => setClick(false)}
           />
-          <input
-            type="submit"
-            value="Add Project"
-            className="bg-blue-600 hover:bg-blue-500 hover:cursor-pointer text-white w-25 h-8 rounded-sm"
-          />
-        </form>
+
+          <h2 className="text-2xl font-bold mb-6 text-center">
+            Add New Project
+          </h2>
+
+          <form
+            id="addProjectForm"
+            onSubmit={(e) => {
+              e.preventDefault();
+              sendProject();
+            }}
+            className="flex flex-col gap-4"
+          >
+            {/* Project name */}
+            <input
+              type="text"
+              name="project-name"
+              placeholder="Project name"
+              maxLength={50}
+              required
+              className="px-4 py-2 rounded-md bg-white/10 text-white placeholder-gray-400 border border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+            {/* Project due date */}
+            <input
+              type="date"
+              name="due-date"
+              required
+              className="px-4 py-2 rounded-md bg-white/10 text-white placeholder-gray-400 border border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+            />
+
+            {/* Submit button - calls api */}
+            <input
+              type="submit"
+              value="Add Project"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md cursor-pointer transition"
+            />
+          </form>
+        </div>
       </div>
+
+      {/* Open modal button */}
       <button
-        onClick={() => setClick(!click)}
-        className="py-5 rounded-md bg-blue-600 hover:bg-blue-500 hover:cursor-pointer size-50"
+        onClick={() => setClick(true)}
+        className="px-6 py-3 rounded-md bg-blue-600 hover:bg-blue-500 text-white font-semibold transition"
       >
-        <div className={`${ellipses} leading-10`}>Add new project</div>
+        Add New Project
       </button>
     </>
   );
