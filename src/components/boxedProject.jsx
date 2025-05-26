@@ -34,7 +34,7 @@ export const BoxedProject = ({
         </div>
       </div>
 
-      {/* Footer action / icon area */}
+      {/* Pushed to the bottom of the box because of the 'justify-between' property on the button element */}
       <div className="flex justify-end">
         <span className="text-sm text-blue-400 group-hover:text-white transition">
            View →
