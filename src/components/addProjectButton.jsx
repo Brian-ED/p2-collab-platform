@@ -78,7 +78,7 @@ export const AddProjectButton = () => {
       {/* Trigger button */}
       <button
         onClick={() => setClick(true)}
-        className="px-6 py-3 rounded-md bg-blue-600 hover:bg-blue-500 text-white font-semibold cursor-pointer transition"
+        className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold cursor-pointer transition"
       >
         Add New Project
       </button>

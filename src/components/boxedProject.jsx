@@ -1,31 +1,44 @@
-"use client";
-
 export const BoxedProject = ({
   title = "MISSING",
-  memberNames, // Example: [{id: 0, name: "" }]
+  memberNames,
   onClick,
 }) => {
+  const visibleMembers = memberNames.slice(0, 3);
+  const extraCount = memberNames.length - visibleMembers.length;
+
   return (
     <button
       onClick={onClick}
-      className="py-5 rounded-md bg-blue-600 hover:bg-blue-500 hover:cursor-pointer size-50"
+      className="w-52 h-48 bg-[#1f2937] border border-[#374151] hover:border-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 p-4 flex flex-col justify-between text-left cursor-pointer group"
     >
-      <div className="h-full">
-        <div className="whitespace-nowrap overflow-hidden leading-10">
+      {/* Project title */}
+      <div>
+        <h3 className="text-white font-semibold text-lg leading-tight mb-2 truncate">
           {title}
-        </div>
-        Members:
-        <div className="flex flex-col">
-          {memberNames.slice(0, 3).map(({ id, name }) => (
+        </h3>
+        <p className="text-gray-400 text-sm mb-1">Team Members</p>
+
+        <div className="space-y-0.5">
+          {visibleMembers.map(({ id, name }) => (
             <p
               key={id}
-              className="whitespace-nowrap overflow-hidden overflow-ellipsis text-[12px] max-w-40 mx-auto"
+              className="text-white text-sm truncate"
             >
-              {""===name? "Non-named User": name}
+              {name === "" ? "Non-named User" : name}
             </p>
           ))}
+
+          {extraCount > 0 && (
+            <p className="text-gray-400 text-sm">+{extraCount} more</p>
+          )}
         </div>
-        {memberNames.length > 3 ? <>...</> : <></>}
+      </div>
+
+      {/* Footer action / icon area */}
+      <div className="flex justify-end">
+        <span className="text-sm text-blue-400 group-hover:text-white transition">
+           View →
+        </span>
       </div>
     </button>
   );
