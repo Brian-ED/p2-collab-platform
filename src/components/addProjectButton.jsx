@@ -2,63 +2,40 @@
 
 import { useState, useRef } from "react";
 import { IoMdClose } from "react-icons/io";
-import { useOutsideClick } from "@/hooks/useOutsideClick"; // Adjust path if needed
+import { useOutsideClick } from "@/hooks/useOutsideClick";
 
-export const AddProjectButton = ({ setProjects }) => {
+export const AddProjectButton = () => {
   const [click, setClick] = useState(false);
   const modalRef = useRef(null);
 
   useOutsideClick(modalRef, () => setClick(false), click);
-
-  const sendProject = () => {
-    const data = new URLSearchParams(
-      new FormData(document.querySelector("#addProjectForm"))
-    );
-
-    fetch(`/api/db/addProject`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: data,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.error !== null) {
-          setProjects({ error: data.error });
-        }
-        setClick(false); // ✅ Close modal after submit
-      });
-  };
 
   return (
     <>
       {/* Modal */}
       <div
         className={`fixed inset-0 z-50 flex justify-center items-center transition-transform duration-300 ${
-          click ? "scale-100" : "scale-0"
+          click
+            ? "scale-100 opacity-100 pointer-events-auto"
+            : "scale-0 opacity-0 pointer-events-none"
         }`}
       >
         <div
           ref={modalRef}
           className="relative bg-[#2e333a] border border-gray-600 rounded-xl p-8 w-full max-w-md shadow-lg text-white"
         >
-          {/* Close icon */}
+          {/* Close button */}
           <IoMdClose
             className="absolute top-4 right-4 text-white hover:text-gray-400 cursor-pointer text-2xl"
             onClick={() => setClick(false)}
           />
 
-          <h2 className="text-2xl font-bold mb-6 text-center">
-            Add New Project
-          </h2>
+          <h2 className="text-2xl font-bold mb-6 text-center">Add New Project</h2>
 
           <form
             id="addProjectForm"
-            onSubmit={(e) => {
-              e.preventDefault();
-              sendProject();
-            }}
+            action="/api/db/addProject"
+            method="POST"
             className="flex flex-col gap-4"
           >
             {/* Project name */}
@@ -66,8 +43,8 @@ export const AddProjectButton = ({ setProjects }) => {
               type="text"
               name="project-name"
               placeholder="Project name"
-              maxLength={50}
               required
+              maxLength={50}
               className="px-4 py-2 rounded-md bg-white/10 text-white placeholder-gray-400 border border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
@@ -78,8 +55,8 @@ export const AddProjectButton = ({ setProjects }) => {
               required
               className="px-4 py-2 rounded-md bg-white/10 text-white placeholder-gray-400 border border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
             />
-
-            {/* Submit button - calls api */}
+            
+            {/* Submit - triggers the action attribute on the form and calls the api */}
             <input
               type="submit"
               value="Add Project"
@@ -89,10 +66,10 @@ export const AddProjectButton = ({ setProjects }) => {
         </div>
       </div>
 
-      {/* Open modal button */}
+      {/* Trigger button */}
       <button
         onClick={() => setClick(true)}
-        className="px-6 py-3 rounded-md bg-blue-600 hover:bg-blue-500 text-white font-semibold transition"
+        className="px-6 py-3 rounded-md bg-blue-600 hover:bg-blue-500 text-white font-semibold cursor-pointer transition"
       >
         Add New Project
       </button>

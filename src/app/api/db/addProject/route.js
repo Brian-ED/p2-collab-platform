@@ -8,6 +8,8 @@ export async function POST(req) {
   let origin = new URL(req.url);
   const formData = await req.formData();
   const projectName = formData.get("project-name");
+  const projectDueDate = formData.get("due-date");
+  console.log(projectDueDate);
 
   if (projectName.length > 50)
     return Response.json({ data: null, error: "Project name too long!" });
@@ -16,7 +18,7 @@ export async function POST(req) {
     return Response.json({ data: null, error: "Project name too short!" });
 
   if (!!session) {
-    const newProjectId = await addProject(session, projectName);
+    const newProjectId = await addProject(session, projectName, projectDueDate);
 
     origin.pathname = `/projects/${newProjectId}`;
 
