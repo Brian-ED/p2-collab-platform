@@ -3,41 +3,43 @@ export const BoxedProject = ({
   memberNames,
   onClick,
 }) => {
-  const visibleMembers = memberNames.slice(0, 3);
+  const visibleMembers = memberNames.slice(0, 6);
   const extraCount = memberNames.length - visibleMembers.length;
 
   return (
     <button
       onClick={onClick}
-      className="w-52 h-48 bg-[#1f2937] border border-[#374151] hover:border-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 p-4 flex flex-col justify-between text-left cursor-pointer group"
+      className="w-84 h-52 bg-[#1f2937] border border-[#2e2e2e] hover:border-blue-500 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 px-6 py-6 text-left flex flex-col justify-between cursor-pointer group"
     >
-      {/* Project title */}
+      {/* Top part - title + members */}
       <div>
-        <h3 className="text-white font-semibold text-lg leading-tight mb-2 truncate">
+        <h3 className="text-white font-semibold text-xl leading-snug mb-3 truncate">
           {title}
         </h3>
-        <p className="text-gray-400 text-sm mb-1">Team Members</p>
+        <p className="text-gray-400 text-sm mb-2">Team Members</p>
 
-        <div className="space-y-0.5">
+        {/* Member name tags - truncated if necessary */}
+        <div className="flex flex-wrap gap-1.5">
           {visibleMembers.map(({ id, name }) => (
-            <p
+            <span
               key={id}
-              className="text-white text-sm truncate"
+              className="bg-[#2f3a4b] text-white text-xs px-2 py-0.5 rounded-md max-w-[7rem] truncate"
             >
-              {name === "" ? "Non-named User" : name}
-            </p>
+              {name === "" ? "Unnamed" : name}
+            </span>
           ))}
-
           {extraCount > 0 && (
-            <p className="text-gray-400 text-sm">+{extraCount} more</p>
+            <span className="bg-gray-600 text-white text-xs px-2 py-0.5 rounded-md">
+              +{extraCount}
+            </span>
           )}
         </div>
       </div>
 
-      {/* Pushed to the bottom of the box because of the 'justify-between' property on the button element */}
-      <div className="flex justify-end">
-        <span className="text-sm text-blue-400 group-hover:text-white transition">
-           View →
+      {/* Pushed to the bottom of the container due to the justify-between property on the bottom element */}
+      <div className="flex justify-end pt-2">
+        <span className="text-blue-400 text-sm group-hover:text-white transition">
+          Open Project →
         </span>
       </div>
     </button>

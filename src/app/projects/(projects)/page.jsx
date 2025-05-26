@@ -38,7 +38,7 @@ export default function Page() {
   return (
     <div className="flex flex-row">
       <InfoModalButton heading={projectsOverview.heading} description={projectsOverview.description} />
-      <div className="m-auto my-20 grid grid-cols-5 gap-15">
+      <div className="m-auto my-20 grid grid-cols-4 gap-15">
         <AddProjectButton setProjects={setProjects} />
         {projects.data.map(({ id, project_name, members }) => (
           <BoxedProject
