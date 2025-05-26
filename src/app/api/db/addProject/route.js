@@ -9,7 +9,6 @@ export async function POST(req) {
   const formData = await req.formData();
   const projectName = formData.get("project-name");
   const projectDueDate = formData.get("due-date");
-  console.log(projectDueDate);
 
   if (projectName.length > 50)
     return Response.json({ data: null, error: "Project name too long!" });
