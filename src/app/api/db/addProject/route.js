@@ -2,6 +2,8 @@ import { auth } from "@/auth/authSetup";
 
 import { addProject } from "@/lib/queries";
 
+import dayjs from "dayjs"
+
 export async function POST(req) {
   const session = await auth();
 
@@ -17,7 +19,7 @@ export async function POST(req) {
     return Response.json({ data: null, error: "Project name too short!" });
 
   if (!!session) {
-    const newProjectId = await addProject(session, projectName, projectDueDate);
+    const newProjectId = await addProject(session, projectName, dayjs(projectDueDate));
 
     origin.pathname = `/projects/${newProjectId}`;
 

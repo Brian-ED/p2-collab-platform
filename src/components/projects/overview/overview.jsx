@@ -15,16 +15,21 @@ export const Overview = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const [setupRes, membersRes] = await Promise.all([
+        const [setupRes, membersRes, timeLeftRes] = await Promise.all([
           fetch(`/api/db/projectSetup?projectId=${pid}`),
           fetch(`/api/db/getProjectMembers?projectId=${pid}`),
+          fetch(`/api/db/getTimeLeft?projectId=${pid}`),
         ]);
 
         const setupData = await setupRes.json();
         const membersData = await membersRes.json();
+        const timeLeft = await timeLeftRes.json();
 
         // Count of the members belonging to the project
         const memberCount = membersData.data.length;
+
+        // Project due date
+        const projectDueDate = timeLeft.data.timeLeft;
 
         const validGroupContractCategories = setupData.data.categories.filter(
           (category) => category.ruleCount >= 3
@@ -41,6 +46,7 @@ export const Overview = () => {
 
         setSetupOverview({
           groupMembers: memberCount,
+          timeLeft: projectDueDate,
         });
 
         setIsLoading(false);
@@ -73,9 +79,7 @@ export const Overview = () => {
       </div>
 
       <div>
-        <h2 className="text-2xl font-semibold mb-2">
-          Project setup checklist
-        </h2>
+        <h2 className="text-2xl font-semibold mb-2">Project setup checklist</h2>
         <p className="text-gray-400 mb-6">
           Complete these steps to ensure your project is off to a solid start.
         </p>

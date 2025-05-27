@@ -1,8 +1,14 @@
 "use client";
 
 import { OverviewInfo } from "@/components/projects/overview/overviewInfo";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 
 export const ProjectOverview = ({ overviewInformation }) => {
+  const timeLeft =
+    dayjs.utc(overviewInformation.timeLeft).diff(dayjs.utc(), "day") + 1;
+
   return (
     <>
       <OverviewInfo
@@ -12,7 +18,7 @@ export const ProjectOverview = ({ overviewInformation }) => {
       />
       <OverviewInfo
         label="Time left for this project"
-        value={"42 days"}
+        value={`${timeLeft} ${timeLeft > 1 ? "days" : "day"}`}
         sectionAnchor="duration"
       />
       <OverviewInfo
