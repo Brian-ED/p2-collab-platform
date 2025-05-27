@@ -170,6 +170,7 @@ export async function addProject(session, projectName, projectDueDate) {
     data: {
       user_id: id,
       project_name: projectName,
+      project_due_date: projectDueDate,
     },
   });
 
@@ -239,7 +240,6 @@ export async function addGroupContractCategory(projectId, category_title) {
   });
   return result;
 }
-
 
 export async function updateGroupContractCategory(categoryId, newTitle) {
   return await prisma.group_contracts.update({
@@ -465,6 +465,15 @@ export async function getProjectInfo(projectId) {
     console.log(err);
     return { data: null, error: "Not authorized" };
   }
+}
+
+export async function getProjectDueDate(pid) {
+  return (
+    await prisma.projects.findFirst({
+      where: { id: pid },
+      select: { project_due_date: true },
+    })
+  ).project_due_date;
 }
 
 export async function getGithubUrl(pid) {
