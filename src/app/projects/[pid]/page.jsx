@@ -8,12 +8,14 @@ import { Settings } from "@/components/projects/settings";
 import { Loading } from "@/components/loading";
 import { Github } from "@/components/projects/github/github";
 import { useAppContext } from "@/context/AppContext";
+import { useRouter } from "next/navigation";
 
 import { useState, useEffect } from "react";
 import { useParams, redirect } from "next/navigation";
 import { InstantMessaging } from "@/components/projects/instantMessaging/instantMessaging";
 
 export default function Projects() {
+  const router = useRouter();
   const { section, setSection } = useAppContext();
   const { pid } = useParams();
 
@@ -40,6 +42,12 @@ export default function Projects() {
   }, []);
 
   useEffect(() => {
+    if (section === "root") {
+      router.push("/");
+    }
+  }, [section]);
+
+  useEffect(() => {
     setHashSection(window.location.hash);
   }, [pid]);
 
@@ -55,6 +63,7 @@ export default function Projects() {
       {section === "github" && <Github />}
       {section === "messaging" && <InstantMessaging />}
       {section === "settings" && <Settings />}
+      {section === "root"}
     </>
   );
 }

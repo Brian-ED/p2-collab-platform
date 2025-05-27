@@ -153,7 +153,7 @@ export async function getProjectMembers(projectId) {
   return members;
 }
 
-export async function addProject(session, projectName) {
+export async function addProject(session, projectName, projectDueDate) {
   const userId = session.user.image.split("/")[4].split("?")[0];
   const id = (
     await prisma.users.findFirst({

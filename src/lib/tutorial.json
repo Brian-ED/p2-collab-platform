@@ -22,5 +22,9 @@
   "settingsIntegration": {
     "heading": "Settings",
     "description": "On this page, you can manage who has access to the project and what permissions they have. You can add group members and assign roles such as read or write access."
+  },
+  "projectsOverview": {
+    "heading": "Welcome to the collaboration platform tailored to students! 👋🧑‍🎓",
+    "description": "This platform is designed to help student groups work together on academic projects more efficiently. \n\nHere’s how you can get started:\n\n📁 Create or select a project: Start by setting up your group project or choosing one from your dashboard.\n📝 Group Contract: Define your team’s rules and expectations to ensure smooth collaboration.\n📊 Gantt Chart: Plan your tasks, assign deadlines, and track progress visually.\n🧩 Kanban Board: Organize your work into phases like 'To Do', 'In Progress', 'In Review', and 'Done'.\n💬 Messaging: Communicate with your group members directly within the platform.\n🔗 GitHub Integration: Connect your project’s codebase for seamless development coordination.\n📚 Platform Guide: Use the helper pages for step-by-step instructions and best practices. \n\nYou can always click the ℹ️ info icon - just like the one you’re reading now - on any page to get tips and explanations on how to use each tool effectively in the context of academic project work. These info buttons provide helpful context on all the tools mentioned above and how to apply them efficiently in your group workflow.\n\nThis platform brings your most important tools into one place, so you can focus on working together - not switching between apps. \n\nGood luck with your project 🚀 "
   }
 }
