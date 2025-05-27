@@ -56,16 +56,17 @@ model permissions {
 }
 
 model projects {
-  id              Int               @id @default(autoincrement())
-  user_id         Int
-  project_name    String            @default("") @db.Char(50)
-  github_url      String            @default("")
-  access          access[]
-  gantt_charts    gantt_charts[]
-  group_contracts group_contracts[]
-  kanban          kanban[]
-  messages        messages[]
-  users           users             @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id               Int               @id @default(autoincrement())
+  user_id          Int
+  project_name     String            @default("") @db.Char(50)
+  project_due_date DateTime          @default(now()) @db.Timestamp(6)
+  github_url       String            @default("")
+  access           access[]
+  gantt_charts     gantt_charts[]
+  group_contracts  group_contracts[]
+  kanban           kanban[]
+  messages         messages[]
+  users            users             @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model users {

@@ -13,6 +13,7 @@ import { RiContractFill } from "react-icons/ri";
 import { BsFillKanbanFill } from "react-icons/bs";
 import { BiSolidMessageSquareDetail } from "react-icons/bi";
 import { IoSettingsSharp } from "react-icons/io5";
+import { RxExit } from "react-icons/rx";
 
 export default function ProjectsLayout({ children }) {
   const router = useRouter();
@@ -86,15 +87,21 @@ export default function ProjectsLayout({ children }) {
                 section="messaging"
                 route="#messaging"
               />
+              <SidebarButton
+                label="Settings "
+                icon={<IoSettingsSharp />}
+                section="settings"
+                route="#settings"
+              />
             </div>
 
             {/* Setting floating at the bottom - casued by the justify between property on the nav element */}
             <div className="mt-4 pt-4 border-t border-white/10">
               <SidebarButton
-                label="Settings"
-                icon={<IoSettingsSharp />}
-                section="settings"
-                route="#settings"
+                label="Exit"
+                icon={<RxExit />}
+                section="root"
+                route="#root"
               />
             </div>
           </nav>
