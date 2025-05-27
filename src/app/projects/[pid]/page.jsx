@@ -8,7 +8,7 @@ import { Settings } from "@/components/projects/settings";
 import { Loading } from "@/components/loading";
 import { Github } from "@/components/projects/github/github";
 import { useAppContext } from "@/context/AppContext";
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/navigation";
 
 import { useState, useEffect } from "react";
 import { useParams, redirect } from "next/navigation";
